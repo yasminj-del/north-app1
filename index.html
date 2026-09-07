@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>North 🌙 - نظام إدارة النقابات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-black: #0a0a0c;
+            --card-black: #141419;
+            --accent-gold: #ffffff;
+            --text-light: #f1f1f1;
+            --text-muted: #8a8a93;
+            --glossy-border: rgba(255, 255, 255, 0.12);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--text-light);
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+            overflow-x: hidden;
+        }
+
+        .auth-wrapper {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 480px;
+            background: linear-gradient(145deg, #16161c, #0d0d10);
+            border: 1px solid var(--glossy-border);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            position: relative;
+        }
+
+        .header-title { text-align: center; margin-bottom: 25px; }
+        .header-title h1 { font-size: 2.5rem; font-weight: 900; color: #ffffff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.4); }
+        .header-title p { color: var(--text-muted); font-size: 0.85rem; }
+
+        .tabs { display: flex; background: rgba(0, 0, 0, 0.4); border-radius: 12px; padding: 4px; margin-bottom: 25px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: var(--text-muted); font-weight: 700; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .tab-btn.active { background: #ffffff; color: #000000; box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2); }
+
+        .form-group { margin-bottom: 18px; text-align: right; }
+        .form-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; color: var(--text-light); font-weight: 600; }
+        .form-control { width: 100%; padding: 12px 16px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; color: #fff; font-size: 0.95rem; outline: none; transition: 0.3s; }
+        .form-control:focus { border-color: #ffffff; box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.07); }
+        textarea.form-control { resize: vertical; min-height: 90px; }
+        select.form-control option { background: #141419; color: #fff; }
+
+        .guilds-section { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 15px; margin-bottom: 18px; }
+        .guilds-section-title { font-size: 0.85rem; font-weight: 700; color: #ffffff; margin-bottom: 10px; border-bottom: 1px dashed rgba(255, 255, 255, 0.1); padding-bottom: 5px; }
+
+        .btn-submit { width: 100%; padding: 14px; background: #ffffff; color: #000000; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .btn-submit:hover { background: #e6e6e6; transform: translateY(-2px); }
+
+        /* شاشة التحميل */
+        .loader-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #0a0a0c; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 60px; height: 60px; border: 3px solid rgba(255, 255, 255, 0.1); border-radius: 50%; border-top-color: #ffffff; animation: spin 1s infinite linear; margin-bottom: 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loader-text { font-size: 1.2rem; font-weight: 700; letter-spacing: 1px; color: #fff; }
+
+        /* Dashboard */
+        .dashboard-screen { min-height: 100vh; width: 100%; display: flex; flex-direction: column; }
+        .navbar { background: rgba(20, 20, 25, 0.8); backdrop-filter: blur(15px); border-bottom: 1px solid var(--glossy-border); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .navbar-actions { display: flex; align-items: center; gap: 15px; }
+
+        .icon-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glossy-border); color: #fff; width: 42px; height: 42px; border-radius: 10px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.2rem; position: relative; transition: 0.3s; }
+        .icon-btn:hover { background: #ffffff; color: #000; }
+
+        .dashboard-content { flex: 1; max-width: 1200px; width: 100%; margin: 0 auto; padding: 40px 20px; }
+        .hero-news-box { background: linear-gradient(145deg, #16161c, #0f0f13); border: 1px solid var(--glossy-border); border-radius: 20px; padding: 30px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .hero-news-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px; }
+
+        /* حاوية الأخبار */
+        #newsFeed { display: flex; flex-direction: column; align-items: center; gap: 25px; }
+        .news-item { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 18px; text-align: right; position: relative; width: 100%; max-width: 600px; box-shadow: 0 8px 20px rgba(0,0,0,0.4); overflow: hidden; }
+        .news-item-img { width: auto; max-width: 100%; max-height: 500px; border-radius: 12px; display: block; margin: 0 auto 15px auto; object-fit: contain; border: 1px solid rgba(255, 255, 255, 0.1); }
+        .news-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .news-author { font-size: 0.9rem; font-weight: bold; color: #ffffff; }
+        .news-author-badge { background: rgba(255, 255, 255, 0.15); padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; margin-right: 5px; color: #fff; }
+        .news-item-time { font-size: 0.8rem; color: var(--text-muted); }
+        .news-item-text { font-size: 0.98rem; line-height: 1.7; white-space: pre-line; word-break: break-word; }
+        .btn-delete-news { background: #dc3545; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-top: 12px; width: 100%; }
+
+        .empty-news-state { text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 1.05rem; background: rgba(255, 255, 255, 0.01); border-radius: 12px; border: 1px dashed rgba(255, 255, 255, 0.08); width: 100%; }
+
+        .btn-action { padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; border: none; transition: 0.2s; }
+        .btn-approve { background: #28a745; color: #fff; }
+        .btn-reject { background: #dc3545; color: #fff; }
+        .btn-ban { background: #ffc107; color: #000; }
+
+        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
+        .modal-content { background: #141419; border: 1px solid var(--glossy-border); border-radius: 15px; width: 100%; max-width: 550px; padding: 25px; }
+
+        /* القائمة الجانبية (Sidebar) للمالك */
+        .sidebar-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; }
+        .sidebar-overlay.active { opacity: 1; visibility: visible; }
+        .sidebar { position: fixed; top: 0; right: -420px; width: 100%; max-width: 400px; height: 100%; background: #121217; border-left: 1px solid var(--glossy-border); z-index: 1001; transition: 0.3s ease-in-out; padding: 25px; display: flex; flex-direction: column; overflow-y: auto; }
+        .sidebar.open { right: 0; }
+        .sidebar-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
+        .sidebar-close { background: transparent; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
+
+        .user-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 15px; margin-bottom: 15px; text-align: right; }
+        .user-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .user-card-details { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px; }
+        .user-card-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+
+        .role-select { padding: 4px 8px; background: #000; color: #fff; border: 1px solid var(--glossy-border); border-radius: 6px; font-size: 0.8rem; margin-top: 5px; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- شاشة التحميل -->
+    <div id="loaderScreen" class="loader-overlay hidden">
+        <div class="spinner"></div>
+        <div class="loader-text" id="loaderText">جاري التحميل...</div>
+    </div>
+
+    <!-- تسجيل الدخول وإنشاء الحساب -->
+    <div id="authWrapper" class="auth-wrapper">
+        <div class="auth-container">
+            <div class="header-title">
+                <h1>🌙 North </h1>
+                <p>نظام إدارة وتتبع النقابات الإمبراطوري</p>
+            </div>
+
+            <div class="tabs" id="authTabs">
+                <button class="tab-btn active" onclick="switchTab('login')">تسجيل الدخول</button>
+                <button class="tab-btn" onclick="switchTab('register')">إنشاء حساب جديد</button>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>اسم المستخدم (Username)</label>
+                    <input type="text" id="loginUsername" class="form-control" placeholder="مثال: Makinorth1" required dir="ltr">
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور / الكود</label>
+                    <input type="password" id="loginCode" class="form-control" placeholder="••••••••" required dir="ltr">
+                </div>
+                <button type="submit" class="btn-submit">دخول النظام</button>
+            </form>
+
+            <form id="registerForm" class="hidden" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>اسم المستخدم بالإنجليزية (Username)</label>
+                    <input type="text" id="regUsername" class="form-control" placeholder="e.g. Knight99" required dir="ltr">
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور (Password)</label>
+                    <input type="password" id="regPassword" class="form-control" placeholder="أنشئ كلمة مرور خاصة بك" required dir="ltr">
+                </div>
+                <div class="form-group">
+                    <label>اللقب</label>
+                    <input type="text" id="regNickname" class="form-control" placeholder="أدخل اللقب" required>
+                </div>
+                <div class="form-group">
+                    <label>الرتبة</label>
+                    <select id="regRank" class="form-control" onchange="onRankChange()" required>
+                        <option value="" disabled selected>اختر الرتبة...</option>
+                        <option value="عضو">عضو</option>
+                        <option value="مشرف تدريبي">مشرف تدريبي</option>
+                        <option value="حامل راية">حامل راية</option>
+                        <option value="حامل بيرق">حامل بيرق</option>
+                        <option value="ملازم">ملازم</option>
+                        <option value="فارس">فارس</option>
+                        <option value="تشيبوكاي">تشيبوكاي</option>
+                        <option value="عميد">عميد</option>
+                        <option value="نائب ادميرال">نائب ادميرال</option>
+                        <option value="ادميرال">ادميرال</option>
+                        <option value="مستشار دوق">مستشار دوق</option>
+                        <option value="وزير دوق">وزير دوق</option>
+                        <option value="نائب دوق">نائب دوق</option>
+                        <option value="دوق">دوق</option>
+                        <option value="مستشار امير">مستشار امير</option>
+                        <option value="وزير امير">وزير امير</option>
+                        <option value="نائب امير">نائب امير</option>
+                        <option value="امير">امير</option>
+                        <option value="مستشار ملك">مستشار ملك</option>
+                        <option value="وزير ملك">وزير ملك</option>
+                        <option value="نائب ملك">نائب ملك</option>
+                        <option value="ملك">ملك</option>
+                        <option value="لورد فروع">لورد فروع</option>
+                        <option value="نائب لورد فروع">نائب لورد فروع</option>
+                        <option value="نائب لورد">نائب لورد</option>
+                        <option value="لورد">لورد</option>
+                        <option value="نائب امبراطور">نائب امبراطور</option>
+                        <option value="امبراطور">امبراطور</option>
+                    </select>
+                </div>
+
+                <div id="guildsContainer" class="guilds-section hidden">
+                    <div class="guilds-section-title" id="guildsSectionTitle">النقابات التابعة لك</div>
+                    <div id="guildsFields"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>رقم الهاتف / الواتساب</label>
+                    <input type="tel" id="regPhone" class="form-control" placeholder="+966xxxxxxxxx" required dir="ltr">
+                </div>
+                <button type="submit" class="btn-submit">تقديم طلب الانضمام</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- شاشة الانتظار والرفض والحظر -->
+    <div id="statusWrapper" class="auth-wrapper hidden">
+        <div class="auth-container" id="statusCardContent" style="text-align: center;"></div>
+    </div>
+
+    <!-- الصفحة الرئيسية -->
+    <div id="mainDashboardScreen" class="dashboard-screen hidden">
+        <nav class="navbar">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button id="sidebarToggleBtn" class="icon-btn hidden" onclick="toggleSidebar()" title="القائمة الجانبية للمالك">☰</button>
+                <div class="navbar-brand">
+                    <h1>🌙 North </h1>
+                </div>
+            </div>
+            <div class="navbar-actions">
+                <button id="adminPublishBtn" class="icon-btn hidden" onclick="openPublishModal()" title="نشر خبر جديد">+</button>
+                <button onclick="handleLogout()" class="btn-action btn-reject" style="padding: 8px 16px;">تسجيل الخروج</button>
+            </div>
+        </nav>
+
+        <div class="dashboard-content">
+            <div class="hero-news-box">
+                <div class="hero-news-title">
+                    📜 آخر أخبار المملكة
+                </div>
+                <div id="newsFeed"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- القائمة الجانبية (Sidebar) الخاصة بحساب Makinorth1 -->
+    <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3>⚙️ لوحة التحكم القارية (Maki)</h3>
+            <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+        </div>
+
+        <h4 style="margin-bottom: 12px; color: #ffc107;">📩 طلبات الانضمام المعلقة</h4>
+        <div id="pendingRequestsContainer"></div>
+
+        <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
+
+        <h4 style="margin-bottom: 12px; color: #fff;">👥 كافة مستخدمي الموقع والتفاصيل</h4>
+        <div id="allUsersContainer"></div>
+    </div>
+
+    <!-- نافذة نشر خبر -->
+    <div id="publishModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 15px; text-align: right;">نشر خبر جديد للمملكة 📢</h3>
+            <form onsubmit="handlePublishNews(event)">
+                <div class="form-group">
+                    <label>نص الخبر / التحديث *</label>
+                    <textarea id="newsContent" class="form-control" placeholder="اكتب الخبر أو الإعلان هنا..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>اختر صورة من جهازك (اختياري)</label>
+                    <input type="file" id="newsImageInput" class="form-control" accept="image/*">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn-submit">نشر الخبر</button>
+                    <button type="button" onclick="closePublishModal()" class="btn-submit" style="background:#444; color:#fff;">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- مكتبات Firebase السحابية المحدثة -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, get, child, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD1IdKso_sOqW3lL6Ux01fpr9GVB-OiPjA",
+            authDomain: "makinorth.firebaseapp.com",
+            databaseURL: "https://makinorth-default-rtdb.firebaseio.com",
+            projectId: "makinorth",
+            storageBucket: "makinorth.firebasestorage.app",
+            messagingSenderId: "61984252574",
+            appId: "1:61984252574:web:738ebf88408d4ebfd5918f",
+            measurementId: "G-37WD2EY9KL"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const GUILDS = [
+            { id: "g1", name: "𝑹𝑨𝑰𝑱𝑰𝑵", emoji: "⚡" },
+            { id: "g2", name: "𝑳𝑼𝑶𝑺", emoji: "⚖️" },
+            { id: "g3", name: "𝑺𝑶𝑼𝑳", emoji: "🩸" },
+            { id: "g4", name: "𝑨𝑹𝑰𝑺𝑨", emoji: "🌊" },
+            { id: "g5", name: "𝑺𝑰𝑳𝑨", emoji: "💧" },
+            { id: "g6", name: "𝑨𝑹𝑰𝑬𝑺", emoji: "⛈️" },
+            { id: "g7", name: "𝑭𝑶𝑻𝑹𝑰𝑿", emoji: "🪐" }
+        ];
+
+        const ADMIN_USER = {
+            username: "Makinorth1",
+            code: "250702011yy",
+            nickname: "Maki 👑",
+            rank: "مالك الموقع"
+        };
+
+        let currentUserIsAdmin = false; 
+        let currentUserCanPublish = false; 
+        let currentActiveUser = null; 
+
+        window.addEventListener('DOMContentLoaded', () => {
+            checkActiveSession();
+            listenToNewsRealtime();
+            listenToUsersRealtime();
+        });
+
+        function checkActiveSession() {
+            const savedSession = sessionStorage.getItem('north_active_session');
+            if (savedSession) {
+                const sessionData = JSON.parse(savedSession);
+                currentUserIsAdmin = sessionData.isAdmin;
+                currentUserCanPublish = sessionData.canPublish;
+                currentActiveUser = sessionData.user;
+                openMainDashboard();
+            }
+        }
+
+        function saveActiveSession() {
+            sessionStorage.setItem('north_active_session', JSON.stringify({
+                isAdmin: currentUserIsAdmin,
+                canPublish: currentUserCanPublish,
+                user: currentActiveUser
+            }));
+        }
+
+        function clearActiveSession() {
+            sessionStorage.removeItem('north_active_session');
+        }
+
+        function listenToNewsRealtime() {
+            const newsRef = ref(db, 'news');
+            onValue(newsRef, (snapshot) => {
+                const data = snapshot.val();
+                const newsList = data ? Object.values(data) : [];
+                newsList.sort((a,b) => b.timestamp - a.timestamp);
+                renderNewsFeed(newsList);
+            });
+        }
+
+        function listenToUsersRealtime() {
+            const usersRef = ref(db, 'users');
+            onValue(usersRef, (snapshot) => {
+                const data = snapshot.val();
+                const usersList = data ? Object.values(data) : [];
+                window.globalUsersList = usersList;
+                if(document.getElementById('sidebar').classList.contains('open')) {
+                    renderSidebarContent();
+                }
+            });
+        }
+
+        window.switchTab = function(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabBtns = document.querySelectorAll('.tab-btn');
+
+            if(tab === 'login') {
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                tabBtns[0].classList.add('active');
+                tabBtns[1].classList.remove('active');
+            } else {
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                tabBtns[0].classList.remove('active');
+                tabBtns[1].classList.add('active');
+            }
+        };
+
+        function createGuildSelectOptions(isRequired = true) {
+            let options = `<option value="" ${isRequired ? 'disabled selected' : 'selected'}>${isRequired ? 'اختر النقابة...' : 'اختر نقابة (اختياري)...'}</option>`;
+            GUILDS.forEach(g => { options += `<option value="${g.name}">${g.emoji} ${g.name}</option>`; });
+            return options;
+        }
+
+        window.onRankChange = function() {
+            const rank = document.getElementById('regRank').value;
+            const container = document.getElementById('guildsContainer');
+            const fieldsArea = document.getElementById('guildsFields');
+            const sectionTitle = document.getElementById('guildsSectionTitle');
+
+            fieldsArea.innerHTML = '';
+
+            // استثناء امبراطور ونائب امبراطور من اختيار أي نقابات
+            if (rank === "امبراطور" || rank === "نائب امبراطور") {
+                container.classList.add('hidden');
+                return;
+            }
+
+            container.classList.remove('hidden');
+
+            const dukeGroup = ["مستشار دوق", "وزير دوق", "نائب دوق", "دوق"];
+            const princeGroup = ["مستشار امير", "وزير امير", "نائب امير", "امير"];
+            const kingGroup = ["مستشار ملك", "وزير ملك", "نائب ملك", "ملك"];
+
+            let reqCount = 1, optCount = 0;
+            if (dukeGroup.includes(rank)) { reqCount = 2; optCount = 1; }
+            else if (princeGroup.includes(rank)) { reqCount = 4; optCount = 1; }
+            else if (kingGroup.includes(rank)) { reqCount = 6; optCount = 4; }
+
+            sectionTitle.innerText = `اختيار النقابات (إجباري: ${reqCount} | اختياري: ${optCount})`;
+
+            for (let i = 1; i <= reqCount; i++) {
+                const div = document.createElement('div');
+                div.className = 'form-group';
+                div.innerHTML = `<label>النقابة الإجبارية رقم ${i} *</label><select class="form-control guild-select" required>${createGuildSelectOptions(true)}</select>`;
+                fieldsArea.appendChild(div);
+            }
+
+            for (let i = 1; i <= optCount; i++) {
+                const div = document.createElement('div');
+                div.className = 'form-group';
+                div.innerHTML = `<label>النقابة الاختيارية رقم ${i} (إضافية)</label><select class="form-control guild-select">${createGuildSelectOptions(false)}</select>`;
+                fieldsArea.appendChild(div);
+            }
+        };
+
+        window.handleRegister = async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            const nickname = document.getElementById('regNickname').value.trim();
+            const rank = document.getElementById('regRank').value;
+            const phone = document.getElementById('regPhone').value.trim();
+
+            const guildSelects = document.querySelectorAll('.guild-select');
+            const selectedGuilds = Array.from(guildSelects).map(s => s.value).filter(v => v !== "");
+
+            if (username.toLowerCase() === ADMIN_USER.username.toLowerCase()) {
+                alert('اسم المستخدم هذا محجوز لمالك الموقع!');
+                return;
+            }
+
+            const userRef = ref(db, 'users/' + username);
+            const snapshot = await get(userRef);
+            if (snapshot.exists()) {
+                alert('اسم المستخدم محجوز مسبقاً، اختر اسماً آخر.');
+                return;
+            }
+
+            const newUser = {
+                username,
+                password,
+                nickname,
+                rank,
+                phone,
+                guilds: selectedGuilds,
+                status: 'pending',
+                role: 'viewer'
+            };
+
+            await set(userRef, newUser);
+
+            alert('تم إرسال طلب الانضمام بنجاح للسحابة! ينتظر مراجعة Maki.');
+            switchTab('login');
+            document.getElementById('loginUsername').value = username;
+            document.getElementById('loginCode').value = password;
+        };
+
+        window.handleLogin = async function(e) {
+            e.preventDefault();
+            const user = document.getElementById('loginUsername').value.trim();
+            const code = document.getElementById('loginCode').value.trim();
+
+            if (user === ADMIN_USER.username && code === ADMIN_USER.code) {
+                currentUserIsAdmin = true;
+                currentUserCanPublish = true;
+                currentActiveUser = ADMIN_USER;
+                saveActiveSession();
+                startLoadingProcess('جاري الدخول بصفة مالك الموقع...', () => openMainDashboard());
+                return;
+            }
+
+            const userRef = ref(db, 'users/' + user);
+            const snapshot = await get(userRef);
+
+            if (!snapshot.exists()) {
+                alert('اسم المستخدم أو كلمة المرور غير صحيحة!');
+                return;
+            }
+
+            const foundUser = snapshot.val();
+
+            if (foundUser.password !== code) {
+                alert('اسم المستخدم أو كلمة المرور غير صحيحة!');
+                return;
+            }
+
+            if (foundUser.status === 'banned') {
+                showStatusScreen('⛔ حسابك محظور', 'تم حظر حسابك من قبل الإدارة ولن تستطيع الدخول مجدداً.');
+                return;
+            }
+
+            if (foundUser.status === 'pending') {
+                showStatusScreen('⏳ طلبك قيد المراجعة', 'لم يتم مراجعة طلب انضمامك بعد من قبل Maki. يرجى الانتظار.');
+                return;
+            }
+
+            if (foundUser.status === 'rejected') {
+                showStatusScreen('❌ تم رفض الطلب', 'نعتذر، تم رفض طلب انضمامك للنظام.');
+                return;
+            }
+
+            currentUserIsAdmin = (foundUser.role === 'owner');
+            currentUserCanPublish = (foundUser.role === 'owner' || foundUser.role === 'commenter');
+            currentActiveUser = foundUser;
+
+            saveActiveSession();
+            startLoadingProcess('جاري الدخول بالنظام...', () => openMainDashboard());
+        };
+
+        window.handleLogout = function() {
+            startLoadingProcess('جاري تسجيل الخروج...', () => {
+                clearActiveSession();
+                hideAllViews();
+                document.getElementById('authWrapper').classList.remove('hidden');
+                document.getElementById('loginUsername').value = '';
+                document.getElementById('loginCode').value = '';
+                currentUserIsAdmin = false;
+                currentUserCanPublish = false;
+                currentActiveUser = null;
+            });
+        };
+
+        function startLoadingProcess(msg, callback) {
+            hideAllViews();
+            document.getElementById('loaderText').innerText = msg;
+            document.getElementById('loaderScreen').classList.remove('hidden');
+
+            setTimeout(() => {
+                document.getElementById('loaderScreen').classList.add('hidden');
+                callback();
+            }, 1000);
+        }
+
+        function hideAllViews() {
+            document.getElementById('authWrapper').classList.add('hidden');
+            document.getElementById('statusWrapper').classList.add('hidden');
+            document.getElementById('mainDashboardScreen').classList.add('hidden');
+        }
+
+        function showStatusScreen(title, message) {
+            hideAllViews();
+            const card = document.getElementById('statusCardContent');
+            card.innerHTML = `
+                <h2 style="margin-bottom:15px;">${title}</h2>
+                <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.6;">${message}</p>
+                <button onclick="location.reload()" class="btn-submit" style="margin-top:20px;">العودة للرئيسية</button>
+            `;
+            document.getElementById('statusWrapper').classList.remove('hidden');
+        }
+
+        function openMainDashboard() {
+            hideAllViews();
+            document.getElementById('mainDashboardScreen').classList.remove('hidden');
+
+            const sidebarBtn = document.getElementById('sidebarToggleBtn');
+            const publishBtn = document.getElementById('adminPublishBtn');
+
+            if (currentUserIsAdmin) {
+                sidebarBtn.classList.remove('hidden');
+            } else {
+                sidebarBtn.classList.add('hidden');
+            }
+
+            if (currentUserCanPublish) {
+                publishBtn.classList.remove('hidden');
+            } else {
+                publishBtn.classList.add('hidden');
+            }
+        }
+
+        window.toggleSidebar = function() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const isOpen = sidebar.classList.contains('open');
+
+            if (!isOpen) {
+                renderSidebarContent();
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+            } else {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+            }
+        };
+
+        function renderSidebarContent() {
+            const users = window.globalUsersList || [];
+            const pendingContainer = document.getElementById('pendingRequestsContainer');
+            const allContainer = document.getElementById('allUsersContainer');
+
+            const pendingUsers = users.filter(u => u.status === 'pending');
+
+            if (pendingUsers.length === 0) {
+                pendingContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">لا توجد طلبات انضمام جديدة.</p>';
+            } else {
+                pendingContainer.innerHTML = '';
+                pendingUsers.forEach(u => {
+                    const div = document.createElement('div');
+                    div.className = 'user-card';
+                    div.innerHTML = `
+                        <div class="user-card-header">
+                            <strong>${u.nickname}</strong>
+                            <span style="color:#ffc107; font-size:0.75rem;">طلب معلق</span>
+                        </div>
+                        <div class="user-card-details">
+                            اسم المستخدم: @${u.username}<br>
+                            الرتبة: ${u.rank} | الهاتف: ${u.phone}<br>
+                            النقابات: ${u.guilds && u.guilds.length > 0 ? u.guilds.join(', ') : 'لا يوجد'}
+                        </div>
+                        <div class="user-card-actions">
+                            <button onclick="updateUserStatus('${u.username}', 'approved')" class="btn-action btn-approve">قبول</button>
+                            <button onclick="updateUserStatus('${u.username}', 'rejected')" class="btn-action btn-reject">رفض</button>
+                        </div>
+                    `;
+                    pendingContainer.appendChild(div);
+                });
+            }
+
+            if (users.length === 0) {
+                allContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">لا يوجد مسجلين بالنظام.</p>';
+                return;
+            }
+
+            allContainer.innerHTML = '';
+            users.forEach((u) => {
+                let statusBadge = '';
+                if(u.status === 'approved') statusBadge = '<span style="color:#28a745; font-size:0.75rem;">[مقبول]</span>';
+                else if(u.status === 'pending') statusBadge = '<span style="color:#ffc107; font-size:0.75rem;">[معلق]</span>';
+                else if(u.status === 'rejected') statusBadge = '<span style="color:#dc3545; font-size:0.75rem;">[مرفوض]</span>';
+                else if(u.status === 'banned') statusBadge = '<span style="color:#dc3545; font-weight:bold; font-size:0.75rem;">[محظور ⛔]</span>';
+
+                const div = document.createElement('div');
+                div.className = 'user-card';
+                div.innerHTML = `
+                    <div class="user-card-header">
+                        <strong>${u.nickname} (@${u.username})</strong>
+                        ${statusBadge}
+                    </div>
+                    <div class="user-card-details">
+                        🔑 كلمة المرور: <span style="color:#fff;">${u.password}</span><br>
+                        🎖️ الرتبة: ${u.rank}<br>
+                        📞 الهاتف: ${u.phone}<br>
+                        🏰 النقابات: ${u.guilds && u.guilds.length > 0 ? u.guilds.join(', ') : 'لا يوجد'}
+                    </div>
+                    <div class="user-card-actions">
+                        <select onchange="updateUserRole('${u.username}', this.value)" class="role-select">
+                            <option value="viewer" ${u.role === 'viewer' ? 'selected' : ''}>مشاهد</option>
+                            <option value="commenter" ${u.role === 'commenter' ? 'selected' : ''}>ناشر للأخبار</option>
+                            <option value="owner" ${u.role === 'owner' ? 'selected' : ''}>مالك/مسؤول</option>
+                        </select>
+                        <button onclick="updateUserStatus('${u.username}', 'banned')" class="btn-action btn-ban">حظر</button>
+                        <button onclick="deleteUser('${u.username}')" class="btn-action btn-reject">حذف</button>
+                    </div>
+                `;
+                allContainer.appendChild(div);
+            });
+        }
+
+        window.updateUserStatus = async function(username, status) {
+            await update(ref(db, 'users/' + username), { status });
+        };
+
+        window.updateUserRole = async function(username, role) {
+            await update(ref(db, 'users/' + username), { role });
+        };
+
+        window.deleteUser = async function(username) {
+            if(confirm(`هل أنت متأكد من حذف الحساب @${username} نهائياً؟`)) {
+                await remove(ref(db, 'users/' + username));
+            }
+        };
+
+        function renderNewsFeed(newsList = []) {
+            const container = document.getElementById('newsFeed');
+            if (!newsList || newsList.length === 0) {
+                container.innerHTML = '<div class="empty-news-state">لا توجد أخبار جديدة في الوقت الحالي.</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+            newsList.forEach(news => {
+                const div = document.createElement('div');
+                div.className = 'news-item';
+
+                let imgHtml = '';
+                if (news.image) {
+                    imgHtml = `<img src="${news.image}" class="news-item-img" alt="صورة الخبر">`;
+                }
+
+                let deleteBtnHtml = '';
+                if (currentUserIsAdmin) {
+                    deleteBtnHtml = `<button onclick="deleteNews('${news.id}')" class="btn-delete-news">حذف الخبر</button>`;
+                }
+
+                div.innerHTML = `
+                    ${imgHtml}
+                    <div class="news-item-header">
+                        <div class="news-author">
+                            ${news.authorNickname}
+                            <span class="news-author-badge">${news.authorRank}</span>
+                        </div>
+                        <div class="news-item-time">${news.date}</div>
+                    </div>
+                    <div class="news-item-text">${news.text}</div>
+                    ${deleteBtnHtml}
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        window.openPublishModal = function() {
+            document.getElementById('publishModal').classList.remove('hidden');
+        };
+
+        window.closePublishModal = function() {
+            document.getElementById('publishModal').classList.add('hidden');
+            document.getElementById('newsContent').value = '';
+            document.getElementById('newsImageInput').value = '';
+        };
+
+        window.handlePublishNews = async function(e) {
+            e.preventDefault();
+            const text = document.getElementById('newsContent').value.trim();
+            const fileInput = document.getElementById('newsImageInput');
+            const file = fileInput.files[0];
+
+            if (!text) return;
+
+            const newNewsId = 'news_' + Date.now();
+            const newsData = {
+                id: newNewsId,
+                text,
+                image: '',
+                authorNickname: currentActiveUser ? currentActiveUser.nickname : 'Maki 👑',
+                authorRank: currentActiveUser ? currentActiveUser.rank : 'مالك الموقع',
+                timestamp: Date.now(),
+                date: new Date().toLocaleDateString('ar-EG', { hour: '2-digit', minute: '2-digit' })
+            };
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async function(evt) {
+                    newsData.image = evt.target.result;
+                    await set(ref(db, 'news/' + newNewsId), newsData);
+                    closePublishModal();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                await set(ref(db, 'news/' + newNewsId), newsData);
+                closePublishModal();
+            }
+        };
+
+        window.deleteNews = async function(newsId) {
+            if (confirm('هل أنت متأكد من حذف هذا الخبر؟')) {
+                await remove(ref(db, 'news/' + newsId));
+            }
+        };
+    </script>
+</body>
+</html>
