@@ -66,17 +66,23 @@
         /* الشاشات الرئيسية */
         .page-screen { min-height: 100vh; width: 100%; display: flex; flex-direction: column; }
         .navbar { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border-color); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .navbar-actions { display: flex; align-items: center; gap: 15px; }
+        .navbar-actions { display: flex; align-items: center; gap: 12px; }
         .icon-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: #fff; width: 42px; height: 42px; border-radius: 10px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.2rem; position: relative; transition: 0.3s; }
         .icon-btn:hover { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
         .page-content { flex: 1; max-width: 1000px; width: 100%; margin: 0 auto; padding: 40px 20px; }
         .page-header-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; color: #fff; }
+        /* صور الملف الشخصي والأفاتار */
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-blue); }
+        .user-avatar-sm { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid var(--accent-blue); }
+        .user-avatar-lg { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-blue); margin: 0 auto 15px auto; display: block; box-shadow: 0 0 15px rgba(37, 99, 235, 0.4); }
+        .avatar-placeholder { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-blue); color: #fff; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1rem; }
+        .avatar-placeholder-sm { width: 30px; height: 30px; border-radius: 50%; background: var(--accent-blue); color: #fff; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 0.8rem; }
         /* حاوية الأخبار */
         #newsFeed { display: flex; flex-direction: column; align-items: center; gap: 25px; }
         .news-item { background: var(--card-black); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; text-align: right; position: relative; width: 100%; max-width: 650px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
         .news-item-img { width: auto; max-width: 100%; max-height: 500px; border-radius: 12px; display: block; margin: 0 auto 15px auto; object-fit: contain; border: 1px solid var(--border-color); }
         .news-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .news-author { font-size: 0.9rem; font-weight: bold; color: #ffffff; display: flex; align-items: center; gap: 5px; }
+        .news-author { font-size: 0.9rem; font-weight: bold; color: #ffffff; display: flex; align-items: center; gap: 8px; }
         .news-author-badge { background: var(--light-blue-bg); border: 1px solid var(--accent-blue); padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; color: #fff; }
         .news-item-time { font-size: 0.8rem; color: var(--text-muted); }
         .news-item-text { font-size: 0.98rem; line-height: 1.7; white-space: pre-line; word-break: break-word; color: #f1f5f9; margin-bottom: 15px; }
@@ -89,11 +95,10 @@
         .comments-title { font-size: 0.85rem; font-weight: bold; color: var(--text-muted); margin-bottom: 10px; }
         .comments-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; max-height: 250px; overflow-y: auto; }
         
-        /* تنسيق عنصر التعليق وتنسيق التعليق المحذوف للمسؤولين */
         .comment-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 8px 12px; font-size: 0.85rem; position: relative; }
         .comment-item.is-deleted-admin { background: rgba(239, 68, 68, 0.08); border: 1px dashed var(--danger-red); }
         .comment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .comment-author { font-weight: bold; color: var(--accent-blue); display: flex; align-items: center; gap: 4px; cursor: pointer; transition: 0.2s; }
+        .comment-author { font-weight: bold; color: var(--accent-blue); display: flex; align-items: center; gap: 6px; cursor: pointer; transition: 0.2s; }
         .comment-author:hover { text-decoration: underline; color: #60a5fa; }
         .comment-del-btn { background: transparent; border: none; color: var(--danger-red); font-size: 0.75rem; cursor: pointer; opacity: 0.8; transition: 0.2s; }
         .comment-del-btn:hover { opacity: 1; text-decoration: underline; }
@@ -151,7 +156,6 @@
         /* الشارات والدائرة الصغيرة للتوثيق */
         .status-badge-online { background: rgba(34, 197, 94, 0.15); color: #22c55e; border: 1px solid #22c55e; padding: 3px 8px; border-radius: 6px; font-size: 0.78rem; font-weight: bold; }
         .status-badge-offline { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid #94a3b8; padding: 3px 8px; border-radius: 6px; font-size: 0.78rem; font-weight: bold; }
-        /* الدائرة الصغيرة المخصصة للتوثيق */
         .verify-toggle-circle {
             width: 22px;
             height: 22px;
@@ -178,9 +182,7 @@
             opacity: 0;
             transition: 0.2s;
         }
-        .verify-toggle-circle.verified::after {
-            opacity: 1;
-        }
+        .verify-toggle-circle.verified::after { opacity: 1; }
         .verified-icon {
             display: inline-flex;
             width: 18px;
@@ -299,6 +301,7 @@
                 </div>
             </div>
             <div class="navbar-actions">
+                <button id="myProfileBtn" class="icon-btn" onclick="openMyProfileModal()" title="حسابي وتفاصيلي">👤</button>
                 <button id="adminPublishBtn" class="icon-btn hidden" onclick="openPublishModal()" title="نشر خبر جديد">+</button>
                 <button onclick="handleLogout()" class="btn-action btn-reject">تسجيل الخروج</button>
             </div>
@@ -360,7 +363,50 @@
             <span>➔</span>
         </button>
     </div>
-    <!-- نافذة تعديل بيانات حساب تفصيلي -->
+
+    <!-- نافذة حساب المستخدم الشخصية (الملف الشخصي) -->
+    <div id="myProfileModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 15px; text-align: right; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">حسابي الشخصي 👤</h3>
+            <div id="myProfileAvatarPreview"></div>
+            <form onsubmit="handleSaveMyProfile(event)">
+                <div class="form-group">
+                    <label>صورة الحساب (Avatar)</label>
+                    <input type="file" id="myProfilePhotoInput" class="form-control" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label>اسم المستخدم (لا يمكن تغييره)</label>
+                    <input type="text" id="myProfileUsername" class="form-control" disabled style="opacity: 0.6;" dir="ltr">
+                </div>
+                <div class="form-group">
+                    <label>اللقب</label>
+                    <input type="text" id="myProfileNickname" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="text" id="myProfilePassword" class="form-control" required dir="ltr">
+                </div>
+                <div class="form-group">
+                    <label>الرتبة</label>
+                    <input type="text" id="myProfileRank" class="form-control" disabled style="opacity: 0.6;">
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف / الواتساب</label>
+                    <input type="tel" id="myProfilePhone" class="form-control" required dir="ltr">
+                </div>
+                <div class="form-group">
+                    <label>النقابات التابعة</label>
+                    <input type="text" id="myProfileGuilds" class="form-control" disabled style="opacity: 0.6;">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button type="submit" class="btn-submit">تحديث البيانات 💾</button>
+                    <button type="button" onclick="closeModal('myProfileModal')" class="btn-submit" style="background:#334155; color:#fff;">إغلاق</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة تعديل بيانات حساب تفصيلي من قبل المالك -->
     <div id="editUserModal" class="modal hidden">
         <div class="modal-content">
             <h3 style="margin-bottom: 15px; text-align: right;">تعديل تفاصيل الحساب ✏️</h3>
@@ -447,17 +493,20 @@
             code: "250702011yy",
             nickname: "Maki 👑",
             rank: "مالك الموقع",
-            verified: true
+            verified: true,
+            photo: ""
         };
         let currentUserIsAdmin = false; 
         let currentUserCanPublish = false; 
         let currentActiveUser = null; 
+
         window.addEventListener('DOMContentLoaded', () => {
             checkActiveSession();
             listenToNewsRealtime();
             listenToUsersRealtime();
         });
-        // تفعيل تتبع حضور المستخدم المتصل تلقائياً
+
+        // تتبع حضور المستخدم
         function setupUserPresence(username) {
             if (!username) return;
             const userPresenceRef = ref(db, 'users/' + username + '/presence');
@@ -519,6 +568,13 @@
                 const data = snapshot.val();
                 const usersList = data ? Object.values(data) : [];
                 window.globalUsersList = usersList;
+                if (currentActiveUser && currentActiveUser.username !== ADMIN_USER.username) {
+                    const freshMe = usersList.find(u => u.username === currentActiveUser.username);
+                    if (freshMe) {
+                        currentActiveUser = freshMe;
+                        saveActiveSession();
+                    }
+                }
                 const pendingCount = usersList.filter(u => u.status === 'pending').length;
                 const pendingDot = document.getElementById('pendingDot');
                 if (pendingDot) {
@@ -586,6 +642,8 @@
                 fieldsArea.appendChild(div);
             }
         };
+
+        // تسجيل حساب جديد مع منع تطابق اليوزر نيم تماماً
         window.handleRegister = async function(e) {
             e.preventDefault();
             const username = document.getElementById('regUsername').value.trim();
@@ -595,34 +653,44 @@
             const phone = document.getElementById('regPhone').value.trim();
             const guildSelects = document.querySelectorAll('.guild-select');
             const selectedGuilds = Array.from(guildSelects).map(s => s.value).filter(v => v !== "");
+
+            // 1. فحص الحجز لمالك الموقع
             if (username.toLowerCase() === ADMIN_USER.username.toLowerCase()) {
-                alert('اسم المستخدم هذا محجوز لمالك الموقع!');
+                alert('⚠️ اسم المستخدم هذا محجوز لمالك الموقع المباشر!');
                 return;
             }
-            const userRef = ref(db, 'users/' + username);
-            const snapshot = await get(userRef);
-            if (snapshot.exists()) {
-                alert('اسم المستخدم محجوز مسبقاً، اختر اسماً آخر.');
-                return;
+
+            // 2. فحص تطابق اسم المستخدم في قاعدة البيانات كاملةً
+            const usersSnapshot = await get(ref(db, 'users'));
+            if (usersSnapshot.exists()) {
+                const allUsers = Object.values(usersSnapshot.val());
+                const isMatch = allUsers.some(u => u.username && u.username.toLowerCase() === username.toLowerCase());
+                if (isMatch) {
+                    alert('⚠️ اسم المستخدم (Username) مستخدم بالفعل! اختر اسم مستخدم آخر.');
+                    return;
+                }
             }
+
             const newUser = {
                 username,
                 password,
                 nickname,
                 rank,
                 phone,
+                photo: "",
                 guilds: selectedGuilds,
                 status: 'pending',
                 role: 'viewer',
                 verified: false,
                 presence: { state: 'offline', lastChanged: Date.now() }
             };
-            await set(userRef, newUser);
+            await set(ref(db, 'users/' + username), newUser);
             alert('تم إرسال طلب الانضمام بنجاح! ينتظر مراجعة الإدارة.');
             switchTab('login');
             document.getElementById('loginUsername').value = username;
             document.getElementById('loginCode').value = password;
         };
+
         window.handleLogin = async function(e) {
             e.preventDefault();
             const user = document.getElementById('loginUsername').value.trim();
@@ -666,6 +734,7 @@
             setupUserPresence(foundUser.username);
             startLoadingProcess('جاري الدخول بالنظام...', 1000, () => navigateToMainNews());
         };
+
         window.handleLogout = async function() {
             if (currentActiveUser) {
                 await setPresenceOffline(currentActiveUser.username);
@@ -681,6 +750,7 @@
                 currentActiveUser = null;
             });
         };
+
         function startLoadingProcess(msg, delay, callback) {
             hideAllPages();
             document.getElementById('loaderText').innerText = msg;
@@ -746,6 +816,73 @@
         window.closeModal = function(modalId) {
             document.getElementById(modalId).classList.add('hidden');
         };
+
+        // فتح نافذة الملف الشخصي للمستخدم الحالي
+        window.openMyProfileModal = function() {
+            if (!currentActiveUser) return;
+            document.getElementById('myProfileUsername').value = currentActiveUser.username;
+            document.getElementById('myProfileNickname').value = currentActiveUser.nickname || '';
+            document.getElementById('myProfilePassword').value = currentActiveUser.password || currentActiveUser.code || '';
+            document.getElementById('myProfileRank').value = currentActiveUser.rank || '';
+            document.getElementById('myProfilePhone').value = currentActiveUser.phone || '';
+            document.getElementById('myProfileGuilds').value = (currentActiveUser.guilds && currentActiveUser.guilds.length) ? currentActiveUser.guilds.join(', ') : 'لا يوجد';
+
+            const previewArea = document.getElementById('myProfileAvatarPreview');
+            if (currentActiveUser.photo) {
+                previewArea.innerHTML = `<img src="${currentActiveUser.photo}" class="user-avatar-lg">`;
+            } else {
+                previewArea.innerHTML = `<div class="user-avatar-lg" style="background:#2563eb; display:flex; align-items:center; justify-content:center; font-size:2.2rem; font-weight:bold; color:#fff;">${(currentActiveUser.nickname || 'U').charAt(0)}</div>`;
+            }
+            document.getElementById('myProfileModal').classList.remove('hidden');
+        };
+
+        // حفظ بيانات الملف الشخصي والتحديث
+        window.handleSaveMyProfile = async function(e) {
+            e.preventDefault();
+            if (!currentActiveUser) return;
+            const nickname = document.getElementById('myProfileNickname').value.trim();
+            const password = document.getElementById('myProfilePassword').value.trim();
+            const phone = document.getElementById('myProfilePhone').value.trim();
+            const photoInput = document.getElementById('myProfilePhotoInput');
+            const file = photoInput.files[0];
+
+            let photoBase64 = currentActiveUser.photo || "";
+
+            const performUpdate = async (finalPhoto) => {
+                if (currentActiveUser.username === ADMIN_USER.username) {
+                    ADMIN_USER.nickname = nickname;
+                    ADMIN_USER.code = password;
+                    ADMIN_USER.phone = phone;
+                    ADMIN_USER.photo = finalPhoto;
+                    currentActiveUser = ADMIN_USER;
+                } else {
+                    await update(ref(db, 'users/' + currentActiveUser.username), {
+                        nickname,
+                        password,
+                        phone,
+                        photo: finalPhoto
+                    });
+                    currentActiveUser.nickname = nickname;
+                    currentActiveUser.password = password;
+                    currentActiveUser.phone = phone;
+                    currentActiveUser.photo = finalPhoto;
+                }
+                saveActiveSession();
+                closeModal('myProfileModal');
+                alert('تم تحديث تفاصيل حسابك بنجاح! ✨');
+            };
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async function(evt) {
+                    await performUpdate(evt.target.result);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                await performUpdate(photoBase64);
+            }
+        };
+
         function renderPendingRequestsPage() {
             const users = window.globalUsersList || [];
             const container = document.getElementById('pendingRequestsList');
@@ -781,6 +918,8 @@
             const date = new Date(timestamp);
             return date.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) + ' - ' + date.toLocaleDateString('ar-EG');
         }
+
+        // عرض قائمة الحسابات للمسؤولين مع الأفاتار والصورة الشخصية
         function renderEmpireAccountsPage() {
             const users = window.globalUsersList || [];
             const container = document.getElementById('empireAccountsList');
@@ -797,12 +936,18 @@
                 const lastSeenText = u.presence && u.presence.lastChanged ? formatLastSeen(u.presence.lastChanged) : 'لم يسجل دخول بعد';
                 const presenceBadge = isOnline 
                     ? `<span class="status-badge-online">🟢 متصل الآن</span>` 
-                    : `<span class="status-badge-offline">⚪ غير متصل (آخر ظهور: ${lastSeenText})</span>`;
+                    : `<span class="status-badge-offline">⚪ غير متصل (${lastSeenText})</span>`;
+
+                const avatarHtml = u.photo 
+                    ? `<img src="${u.photo}" class="user-avatar" style="margin-left: 8px;">` 
+                    : `<div class="avatar-placeholder" style="margin-left: 8px;">${(u.nickname || 'U').charAt(0)}</div>`;
+
                 const div = document.createElement('div');
                 div.className = 'user-card';
                 div.innerHTML = `
                     <div class="user-card-header">
                         <div style="display:flex; align-items:center;">
+                            ${avatarHtml}
                             <span class="verify-toggle-circle ${isVerified ? 'verified' : ''}" onclick="toggleUserVerification('${u.username}', ${!isVerified})" title="اضغط لتوثيق / إلغاء توثيق الحساب"></span>
                             <strong style="margin-right: 5px;">${u.nickname} ${isVerified ? '<span class="verified-icon">✔</span>' : ''}</strong>
                         </div>
@@ -834,6 +979,7 @@
                 container.appendChild(div);
             });
         }
+
         window.toggleUserVerification = async function(username, targetState) {
             await update(ref(db, 'users/' + username), { verified: targetState });
         };
@@ -895,18 +1041,23 @@
             const isOnline = user.presence && user.presence.state === 'online';
             const lastSeenText = user.presence && user.presence.lastChanged ? formatLastSeen(user.presence.lastChanged) : 'غير معروف';
 
+            const avatarHtml = user.photo 
+                ? `<img src="${user.photo}" class="user-avatar-lg">` 
+                : `<div class="user-avatar-lg" style="background:#2563eb; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:bold; color:#fff;">${(user.nickname || 'U').charAt(0)}</div>`;
+
             detailsBox.innerHTML = `
+                ${avatarHtml}
                 📌 <strong>اللقب:</strong> ${user.nickname} ${user.verified ? '<span class="verified-icon">✔</span>' : ''}<br>
                 👤 <strong>اسم المستخدم:</strong> @${user.username}<br>
                 🎖️ <strong>الرتبة:</strong> ${user.rank || 'عضو'}<br>
                 📞 <strong>الهاتف / الواتساب:</strong> <a style="color:var(--accent-blue);" href="https://wa.me/${(user.phone||'').replace('+','')}" target="_blank">${user.phone || 'غير مسجل'}</a><br>
                 🏰 <strong>النقابات:</strong> ${user.guilds && user.guilds.length > 0 ? user.guilds.join(', ') : 'لا يتبع لأي نقابة'}<br>
-                🔵 <strong>الحالة:</strong> ${isOnline ? '<span style="color:#22c55e; font-weight:bold;">🟢 متصل الآن</span>' : `<span style="color:#94a3b8;">⚪ غير متصل (آخر ظهور: ${lastSeenText})</span>`}
+                🔵 <strong>الحالة:</strong> ${isOnline ? '<span style="color:#22c55e; font-weight:bold;">🟢 متصل الآن</span>' : `<span style="color:#94a3b8;">⚪ غير متصل (${lastSeenText})</span>`}
             `;
             document.getElementById('viewUserModal').classList.remove('hidden');
         };
 
-        // عرض الأخبار والتفاعل بالإعجابات والتعليقات
+        // عرض الأخبار والتعليقات مع الأفاتار والصور
         function renderNewsFeed(newsList = []) {
             const container = document.getElementById('newsFeed');
             if (!newsList || newsList.length === 0) {
@@ -917,21 +1068,14 @@
             newsList.forEach(news => {
                 const div = document.createElement('div');
                 div.className = 'news-item';
-                let imgHtml = '';
-                if (news.image) {
-                    imgHtml = `<img src="${news.image}" class="news-item-img" alt="صورة الخبر">`;
-                }
-                let deleteBtnHtml = '';
-                if (currentUserIsAdmin) {
-                    deleteBtnHtml = `<button onclick="deleteNews('${news.id}')" class="btn-delete-news">حذف الخبر</button>`;
-                }
+                let imgHtml = news.image ? `<img src="${news.image}" class="news-item-img" alt="صورة الخبر">` : '';
+                let deleteBtnHtml = currentUserIsAdmin ? `<button onclick="deleteNews('${news.id}')" class="btn-delete-news">حذف الخبر</button>` : '';
                 const authorVerified = news.authorVerified ? '<span class="verified-icon">✔</span>' : '';
-                // معالجة الإعجابات (Likes)
+
                 const likesObj = news.likes || {};
                 const likesCount = Object.keys(likesObj).length;
                 const isLikedByMe = currentActiveUser && likesObj[currentActiveUser.username];
                 
-                // معالجة التعليقات (Comments)
                 const commentsObj = news.comments || {};
                 const commentsList = Object.values(commentsObj).sort((a,b) => a.timestamp - b.timestamp);
                 let commentsHtml = '';
@@ -939,16 +1083,11 @@
 
                 commentsList.forEach(c => {
                     const isDeleted = c.deleted || false;
-                    
-                    // إذا كان التعليق محذوفاً والمستخدم ليس مسؤولاً، فلن يظهر أبداً
-                    if (isDeleted && !currentUserIsAdmin) {
-                        return;
-                    }
+                    if (isDeleted && !currentUserIsAdmin) return;
                     
                     visibleCommentsCount++;
                     const cVerified = c.authorVerified ? '<span class="verified-icon">✔</span>' : '';
                     
-                    // تحضير زر الحذف
                     let deleteCommentAction = '';
                     if (!isDeleted) {
                         if (currentUserIsAdmin || (currentActiveUser && currentActiveUser.username === c.authorUsername)) {
@@ -956,25 +1095,27 @@
                         }
                     }
 
+                    const commentAvatar = c.authorPhoto 
+                        ? `<img src="${c.authorPhoto}" class="user-avatar-sm">` 
+                        : `<div class="avatar-placeholder-sm">${(c.authorNickname || 'U').charAt(0)}</div>`;
+
                     if (isDeleted && currentUserIsAdmin) {
-                        // التعليق المحذوف الظاهر فقط للمسؤولين
                         commentsHtml += `
                             <div class="comment-item is-deleted-admin">
                                 <div class="comment-header">
                                     <span class="comment-author" onclick="viewUserProfile('${c.authorUsername}')">
-                                        <span class="deleted-tag">[تعليق محذوف]</span> ${c.authorNickname} ${cVerified}
+                                        ${commentAvatar} <span class="deleted-tag">[تعليق محذوف]</span> ${c.authorNickname} ${cVerified}
                                     </span>
                                 </div>
                                 <div class="comment-text" style="color:var(--text-muted); text-decoration: line-through;">${c.text}</div>
                             </div>
                         `;
                     } else {
-                        // التعليق العادي
                         commentsHtml += `
                             <div class="comment-item">
                                 <div class="comment-header">
-                                    <span class="comment-author" onclick="viewUserProfile('${c.authorUsername}')" title="اضغط لعرض تفاصيل الحساب">
-                                        ${c.authorNickname} ${cVerified}
+                                    <span class="comment-author" onclick="viewUserProfile('${c.authorUsername}')">
+                                        ${commentAvatar} ${c.authorNickname} ${cVerified}
                                     </span>
                                     ${deleteCommentAction}
                                 </div>
@@ -984,7 +1125,6 @@
                     }
                 });
 
-                // التحقق هل يحق للمستخدم الحالي التعليق (يجب أن يكون حسابه موثقاً أو المالك)
                 const userCanComment = currentActiveUser && (currentActiveUser.verified || currentUserIsAdmin);
                 div.innerHTML = `
                     ${imgHtml}
@@ -996,13 +1136,11 @@
                         <div class="news-item-time">${news.date}</div>
                     </div>
                     <div class="news-item-text">${news.text}</div>
-                    <!-- بار الإعجابات -->
                     <div class="news-actions-bar">
                         <button onclick="toggleLikeNews('${news.id}')" class="like-btn ${isLikedByMe ? 'liked' : ''}">
                             ❤️ <span>${likesCount} إعجاب</span>
                         </button>
                     </div>
-                    <!-- قسم التعليقات -->
                     <div class="comments-section">
                         <div class="comments-title">💬 التعليقات (${visibleCommentsCount})</div>
                         <div class="comments-list">
@@ -1025,7 +1163,6 @@
             });
         }
 
-        // التفاعل بالإعجاب
         window.toggleLikeNews = async function(newsId) {
             if (!currentActiveUser) return;
             const myUsername = currentActiveUser.username;
@@ -1038,7 +1175,6 @@
             }
         };
 
-        // إضافة تعليق
         window.addCommentNews = async function(newsId) {
             if (!currentActiveUser) return;
             if (!currentActiveUser.verified && !currentUserIsAdmin) {
@@ -1055,6 +1191,7 @@
                 text,
                 authorUsername: currentActiveUser.username,
                 authorNickname: currentActiveUser.nickname,
+                authorPhoto: currentActiveUser.photo || "",
                 authorVerified: currentActiveUser.verified || false,
                 deleted: false,
                 timestamp: Date.now()
@@ -1062,7 +1199,6 @@
             input.value = '';
         };
 
-        // حذف التعليق (تسجيله كمحذوف ليختفي عند الجميع ويظهر للمسؤول فقط)
         window.deleteComment = async function(newsId, commentId) {
             if (confirm('هل أنت متأكد من حذف هذا التعليق؟')) {
                 const commentRef = ref(db, `news/${newsId}/comments/${commentId}`);
