@@ -93,9 +93,26 @@
         .news-author { font-size: 0.9rem; font-weight: bold; color: #ffffff; display: flex; align-items: center; gap: 5px; }
         .news-author-badge { background: var(--light-blue-bg); border: 1px solid var(--accent-blue); padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; color: #fff; }
         .news-item-time { font-size: 0.8rem; color: var(--text-muted); }
-        .news-item-text { font-size: 0.98rem; line-height: 1.7; white-space: pre-line; word-break: break-word; color: #f1f5f9; }
-        .btn-delete-news { background: var(--danger-red); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-top: 12px; width: 100%; font-weight: bold; }
+        .news-item-text { font-size: 0.98rem; line-height: 1.7; white-space: pre-line; word-break: break-word; color: #f1f5f9; margin-bottom: 15px; }
 
+        /* التفاعلات والتعليقات على الأخبار */
+        .news-actions-bar { display: flex; align-items: center; gap: 15px; border-top: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 10px 0; margin-bottom: 15px; }
+        .like-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: #fff; padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .like-btn.liked { background: rgba(239, 68, 68, 0.2); border-color: var(--danger-red); color: #ef4444; }
+        .like-btn:hover { border-color: var(--danger-red); }
+
+        .comments-section { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; margin-top: 10px; }
+        .comments-title { font-size: 0.85rem; font-weight: bold; color: var(--text-muted); margin-bottom: 10px; }
+        .comments-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; max-height: 250px; overflow-y: auto; }
+        .comment-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.05); border-radius: 8px; padding: 8px 12px; font-size: 0.85rem; }
+        .comment-author { font-weight: bold; color: var(--accent-blue); margin-bottom: 3px; display: flex; align-items: center; gap: 4px; }
+        .comment-text { color: #e2e8f0; line-height: 1.4; word-break: break-word; }
+
+        .comment-input-box { display: flex; gap: 8px; }
+        .comment-input-box input { flex: 1; padding: 8px 12px; font-size: 0.85rem; border-radius: 8px; }
+        .comment-input-box button { padding: 8px 14px; font-size: 0.85rem; border-radius: 8px; }
+
+        .btn-delete-news { background: var(--danger-red); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-top: 12px; width: 100%; font-weight: bold; }
         .empty-news-state { text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 1.05rem; background: var(--card-black); border-radius: 12px; border: 1px dashed var(--border-color); width: 100%; }
 
         /* الأزرار العامة */
@@ -119,7 +136,6 @@
         .sidebar-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); margin-bottom: 20px; }
         .sidebar-close { background: transparent; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
 
-        /* أزرار القائمة الجانبية */
         .sidebar-menu-btn {
             width: 100%;
             padding: 16px 20px;
@@ -139,15 +155,7 @@
         }
         .sidebar-menu-btn:hover { background: var(--light-blue-bg); border-color: var(--accent-blue); }
         
-        /* نقطة التنبيه الحمراء */
-        .notification-dot {
-            width: 12px;
-            height: 12px;
-            background-color: var(--danger-red);
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 10px var(--danger-red);
-        }
+        .notification-dot { width: 12px; height: 12px; background-color: var(--danger-red); border-radius: 50%; display: inline-block; box-shadow: 0 0 10px var(--danger-red); }
 
         /* كروت المستخدمين */
         .user-card { background: var(--card-black); border: 1px solid var(--border-color); border-radius: 12px; padding: 18px; margin-bottom: 18px; text-align: right; position: relative; }
@@ -155,30 +163,39 @@
         .user-card-details { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; }
         .user-card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
 
-        /* شارات الاتصال والتوثيق */
+        /* الشارات والدائرة الصغيرة للتوثيق */
         .status-badge-online { background: rgba(34, 197, 94, 0.15); color: #22c55e; border: 1px solid #22c55e; padding: 3px 8px; border-radius: 6px; font-size: 0.78rem; font-weight: bold; }
         .status-badge-offline { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid #94a3b8; padding: 3px 8px; border-radius: 6px; font-size: 0.78rem; font-weight: bold; }
 
-        .verify-badge {
-            width: 26px;
-            height: 26px;
+        /* الدائرة الصغيرة المخصصة للتوثيق */
+        .verify-toggle-circle {
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
-            border: 2px solid #475569;
             display: inline-flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            font-size: 0.8rem;
             transition: 0.3s;
-            background: rgba(255,255,255,0.05);
-            color: #94a3b8;
-            user-select: none;
+            border: 2px solid #64748b;
+            background: rgba(255, 255, 255, 0.05);
+            margin-left: 6px;
         }
-        .verify-badge.verified {
+        .verify-toggle-circle.verified {
             border-color: var(--accent-blue);
             background: var(--accent-blue);
+            box-shadow: 0 0 10px rgba(37, 99, 235, 0.8);
+        }
+        .verify-toggle-circle::after {
+            content: '✓';
             color: #fff;
-            box-shadow: 0 0 10px rgba(37, 99, 235, 0.6);
+            font-size: 0.75rem;
+            font-weight: bold;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .verify-toggle-circle.verified::after {
+            opacity: 1;
         }
 
         .verified-icon {
@@ -196,7 +213,6 @@
         }
 
         .role-select { padding: 6px 10px; background: #0f172a; color: #fff; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.82rem; }
-
         .hidden { display: none !important; }
     </style>
 </head>
@@ -498,7 +514,6 @@
             });
         }
 
-        // إيقاف وتحديث حالة الخروج
         async function setPresenceOffline(username) {
             if (!username) return;
             const userPresenceRef = ref(db, 'users/' + username + '/presence');
@@ -804,7 +819,7 @@
 
         window.navigateToPendingRequests = function() {
             toggleSidebar();
-            startLoadingProcess('جاري الانتقال لصفحة الطلبات المعلقة...', 2000, () => {
+            startLoadingProcess('جاري الانتقال لصفحة الطلبات المعلقة...', 1500, () => {
                 hideAllPages();
                 renderPendingRequestsPage();
                 document.getElementById('pendingRequestsPage').classList.remove('hidden');
@@ -888,11 +903,9 @@
                 div.className = 'user-card';
                 div.innerHTML = `
                     <div class="user-card-header">
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span class="verify-badge ${isVerified ? 'verified' : ''}" onclick="toggleUserVerification('${u.username}', ${!isVerified})" title="توثيق الحساب">
-                                ✔
-                            </span>
-                            <strong>${u.nickname} ${isVerified ? '<span class="verified-icon">✔</span>' : ''}</strong>
+                        <div style="display:flex; align-items:center;">
+                            <span class="verify-toggle-circle ${isVerified ? 'verified' : ''}" onclick="toggleUserVerification('${u.username}', ${!isVerified})" title="اضغط لتوثيق / إلغاء توثيق الحساب"></span>
+                            <strong style="margin-right: 5px;">${u.nickname} ${isVerified ? '<span class="verified-icon">✔</span>' : ''}</strong>
                         </div>
                         <div>
                             ${presenceBadge}
@@ -973,6 +986,7 @@
             }
         };
 
+        // عرض الأخبار والتفاعل بالإعجابات والتعليقات
         function renderNewsFeed(newsList = []) {
             const container = document.getElementById('newsFeed');
             if (!newsList || newsList.length === 0) {
@@ -997,6 +1011,29 @@
 
                 const authorVerified = news.authorVerified ? '<span class="verified-icon">✔</span>' : '';
 
+                // معالجة الإعجابات (Likes)
+                const likesObj = news.likes || {};
+                const likesCount = Object.keys(likesObj).length;
+                const isLikedByMe = currentActiveUser && likesObj[currentActiveUser.username];
+
+                // معالجة التعليقات (Comments)
+                const commentsObj = news.comments || {};
+                const commentsList = Object.values(commentsObj).sort((a,b) => a.timestamp - b.timestamp);
+
+                let commentsHtml = '';
+                commentsList.forEach(c => {
+                    const cVerified = c.authorVerified ? '<span class="verified-icon">✔</span>' : '';
+                    commentsHtml += `
+                        <div class="comment-item">
+                            <div class="comment-author">${c.authorNickname} ${cVerified}</div>
+                            <div class="comment-text">${c.text}</div>
+                        </div>
+                    `;
+                });
+
+                // التحقق هل يحق للمستخدم الحالي التعليق (يجب أن يكون حسابه موثقاً أو المالك)
+                const userCanComment = currentActiveUser && (currentActiveUser.verified || currentUserIsAdmin);
+
                 div.innerHTML = `
                     ${imgHtml}
                     <div class="news-item-header">
@@ -1007,11 +1044,81 @@
                         <div class="news-item-time">${news.date}</div>
                     </div>
                     <div class="news-item-text">${news.text}</div>
+
+                    <!-- بار الإعجابات -->
+                    <div class="news-actions-bar">
+                        <button onclick="toggleLikeNews('${news.id}')" class="like-btn ${isLikedByMe ? 'liked' : ''}">
+                            ❤️ <span>${likesCount} إعجاب</span>
+                        </button>
+                    </div>
+
+                    <!-- قسم التعليقات -->
+                    <div class="comments-section">
+                        <div class="comments-title">💬 التعليقات (${commentsList.length})</div>
+                        <div class="comments-list">
+                            ${commentsHtml.length > 0 ? commentsHtml : '<div style="color:var(--text-muted); font-size:0.8rem;">لا توجد تعليقات بعد.</div>'}
+                        </div>
+
+                        ${userCanComment ? `
+                            <div class="comment-input-box">
+                                <input type="text" id="comment_input_${news.id}" class="form-control" placeholder="اكتب تعليقاً...">
+                                <button onclick="addCommentNews('${news.id}')" class="btn-action btn-approve">إرسال</button>
+                            </div>
+                        ` : `
+                            <div style="font-size:0.78rem; color:var(--text-muted); text-align:center; padding:5px; border:1px dashed var(--border-color); border-radius:6px;">
+                                🔒 التعليقات مخصصة فقط للحسابات الموثقة ✔️
+                            </div>
+                        `}
+                    </div>
+
                     ${deleteBtnHtml}
                 `;
                 container.appendChild(div);
             });
         }
+
+        // التفاعل بالإعجاب
+        window.toggleLikeNews = async function(newsId) {
+            if (!currentActiveUser) return;
+            const myUsername = currentActiveUser.username;
+            const likeRef = ref(db, `news/${newsId}/likes/${myUsername}`);
+
+            const snapshot = await get(likeRef);
+            if (snapshot.exists()) {
+                await remove(likeRef);
+            } else {
+                await set(likeRef, true);
+            }
+        };
+
+        // إضافة تعليق
+        window.addCommentNews = async function(newsId) {
+            if (!currentActiveUser) return;
+
+            if (!currentActiveUser.verified && !currentUserIsAdmin) {
+                alert('عذراً، التعليق متاح فقط للحسابات الموثقة ✔️');
+                return;
+            }
+
+            const input = document.getElementById(`comment_input_${newsId}`);
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            const commentId = 'comment_' + Date.now();
+            const commentRef = ref(db, `news/${newsId}/comments/${commentId}`);
+
+            await set(commentRef, {
+                id: commentId,
+                text,
+                authorUsername: currentActiveUser.username,
+                authorNickname: currentActiveUser.nickname,
+                authorVerified: currentActiveUser.verified || false,
+                timestamp: Date.now()
+            });
+
+            input.value = '';
+        };
 
         window.openPublishModal = function() {
             document.getElementById('publishModal').classList.remove('hidden');
