@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>North 🌙 - النظام الإمبراطوري المتكامل</title>
+    <title>North 🌙 - نظام إدارة النقابات والإمبراطورية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -54,28 +54,34 @@
         .form-control:focus { border-color: var(--accent-blue); box-shadow: 0 0 10px rgba(37, 99, 235, 0.3); background: rgba(255, 255, 255, 0.08); }
         textarea.form-control { resize: vertical; min-height: 90px; }
         select.form-control option { background: #1e293b; color: #fff; }
+        .guilds-section { background: rgba(37, 99, 235, 0.05); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; margin-bottom: 18px; }
+        .guilds-section-title { font-size: 0.85rem; font-weight: 700; color: #ffffff; margin-bottom: 10px; border-bottom: 1px dashed var(--border-color); padding-bottom: 5px; }
         .btn-submit { width: 100%; padding: 14px; background: var(--accent-blue); color: #ffffff; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px; }
         .btn-submit:hover { background: var(--hover-blue); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4); }
         
+        /* شاشة التحميل الانتقالية */
         .loader-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-black); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
         .spinner { width: 60px; height: 60px; border: 3px solid rgba(255, 255, 255, 0.1); border-radius: 50%; border-top-color: var(--accent-blue); animation: spin 1s infinite linear; margin-bottom: 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .loader-text { font-size: 1.2rem; font-weight: 700; color: #fff; }
+        .loader-text { font-size: 1.2rem; font-weight: 700; letter-spacing: 1px; color: #fff; }
         
+        /* الشاشات الرئيسية */
         .page-screen { min-height: 100vh; width: 100%; display: flex; flex-direction: column; }
         .navbar { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border-color); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .navbar-actions { display: flex; align-items: center; gap: 12px; }
-        .icon-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: #fff; width: 42px; height: 42px; border-radius: 10px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.2rem; transition: 0.3s; }
+        .icon-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: #fff; width: 42px; height: 42px; border-radius: 10px; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.2rem; position: relative; transition: 0.3s; }
         .icon-btn:hover { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
         .page-content { flex: 1; max-width: 1000px; width: 100%; margin: 0 auto; padding: 40px 20px; }
         .page-header-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; color: #fff; }
         
+        /* الأفاتار والصور الشخصية */
         .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-blue); }
         .user-avatar-sm { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; border: 1px solid var(--accent-blue); }
-        .user-avatar-lg { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-blue); margin: 0 auto 15px auto; display: block; }
-        .avatar-placeholder { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-blue); color: #fff; display: flex; justify-content: center; align-items: center; font-weight: bold; }
+        .user-avatar-lg { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-blue); margin: 0 auto 15px auto; display: block; box-shadow: 0 0 15px rgba(37, 99, 235, 0.4); }
+        .avatar-placeholder { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-blue); color: #fff; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1rem; }
         .avatar-placeholder-sm { width: 30px; height: 30px; border-radius: 50%; background: var(--accent-blue); color: #fff; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 0.8rem; }
         
+        /* حاوية الأخبار والنقابات */
         #newsFeed { display: flex; flex-direction: column; align-items: center; gap: 25px; margin-bottom: 40px; }
         .news-item { background: var(--card-black); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; text-align: right; position: relative; width: 100%; max-width: 650px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
         .news-item-img { width: auto; max-width: 100%; max-height: 500px; border-radius: 12px; display: block; margin: 0 auto 15px auto; object-fit: contain; border: 1px solid var(--border-color); }
@@ -103,7 +109,7 @@
         .btn-delete-news { background: var(--danger-red); color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; margin-top: 12px; width: 100%; font-weight: bold; }
         .empty-news-state { text-align: center; color: var(--text-muted); padding: 40px 20px; font-size: 1.05rem; background: var(--card-black); border-radius: 12px; border: 1px dashed var(--border-color); width: 100%; }
 
-        /* الشبكات والتفاصيل للنقابات والفروع */
+        /* تنسيقات شبكة النقابات والفروع */
         .guilds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%; margin-top: 15px; }
         .guild-card { background: var(--card-black); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; cursor: pointer; transition: 0.3s; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
         .guild-card:hover { transform: translateY(-5px); border-color: var(--accent-blue); box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3); }
@@ -112,6 +118,7 @@
         .guild-card-body { padding: 40px 20px 20px 20px; text-align: right; }
         .guild-card-title { font-size: 1.2rem; font-weight: 800; color: #fff; margin-bottom: 5px; }
 
+        /* كارت تفاصيل النقابة الكامل */
         .guild-details-card { background: var(--card-black); border: 1px solid var(--border-color); border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); position: relative; }
         .guild-header-banner { width: 100%; height: 220px; border-radius: 15px; object-fit: cover; border: 1px solid var(--border-color); margin-bottom: 20px; }
         .guild-header-info { display: flex; align-items: center; gap: 20px; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
@@ -122,6 +129,7 @@
         .stat-item-label { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 5px; }
         .stat-item-value { font-size: 1.1rem; font-weight: bold; color: #fff; }
 
+        /* الأزرار العامة والقوائم */
         .btn-action { padding: 8px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: bold; cursor: pointer; border: none; transition: 0.2s; }
         .btn-approve { background: var(--accent-blue); color: #fff; }
         .btn-reject { background: var(--danger-red); color: #fff; }
@@ -158,6 +166,7 @@
     </style>
 </head>
 <body>
+    <!-- شاشة التحميل -->
     <div id="loaderScreen" class="loader-overlay hidden">
         <div class="spinner"></div>
         <div class="loader-text" id="loaderText">جاري التحميل...</div>
@@ -243,11 +252,13 @@
             </div>
         </nav>
         <div class="page-content">
+            <!-- قسم الأخبار -->
             <div class="page-header-title">
                 <span>📜 آخر أخبار المملكة</span>
             </div>
             <div id="newsFeed"></div>
 
+            <!-- قسم نقابات الإمبراطورية -->
             <div class="page-header-title" style="margin-top: 50px;">
                 <span>🏰 نقابات الإمبراطورية</span>
                 <button id="addEmpireGuildBtn" class="btn-action btn-approve hidden" onclick="openAddGuildModal()">إضافة نقابة ➕</button>
@@ -339,7 +350,9 @@
         </button>
     </div>
 
-    <!-- النوافذ المنبثقة -->
+    <!-- النوافذ المنبثقة (Modals) -->
+
+    <!-- نافذة إضافة نقابة جديدة -->
     <div id="addGuildModal" class="modal hidden">
         <div class="modal-content">
             <h3 style="margin-bottom: 15px; text-align: right;">إضافة نقابة جديدة 🏰</h3>
@@ -364,6 +377,7 @@
         </div>
     </div>
 
+    <!-- نافذة تعديل تفاصيل النقابة للمسؤولين -->
     <div id="editGuildModal" class="modal hidden">
         <div class="modal-content">
             <h3 style="margin-bottom: 15px; text-align: right;">تعديل تفاصيل النقابة ✏️</h3>
@@ -403,6 +417,7 @@
         </div>
     </div>
 
+    <!-- نافذة إضافة فرع جديد للنقابة -->
     <div id="addBranchModal" class="modal hidden">
         <div class="modal-content">
             <h3 style="margin-bottom: 15px; text-align: right;">إضافة فرع جديد للنقابة 🌿</h3>
@@ -435,6 +450,7 @@
         </div>
     </div>
 
+    <!-- باقي النوافذ المعتادة (الملف الشخصي - نشر خبر - عرض مستخدم) -->
     <div id="myProfileModal" class="modal hidden">
         <div class="modal-content">
             <h3 style="margin-bottom: 15px; text-align: right;">حسابي الشخصي 👤</h3>
@@ -470,7 +486,7 @@
         </div>
     </div>
 
-    <!-- مكتبات Firebase والبرمجة بالكامل دون اختصار -->
+    <!-- مكتبات Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, get, onValue, remove, update, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -500,7 +516,6 @@
             listenToNewsRealtime();
             listenToUsersRealtime();
             listenToGuildsRealtime();
-            setupPresenceSystem();
         });
 
         function checkActiveSession() {
@@ -517,18 +532,7 @@
             sessionStorage.setItem('north_active_session', JSON.stringify({ isAdmin: currentUserIsAdmin, canPublish: currentUserCanPublish, user: currentActiveUser }));
         }
 
-        function setupPresenceSystem() {
-            if (!currentActiveUser || currentUserIsAdmin) return;
-            const myPresenceRef = ref(db, `users/${currentActiveUser.username}/isOnline`);
-            const connectedRef = ref(db, '.info/connected');
-            onValue(connectedRef, (snap) => {
-                if (snap.val() === true) {
-                    onDisconnect(myPresenceRef).set(false);
-                    set(myPresenceRef, true);
-                }
-            });
-        }
-
+        /* --- الاستماع في الوقت الفعلي لأخبار ونقابات وحسابات --- */
         function listenToNewsRealtime() {
             onValue(ref(db, 'news'), (snapshot) => {
                 const data = snapshot.val();
@@ -544,8 +548,6 @@
                 const pendingCount = (window.globalUsersList).filter(u => u.status === 'pending').length;
                 const dot = document.getElementById('pendingDot');
                 if(dot) { if(pendingCount > 0) dot.classList.remove('hidden'); else dot.classList.add('hidden'); }
-                if (!document.getElementById('pendingRequestsPage').classList.contains('hidden')) renderPendingRequestsPage();
-                if (!document.getElementById('empireAccountsPage').classList.contains('hidden')) renderEmpireAccountsPage();
             });
         }
         function listenToGuildsRealtime() {
@@ -560,7 +562,7 @@
             });
         }
 
-        /* تسجيل ومعالجة دخول */
+        /* --- إدارة الحساب والتسجيل --- */
         window.handleRegister = async function(e) {
             e.preventDefault();
             const username = document.getElementById('regUsername').value.trim();
@@ -569,13 +571,17 @@
             const rank = document.getElementById('regRank').value;
             const phone = document.getElementById('regPhone').value.trim();
 
-            if (username.toLowerCase() === ADMIN_USER.username.toLowerCase()) { alert('⚠️ اسم المستخدم محجوز!'); return; }
+            if (username.toLowerCase() === ADMIN_USER.username.toLowerCase()) {
+                alert('⚠️ اسم المستخدم محجوز!'); return;
+            }
             const snap = await get(ref(db, 'users/' + username));
-            if (snap.exists()) { alert('⚠️ اسم المستخدم مستخدم بالفعل!'); return; }
+            if (snap.exists()) {
+                alert('⚠️ اسم المستخدم مستخدم بالفعل! اختر اسماً آخر.'); return;
+            }
 
-            const newUser = { username, password, nickname, rank, phone, photo: "", status: 'pending', role: 'viewer', verified: false, isOnline: false };
+            const newUser = { username, password, nickname, rank, phone, photo: "", status: 'pending', role: 'viewer', verified: false };
             await set(ref(db, 'users/' + username), newUser);
-            alert('تم تقديم الطلب بنجاح! ينتظر موافقة المالك.');
+            alert('تم تقديم الطلب بنجاح! ينتظر المراجعة.');
             switchTab('login');
         };
 
@@ -590,33 +596,20 @@
             const snap = await get(ref(db, 'users/' + user));
             if (!snap.exists() || snap.val().password !== code) { alert('بيانات الدخول غير صحيحة!'); return; }
             const foundUser = snap.val();
-            if (foundUser.status === 'banned') { showStatusCard('🚫 تم حظر حسابك من قبل إدارة الإمبراطورية.'); return; }
-            if (foundUser.status === 'rejected') { showStatusCard('❌ تم رفض طلب انضمامك.'); return; }
-            if (foundUser.status === 'pending') { showStatusCard('⏳ حسابك قيد المراجعة والانتظار.'); return; }
+            if (foundUser.status !== 'approved') { alert('حسابك غير نشط أو معلق أو محظور!'); return; }
 
             currentUserIsAdmin = (foundUser.role === 'owner');
             currentUserCanPublish = (foundUser.role === 'owner' || foundUser.role === 'commenter');
             currentActiveUser = foundUser;
-            setupPresenceSystem();
             saveActiveSession(); navigateToMainNews();
         };
 
-        function showStatusCard(msg) {
-            hideAllPages();
-            const card = document.getElementById('statusCardContent');
-            card.innerHTML = `<h2 style="color:var(--danger-red); margin-bottom:15px;">تنبيه</h2><p style="font-size:1.1rem; margin-bottom:20px;">${msg}</p><button onclick="location.reload()" class="btn-submit">العودة للشاشة الرئيسية</button>`;
-            document.getElementById('statusWrapper').classList.remove('hidden');
-        }
-
-        window.handleLogout = async function() {
-            if (currentActiveUser && !currentUserIsAdmin) {
-                await set(ref(db, `users/${currentActiveUser.username}/isOnline`), false);
-            }
+        window.handleLogout = function() {
             sessionStorage.removeItem('north_active_session');
             location.reload();
         };
 
-        /* إدارة النقابات والفروع الكاملة */
+        /* --- قسم نقابات الإمبراطورية (تحت الأخبار) --- */
         function renderEmpireGuildsGrid() {
             const container = document.getElementById('empireGuildsGrid');
             const guilds = window.globalGuilds || {};
@@ -626,7 +619,7 @@
             if(currentUserIsAdmin) addBtn.classList.remove('hidden'); else addBtn.classList.add('hidden');
 
             if (keys.length === 0) {
-                container.innerHTML = '<div class="empty-news-state" style="grid-column: 1/-1;">لا توجد نقابات مضافة حالياً.</div>';
+                container.innerHTML = '<div class="empty-news-state" style="grid-column: 1/-1;">لا توجد نقابات مضافة حالياً بالإمبراطورية.</div>';
                 return;
             }
             container.innerHTML = '';
@@ -647,23 +640,36 @@
             });
         }
 
-        window.openAddGuildModal = function() { document.getElementById('addGuildModal').classList.remove('hidden'); };
+        window.openAddGuildModal = function() {
+            document.getElementById('addGuildModal').classList.remove('hidden');
+        };
 
         window.handleCreateGuild = async function(e) {
             e.preventDefault();
             const name = document.getElementById('guildNameInput').value.trim();
             const imgFile = document.getElementById('guildImageInput').files[0];
             const logoFile = document.getElementById('guildLogoInput').files[0];
+
             if(!imgFile || !logoFile) return;
 
             const reader1 = new FileReader();
             const reader2 = new FileReader();
+
             reader1.onload = function(e1) {
                 reader2.onload = async function(e2) {
                     const guildId = 'guild_' + Date.now();
                     const newGuild = {
-                        id: guildId, name: name, image: e1.target.result, logo: e2.target.result,
-                        members: 0, rank: "غير مصنفة", moderators: 0, stability: "نقابة مستقرة 🟢", activityRate: "100%", publishRate: "يومي", branches: {}
+                        id: guildId,
+                        name: name,
+                        image: e1.target.result,
+                        logo: e2.target.result,
+                        members: 0,
+                        rank: "غير مصنفة",
+                        moderators: 0,
+                        stability: "نقابة مستقرة 🟢",
+                        activityRate: "100%",
+                        publishRate: "يومي",
+                        branches: {}
                     };
                     await set(ref(db, 'empire_guilds/' + guildId), newGuild);
                     closeModal('addGuildModal');
@@ -674,6 +680,7 @@
             reader1.readAsDataURL(imgFile);
         };
 
+        /* --- صفحة تفاصيل النقابة الكاملة --- */
         window.openGuildDetailsPage = function(guildId) {
             selectedGuildId = guildId;
             hideAllPages();
@@ -688,7 +695,9 @@
             document.getElementById('guildDetailNavTitle').innerText = `🏰 نقابة ${g.name}`;
             const container = document.getElementById('guildDetailContainer');
 
-            let adminControls = currentUserIsAdmin ? `<button onclick="openEditGuildModal()" class="btn-action btn-edit" style="margin-bottom:20px;">تعديل تفاصيل النقابة ✏️</button>` : '';
+            let adminControls = currentUserIsAdmin ? `
+                <button onclick="openEditGuildModal()" class="btn-action btn-edit" style="margin-bottom:20px;">تعديل تفاصيل النقابة ✏️</button>
+            ` : '';
 
             container.innerHTML = `
                 <div class="guild-details-card">
@@ -741,6 +750,7 @@
             alert('تم حفظ البيانات بنجاح!');
         };
 
+        /* --- صفحة فروع النقابة --- */
         window.openGuildBranchesPage = function(guildId) {
             selectedGuildId = guildId;
             hideAllPages();
@@ -754,6 +764,7 @@
 
             document.getElementById('guildBranchesNavTitle').innerText = `🌿 فروع ${g.name}`;
             document.getElementById('guildBranchesHeaderTitle').innerText = `قائمة فروع نقابة ${g.name}`;
+            
             document.getElementById('backToGuildDetailBtn').onclick = () => openGuildDetailsPage(guildId);
 
             const addBtn = document.getElementById('addBranchBtn');
@@ -774,6 +785,7 @@
                 const card = document.createElement('div');
                 card.className = 'guild-card';
                 card.style.cursor = 'default';
+
                 let deleteBranchBtn = currentUserIsAdmin ? `<button onclick="deleteBranch('${bId}')" class="btn-action btn-reject" style="margin-top:10px; width:100%;">حذف الفرع 🗑️</button>` : '';
 
                 card.innerHTML = `
@@ -792,7 +804,9 @@
             });
         }
 
-        window.openAddBranchModal = function() { document.getElementById('addBranchModal').classList.remove('hidden'); };
+        window.openAddBranchModal = function() {
+            document.getElementById('addBranchModal').classList.remove('hidden');
+        };
 
         window.handleCreateBranch = async function(e) {
             e.preventDefault();
@@ -803,14 +817,21 @@
             const members = document.getElementById('branchMembersInput').value;
             const quality = document.getElementById('branchQualityInput').value.trim();
             const requestsRate = document.getElementById('branchRequestsRateInput').value.trim();
+
             if (!imgFile) return;
 
             const reader = new FileReader();
             reader.onload = async function(evt) {
                 const branchId = 'branch_' + Date.now();
-                await set(ref(db, `empire_guilds/${selectedGuildId}/branches/${branchId}`), {
-                    id: branchId, image: evt.target.result, type, members, quality, requestsRate
-                });
+                const branchData = {
+                    id: branchId,
+                    image: evt.target.result,
+                    type,
+                    members,
+                    quality,
+                    requestsRate
+                };
+                await set(ref(db, `empire_guilds/${selectedGuildId}/branches/${branchId}`), branchData);
                 closeModal('addBranchModal');
                 alert('تمت إضافة الفرع بنجاح! 🌿');
             };
@@ -823,286 +844,7 @@
             }
         };
 
-        /* إدارة الأخبار، الإعجابات، والتعليقات بالكامل */
-        function renderNewsFeed(newsList = []) {
-            const container = document.getElementById('newsFeed');
-            if (!newsList.length) { container.innerHTML = '<div class="empty-news-state">لا توجد أخبار حالياً.</div>'; return; }
-            container.innerHTML = '';
-            newsList.forEach(news => {
-                const div = document.createElement('div');
-                div.className = 'news-item';
-
-                const likes = news.likes || {};
-                const likeCount = Object.keys(likes).length;
-                const isLiked = currentActiveUser && likes[currentActiveUser.username];
-
-                const comments = news.comments || {};
-                const commentKeys = Object.keys(comments);
-
-                let deleteNewsBtn = currentUserIsAdmin ? `<button onclick="deleteNews('${news.id}')" class="btn-delete-news">حذف هذا الخبر 🗑️</button>` : '';
-
-                let commentsHtml = commentKeys.map(cId => {
-                    const c = comments[cId];
-                    let deleteCommentBtn = (currentUserIsAdmin || (currentActiveUser && currentActiveUser.username === c.username)) ? `<button onclick="deleteComment('${news.id}', '${cId}')" class="comment-del-btn">حذف 🗑️</button>` : '';
-                    let adminDeletedStyle = c.isDeletedByAdmin ? 'is-deleted-admin' : '';
-                    let adminDeletedLabel = c.isDeletedByAdmin ? '<span style="color:var(--danger-red); font-weight:bold; font-size:0.75rem;"> (تم حذفه بواسطة المالك)</span>' : '';
-
-                    return `
-                        <div class="comment-item ${adminDeletedStyle}">
-                            <div class="comment-header">
-                                <span class="comment-author" onclick="viewUserProfile('${c.username}')">
-                                    ${c.userPhoto ? `<img src="${c.userPhoto}" class="user-avatar-sm">` : `<div class="avatar-placeholder-sm">${c.nickname ? c.nickname.charAt(0) : 'U'}</div>`}
-                                    ${c.nickname} ${c.verified ? '<span class="verified-icon">✓</span>' : ''} ${adminDeletedLabel}
-                                </span>
-                                ${deleteCommentBtn}
-                            </div>
-                            <div class="comment-text">${c.text}</div>
-                        </div>
-                    `;
-                }).join('');
-
-                div.innerHTML = `
-                    ${news.image ? `<img src="${news.image}" class="news-item-img">` : ''}
-                    <div class="news-item-header">
-                        <div class="news-author">
-                            ${news.authorPhoto ? `<img src="${news.authorPhoto}" class="user-avatar-sm">` : ''}
-                            ${news.authorNickname} ${news.authorVerified ? '<span class="verified-icon">✓</span>' : ''}
-                            <span class="news-author-badge">${news.authorRank}</span>
-                        </div>
-                        <div class="news-item-time">${news.date}</div>
-                    </div>
-                    <div class="news-item-text">${news.text}</div>
-                    <div class="news-actions-bar">
-                        <button onclick="toggleLike('${news.id}')" class="like-btn ${isLiked ? 'liked' : ''}">
-                            ❤️ <span>${likeCount}</span> إعجاب
-                        </button>
-                    </div>
-                    <div class="comments-section">
-                        <div class="comments-title">💬 التعليقات (${commentKeys.length})</div>
-                        <div class="comments-list">${commentsHtml}</div>
-                        ${currentUserCanPublish ? `
-                            <div class="comment-input-box">
-                                <input type="text" id="comment_input_${news.id}" class="form-control" placeholder="اكتب تعليقك هنا...">
-                                <button onclick="addComment('${news.id}')" class="btn-action btn-approve">ارسال</button>
-                            </div>
-                        ` : '<div style="font-size:0.8rem; color:var(--text-muted);">عفواً، لا يملك حسابك صلاحية التعليق.</div>'}
-                    </div>
-                    ${deleteNewsBtn}
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        window.toggleLike = async function(newsId) {
-            if (!currentActiveUser) return;
-            const likeRef = ref(db, `news/${newsId}/likes/${currentActiveUser.username}`);
-            const snap = await get(likeRef);
-            if (snap.exists()) await remove(likeRef); else await set(likeRef, true);
-        };
-
-        window.addComment = async function(newsId) {
-            const input = document.getElementById(`comment_input_${newsId}`);
-            const text = input.value.trim();
-            if (!text || !currentActiveUser) return;
-
-            const commentId = 'comment_' + Date.now();
-            await set(ref(db, `news/${newsId}/comments/${commentId}`), {
-                id: commentId,
-                username: currentActiveUser.username,
-                nickname: currentActiveUser.nickname,
-                userPhoto: currentActiveUser.photo || "",
-                verified: currentActiveUser.verified || false,
-                text: text,
-                timestamp: Date.now()
-            });
-            input.value = '';
-        };
-
-        window.deleteComment = async function(newsId, commentId) {
-            if (currentUserIsAdmin) {
-                await update(ref(db, `news/${newsId}/comments/${commentId}`), { isDeletedByAdmin: true });
-            } else {
-                await remove(ref(db, `news/${newsId}/comments/${commentId}`));
-            }
-        };
-
-        window.openPublishModal = function() { document.getElementById('publishModal').classList.remove('hidden'); };
-
-        window.handlePublishNews = async function(e) {
-            e.preventDefault();
-            const text = document.getElementById('newsContent').value.trim();
-            const imgFile = document.getElementById('newsImageInput').files[0];
-
-            const newsId = 'news_' + Date.now();
-            const newsData = {
-                id: newsId, text: text,
-                authorNickname: currentActiveUser.nickname,
-                authorRank: currentActiveUser.rank,
-                authorPhoto: currentActiveUser.photo || "",
-                authorVerified: currentActiveUser.verified || false,
-                date: new Date().toLocaleDateString('ar-EG'),
-                timestamp: Date.now()
-            };
-
-            if (imgFile) {
-                const reader = new FileReader();
-                reader.onload = async function(evt) {
-                    newsData.image = evt.target.result;
-                    await set(ref(db, 'news/' + newsId), newsData);
-                    closeModal('publishModal');
-                };
-                reader.readAsDataURL(imgFile);
-            } else {
-                await set(ref(db, 'news/' + newsId), newsData);
-                closeModal('publishModal');
-            }
-        };
-
-        window.deleteNews = async function(newsId) {
-            if (confirm('هل أنت متأكد من حذف هذا الخبر؟')) {
-                await remove(ref(db, 'news/' + newsId));
-            }
-        };
-
-        /* إدارة الطلبات والحسابات المعلقة والإمبراطورية */
-        function renderPendingRequestsPage() {
-            const container = document.getElementById('pendingRequestsList');
-            const pendingUsers = (window.globalUsersList || []).filter(u => u.status === 'pending');
-            if (pendingUsers.length === 0) { container.innerHTML = '<div class="empty-news-state">لا توجد طلبات معلقة حالياً.</div>'; return; }
-
-            container.innerHTML = '';
-            pendingUsers.forEach(u => {
-                const card = document.createElement('div');
-                card.className = 'user-card';
-                card.innerHTML = `
-                    <div class="user-card-header"><span style="font-weight:bold; color:#fff;">${u.nickname} (@${u.username})</span></div>
-                    <div class="user-card-details">
-                        الرتبة: ${u.rank}<br>
-                        الهاتف: ${u.phone}
-                    </div>
-                    <div class="user-card-actions">
-                        <button onclick="approveUser('${u.username}')" class="btn-action btn-approve">قبول الطلب ✓</button>
-                        <button onclick="rejectUser('${u.username}')" class="btn-action btn-reject">رفض الطلب ✕</button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        window.approveUser = async function(username) {
-            await update(ref(db, 'users/' + username), { status: 'approved' });
-            alert('تم قبول العضو بنجاح!');
-        };
-        window.rejectUser = async function(username) {
-            await update(ref(db, 'users/' + username), { status: 'rejected' });
-        };
-
-        function renderEmpireAccountsPage() {
-            const container = document.getElementById('empireAccountsList');
-            const approvedUsers = (window.globalUsersList || []).filter(u => u.status === 'approved' || u.status === 'banned');
-            if (approvedUsers.length === 0) { container.innerHTML = '<div class="empty-news-state">لا توجد حسابات مضافة.</div>'; return; }
-
-            container.innerHTML = '';
-            approvedUsers.forEach(u => {
-                const card = document.createElement('div');
-                card.className = 'user-card';
-                const isOnline = u.isOnline ? '<span class="status-badge-online">متصل الآن 🟢</span>' : '<span class="status-badge-offline">غير متصل 🔴</span>';
-                const isBanned = u.status === 'banned';
-
-                card.innerHTML = `
-                    <div class="user-card-header">
-                        <span style="font-weight:bold; color:#fff; display:flex; align-items:center; gap:6px;">
-                            ${u.nickname} (${u.username}) ${u.verified ? '<span class="verified-icon">✓</span>' : ''}
-                        </span>
-                        ${isOnline}
-                    </div>
-                    <div class="user-card-details">
-                        الرتبة: ${u.rank} | كلمة المرور: <span dir="ltr">${u.password}</span><br>
-                        الهاتف: ${u.phone}
-                    </div>
-                    <div class="user-card-actions">
-                        <select onchange="updateUserRole('${u.username}', this.value)" class="role-select">
-                            <option value="viewer" ${u.role === 'viewer' ? 'selected' : ''}>مشاهد فقط</option>
-                            <option value="commenter" ${u.role === 'commenter' ? 'selected' : ''}>مشاهد + معلق</option>
-                        </select>
-                        <div class="verify-toggle-circle ${u.verified ? 'verified' : ''}" onclick="toggleUserVerify('${u.username}', ${!u.verified})" title="توثيق الحساب"></div>
-                        ${isBanned ? `<button onclick="unbanUser('${u.username}')" class="btn-action btn-unban">إلغاء الحظر</button>` : `<button onclick="banUser('${u.username}')" class="btn-action btn-ban">حظر العضو</button>`}
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        window.updateUserRole = async function(username, role) { await update(ref(db, 'users/' + username), { role: role }); };
-        window.toggleUserVerify = async function(username, targetStatus) { await update(ref(db, 'users/' + username), { verified: targetStatus }); };
-        window.banUser = async function(username) { await update(ref(db, 'users/' + username), { status: 'banned' }); };
-        window.unbanUser = async function(username) { await update(ref(db, 'users/' + username), { status: 'approved' }); };
-
-        /* الملف الشخصي وعرض التفاصيل */
-        window.openMyProfileModal = function() {
-            if (!currentActiveUser) return;
-            document.getElementById('myProfileUsername').value = currentActiveUser.username;
-            document.getElementById('myProfileNickname').value = currentActiveUser.nickname;
-            document.getElementById('myProfilePassword').value = currentActiveUser.password || currentActiveUser.code || '';
-            document.getElementById('myProfileRank').value = currentActiveUser.rank;
-            document.getElementById('myProfilePhone').value = currentActiveUser.phone || '';
-
-            const preview = document.getElementById('myProfileAvatarPreview');
-            if (currentActiveUser.photo) {
-                preview.innerHTML = `<img src="${currentActiveUser.photo}" class="user-avatar-lg">`;
-            } else {
-                preview.innerHTML = `<div class="user-avatar-lg" style="background:var(--accent-blue); display:flex; justify-content:center; align-items:center; font-size:2rem; font-weight:bold;">${currentActiveUser.nickname.charAt(0)}</div>`;
-            }
-            document.getElementById('myProfileModal').classList.remove('hidden');
-        };
-
-        window.handleSaveMyProfile = async function(e) {
-            e.preventDefault();
-            const nickname = document.getElementById('myProfileNickname').value.trim();
-            const password = document.getElementById('myProfilePassword').value.trim();
-            const phone = document.getElementById('myProfilePhone').value.trim();
-            const photoFile = document.getElementById('myProfilePhotoInput').files[0];
-
-            let photoBase64 = currentActiveUser.photo || "";
-
-            const saveProcess = async (photo) => {
-                if (currentUserIsAdmin) {
-                    ADMIN_USER.nickname = nickname; ADMIN_USER.code = password; ADMIN_USER.phone = phone; ADMIN_USER.photo = photo;
-                    currentActiveUser = ADMIN_USER;
-                } else {
-                    await update(ref(db, 'users/' + currentActiveUser.username), { nickname, password, phone, photo });
-                    currentActiveUser.nickname = nickname; currentActiveUser.password = password; currentActiveUser.phone = phone; currentActiveUser.photo = photo;
-                }
-                saveActiveSession();
-                closeModal('myProfileModal');
-                alert('تم تحديث الملف الشخصي بنجاح!');
-            };
-
-            if (photoFile) {
-                const reader = new FileReader();
-                reader.onload = function(evt) { saveProcess(evt.target.result); };
-                reader.readAsDataURL(photoFile);
-            } else {
-                saveProcess(photoBase64);
-            }
-        };
-
-        window.viewUserProfile = async function(username) {
-            const snap = await get(ref(db, 'users/' + username));
-            if (!snap.exists()) return;
-            const u = snap.val();
-            const details = document.getElementById('viewUserDetails');
-            details.innerHTML = `
-                ${u.photo ? `<img src="${u.photo}" class="user-avatar-lg">` : ''}
-                <strong>اللقب:</strong> ${u.nickname} ${u.verified ? '✓' : ''}<br>
-                <strong>اسم المستخدم:</strong> ${u.username}<br>
-                <strong>الرتبة:</strong> ${u.rank}<br>
-                <strong>رقم الهاتف:</strong> ${u.phone || 'غير متوفر'}
-            `;
-            document.getElementById('viewUserModal').classList.remove('hidden');
-        };
-
-        /* تنقل عام */
+        /* --- التنقل والصفحات العامة --- */
         window.navigateToMainNews = function() {
             hideAllPages();
             document.getElementById('mainDashboardPage').classList.remove('hidden');
@@ -1143,6 +885,26 @@
             btns[0].classList.toggle('active', tab === 'login');
             btns[1].classList.toggle('active', tab === 'register');
         };
+
+        /* --- دوال تعليقات وأخبار الملف الشخصي المعتادة --- */
+        function renderNewsFeed(newsList = []) {
+            const container = document.getElementById('newsFeed');
+            if (!newsList.length) { container.innerHTML = '<div class="empty-news-state">لا توجد أخبار حالياً.</div>'; return; }
+            container.innerHTML = '';
+            newsList.forEach(news => {
+                const div = document.createElement('div');
+                div.className = 'news-item';
+                div.innerHTML = `
+                    ${news.image ? `<img src="${news.image}" class="news-item-img">` : ''}
+                    <div class="news-item-header">
+                        <div class="news-author">${news.authorNickname} <span class="news-author-badge">${news.authorRank}</span></div>
+                        <div class="news-item-time">${news.date}</div>
+                    </div>
+                    <div class="news-item-text">${news.text}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
     </script>
 </body>
 </html>
