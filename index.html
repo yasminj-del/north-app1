@@ -303,7 +303,6 @@
                 <h1 id="guildBranchesTitleNav">🌿 فروع النقابة</h1>
             </div>
             <div class="navbar-actions">
-                <!-- تم إصلاح الزر هنا ليستدعي المتغير الحالي مباشرة -->
                 <button onclick="navigateToGuildDetail(window.currentViewingGuildId)" class="btn-back">← العودة للنقابة</button>
             </div>
         </nav>
@@ -629,7 +628,7 @@
             <button type="button" onclick="closeModal('viewUserModal')" class="btn-submit" style="background:#334155; color:#fff;">إغلاق</button>
         </div>
     </div>
-    
+
     <!-- نافذة نشر خبر -->
     <div id="publishModal" class="modal hidden">
         <div class="modal-content">
@@ -650,6 +649,7 @@
             </form>
         </div>
     </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, get, onValue, remove, update, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -689,7 +689,6 @@
         let currentActiveUser = null; 
         let currentViewingGuildId = null;
         
-        // جعل المعرف متاحاً بشكل عام للنصوص في HTML
         Object.defineProperty(window, 'currentViewingGuildId', {
             get: () => currentViewingGuildId,
             set: (val) => { currentViewingGuildId = val; }
@@ -1508,6 +1507,103 @@
             `;
             document.getElementById('viewUserModal').classList.remove('hidden');
         };
+
+        // دالة إظهار نافذة نشر خبر جديد
+        window.openPublishModal = function() {
+            document.getElementById('publishModal').classList.remove('hidden');
+        };
+
+        // دالة معالجة نشر الخبر وإضافته إلكترونياً
+        window.handlePublishNews = async function(e) {
+            e.preventDefault();
+            const content = document.getElementById('newsContent').value.trim();
+            const imageInput = document.getElementById('newsImageInput');
+            const file = imageInput.files[0];
+            const newsId = 'news_' + Date.now();
+
+            const newsData = {
+                id: newsId,
+                content: content,
+                authorNickname: currentActiveUser ? currentActiveUser.nickname : 'مسؤول',
+                authorUsername: currentActiveUser ? currentActiveUser.username : 'admin',
+                authorRank: currentActiveUser ? currentActiveUser.rank : 'إدارة',
+                authorVerified: currentActiveUser ? currentActiveUser.verified || false : true,
+                date: getCurrentFormattedDate(),
+                timestamp: Date.now(),
+                image: ''
+            };
+
+            const publishProcess = async (imgData) => {
+                newsData.image = imgData;
+                await set(ref(db, 'news/' + newsId), newsData);
+                document.getElementById('newsContent').value = '';
+                imageInput.value = '';
+                closeModal('publishModal');
+                alert('تم نشر الخبر بنجاح! 📢');
+            };
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async function(evt) {
+                    await publishProcess(evt.target.result);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                await publishProcess('');
+            }
+        };
+
+        // دالة الإعجاب بالخبر
+        window.toggleLikeNews = async function(newsId) {
+            if (!currentActiveUser) return;
+            const newsRef = ref(db, `news/${newsId}/likes/${currentActiveUser.username}`);
+            const snapshot = await get(newsRef);
+            if (snapshot.exists()) {
+                await remove(newsRef);
+            } else {
+                await set(newsRef, true);
+            }
+        };
+
+        // دالة إضافة تعليق
+        window.handleAddComment = async function(newsId) {
+            const input = document.getElementById(`comment-input-${newsId}`);
+            if (!input) return;
+            const text = input.value.trim();
+            if (!text) return;
+
+            const commentId = 'comment_' + Date.now();
+            const commentData = {
+                id: commentId,
+                text: text,
+                authorNickname: currentActiveUser ? currentActiveUser.nickname : 'عضو',
+                authorUsername: currentActiveUser ? currentActiveUser.username : 'user',
+                authorPhoto: currentActiveUser ? currentActiveUser.photo || '' : '',
+                authorVerified: currentActiveUser ? currentActiveUser.verified || false : false,
+                timestamp: Date.now()
+            };
+
+            await set(ref(db, `news/${newsId}/comments/${commentId}`), commentData);
+            input.value = '';
+        };
+
+        // دالة حذف الخبر
+        window.deleteNews = async function(newsId) {
+            if (confirm('هل أنت متأكد من حذف هذا الخبر بالكامل؟')) {
+                await remove(ref(db, 'news/' + newsId));
+            }
+        };
+
+        // دالة حذف التعليق
+        window.deleteComment = async function(newsId, commentId) {
+            if (currentUserIsAdmin) {
+                await update(ref(db, `news/${newsId}/comments/${commentId}`), { deleted: true });
+            } else {
+                await remove(ref(db, `news/${newsId}/comments/${commentId}`));
+            }
+        };
+
+        // دالة بناء عرض جميع الأخبار بالصفحة
         function renderNewsFeed(newsList = []) {
             const container = document.getElementById('newsFeed');
             if (!newsList || newsList.length === 0) {
@@ -1570,7 +1666,9 @@
                         `;
                     }
                 });
-                const userCanComment = currentActiveUser && (currentActiveUser.verified || currentUserIsAdmin);
+
+                const userCanComment = currentActiveUser && (currentActiveUser.verified || currentUserIsAdmin || currentActiveUser.role === 'commenter');
+                
                 div.innerHTML = `
                     ${imgHtml}
                     <div class="news-item-header">
@@ -1580,27 +1678,21 @@
                         </div>
                         <div class="news-item-time">${news.date}</div>
                     </div>
-                    <div class="news-item-text">${news.text}</div>
+                    <div class="news-item-text">${news.content}</div>
                     <div class="news-actions-bar">
-                        <button onclick="toggleLikeNews('${news.id}')" class="like-btn ${isLikedByMe ? 'liked' : ''}">
-                            ❤️ <span>${likesCount} إعجاب</span>
+                        <button class="like-btn ${isLikedByMe ? 'liked' : ''}" onclick="toggleLikeNews('${news.id}')">
+                            ❤️ ${likesCount} إعجاب
                         </button>
                     </div>
                     <div class="comments-section">
                         <div class="comments-title">💬 التعليقات (${visibleCommentsCount})</div>
-                        <div class="comments-list">
-                            ${commentsHtml.length > 0 ? commentsHtml : '<div style="color:var(--text-muted); font-size:0.8rem;">لا توجد تعليقات بعد.</div>'}
-                        </div>
+                        <div class="comments-list">${commentsHtml}</div>
                         ${userCanComment ? `
                             <div class="comment-input-box">
-                                <input type="text" id="comment_input_${news.id}" class="form-control" placeholder="اكتب تعليقاً...">
-                                <button onclick="addCommentNews('${news.id}')" class="btn-action btn-approve">إرسال</button>
+                                <input type="text" id="comment-input-${news.id}" class="form-control" placeholder="اكتب تعليقاً...">
+                                <button onclick="handleAddComment('${news.id}')" class="btn-action btn-approve">إرسال</button>
                             </div>
-                        ` : `
-                            <div style="font-size:0.78rem; color:var(--text-muted); text-align:center; padding:5px; border:1px dashed var(--border-color); border-radius:6px;">
-                                🔒 التعليقات مخصصة فقط للحسابات الموثقة ✔️
-                            </div>
-                        `}
+                        ` : '<div style="font-size:0.8rem; color:var(--text-muted);">عذراً، يتطلب كتابة التعليقات حساباً موثقاً أو صلاحية ناشر.</div>'}
                     </div>
                     ${deleteBtnHtml}
                 `;
