@@ -290,6 +290,7 @@
             
             <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px; flex-wrap: wrap;">
                 <button id="editGuildAdminBtn" class="btn-action btn-edit hidden" onclick="openEditGuildModal()" style="padding: 12px 25px; font-size: 1rem;">✏️ تعديل تفاصيل النقابة</button>
+                <button id="deleteGuildAdminBtn" class="btn-action btn-reject hidden" onclick="deleteCurrentGuild()" style="padding: 12px 25px; font-size: 1rem;">🗑️ حذف النقابة</button>
                 <button id="viewBranchesBtn" class="btn-action btn-approve" onclick="navigateToGuildBranches()" style="padding: 12px 25px; font-size: 1rem;">🌿 فروع النقابة</button>
             </div>
         </div>
@@ -648,7 +649,6 @@
             </form>
         </div>
     </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, get, onValue, remove, update, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -687,20 +687,17 @@
         let currentUserCanPublish = false; 
         let currentActiveUser = null; 
         let currentViewingGuildId = null;
-
-        // دالة مساعدة للحصول على الوقت المنسق
+        
         function getCurrentFormattedDate() {
             const now = new Date();
             return now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) + ' - ' + now.toLocaleDateString('ar-EG');
         }
-
         window.addEventListener('DOMContentLoaded', () => {
             checkActiveSession();
             listenToNewsRealtime();
             listenToUsersRealtime();
             listenToGuildsRealtime();
         });
-
         function setupUserPresence(username) {
             if (!username) return;
             const userPresenceRef = ref(db, 'users/' + username + '/presence');
@@ -712,12 +709,10 @@
                 }
             });
         }
-
         async function setPresenceOffline(username) {
             if (!username) return;
             await set(ref(db, 'users/' + username + '/presence'), { state: 'offline', lastChanged: serverTimestamp() });
         }
-
         function checkActiveSession() {
             const savedSession = sessionStorage.getItem('north_active_session');
             if (savedSession) {
@@ -729,7 +724,6 @@
                 navigateToMainNews();
             }
         }
-
         function saveActiveSession() {
             sessionStorage.setItem('north_active_session', JSON.stringify({
                 isAdmin: currentUserIsAdmin,
@@ -737,11 +731,9 @@
                 user: currentActiveUser
             }));
         }
-
         function clearActiveSession() {
             sessionStorage.removeItem('north_active_session');
         }
-
         function listenToNewsRealtime() {
             onValue(ref(db, 'news'), (snapshot) => {
                 const data = snapshot.val();
@@ -750,7 +742,6 @@
                 renderNewsFeed(newsList);
             });
         }
-
         function listenToUsersRealtime() {
             onValue(ref(db, 'users'), (snapshot) => {
                 const data = snapshot.val();
@@ -773,7 +764,6 @@
                 if (!document.getElementById('empireAccountsPage').classList.contains('hidden')) renderEmpireAccountsPage();
             });
         }
-
         function listenToGuildsRealtime() {
             onValue(ref(db, 'empire_guilds'), (snapshot) => {
                 const data = snapshot.val();
@@ -788,7 +778,6 @@
                 }
             });
         }
-
         window.switchTab = function(tab) {
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
@@ -805,14 +794,12 @@
                 tabBtns[1].classList.add('active');
             }
         };
-
         function createGuildSelectOptions(isRequired = true) {
             let options = `<option value="" ${isRequired ? 'disabled selected' : 'selected'}>${isRequired ? 'اختر النقابة...' : 'اختر نقابة (اختياري)...'}</option>`;
             const guildsList = window.globalGuildsObj ? Object.values(window.globalGuildsObj) : DEFAULT_GUILDS;
             guildsList.forEach(g => { options += `<option value="${g.name}">${g.badge || '🏰'} ${g.name}</option>`; });
             return options;
         }
-
         window.onRankChange = function() {
             const rank = document.getElementById('regRank').value;
             const container = document.getElementById('guildsContainer');
@@ -845,7 +832,6 @@
                 fieldsArea.appendChild(div);
             }
         };
-
         window.handleRegister = async function(e) {
             e.preventDefault();
             const username = document.getElementById('regUsername').value.trim();
@@ -878,7 +864,6 @@
             document.getElementById('loginUsername').value = username;
             document.getElementById('loginCode').value = password;
         };
-
         window.handleLogin = async function(e) {
             e.preventDefault();
             const user = document.getElementById('loginUsername').value.trim();
@@ -907,7 +892,6 @@
             setupUserPresence(foundUser.username);
             startLoadingProcess('جاري الدخول للنظام...', 1000, () => navigateToMainNews());
         };
-
         window.handleLogout = async function() {
             if (currentActiveUser) await setPresenceOffline(currentActiveUser.username);
             startLoadingProcess('جاري تسجيل الخروج...', 1000, () => {
@@ -921,7 +905,6 @@
                 currentActiveUser = null;
             });
         };
-
         function startLoadingProcess(msg, delay, callback) {
             hideAllPages();
             document.getElementById('loaderText').innerText = msg;
@@ -931,7 +914,6 @@
                 callback();
             }, delay);
         }
-
         function hideAllPages() {
             document.getElementById('authWrapper').classList.add('hidden');
             document.getElementById('statusWrapper').classList.add('hidden');
@@ -941,7 +923,6 @@
             document.getElementById('pendingRequestsPage').classList.add('hidden');
             document.getElementById('empireAccountsPage').classList.add('hidden');
         }
-
         function showStatusScreen(title, message) {
             hideAllPages();
             const card = document.getElementById('statusCardContent');
@@ -952,7 +933,6 @@
             `;
             document.getElementById('statusWrapper').classList.remove('hidden');
         }
-
         window.toggleSidebar = function() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
@@ -964,7 +944,6 @@
                 overlay.classList.remove('active');
             }
         };
-
         window.navigateToMainNews = function() {
             hideAllPages();
             document.getElementById('mainDashboardPage').classList.remove('hidden');
@@ -981,7 +960,6 @@
             if (currentUserCanPublish) publishBtn.classList.remove('hidden');
             else publishBtn.classList.add('hidden');
         };
-
         window.navigateToPendingRequests = function() {
             toggleSidebar();
             startLoadingProcess('جاري الانتقال لصفحة الطلبات المعلقة...', 1000, () => {
@@ -990,18 +968,15 @@
                 document.getElementById('pendingRequestsPage').classList.remove('hidden');
             });
         };
-
         window.navigateToEmpireAccounts = function() {
             toggleSidebar();
             hideAllPages();
             renderEmpireAccountsPage();
             document.getElementById('empireAccountsPage').classList.remove('hidden');
         };
-
         window.closeModal = function(modalId) {
             document.getElementById(modalId).classList.add('hidden');
         };
-
         function renderEmpireGuildsGrid(guildsList = []) {
             const grid = document.getElementById('empireGuildsGrid');
             if (!grid) return;
@@ -1020,7 +995,6 @@
                 grid.appendChild(card);
             });
         }
-
         window.navigateToGuildDetail = function(guildId) {
             currentViewingGuildId = guildId;
             hideAllPages();
@@ -1028,7 +1002,6 @@
             if (guild) renderGuildDetailPage(guild);
             document.getElementById('guildDetailPage').classList.remove('hidden');
         };
-
         function renderGuildDetailPage(guild) {
             document.getElementById('guildDetailTitleNav').innerText = `🏰 نقابة ${guild.name}`;
             const headerArea = document.getElementById('guildDetailHeaderArea');
@@ -1041,7 +1014,6 @@
             
             const lastModAuthor = guild.lastModifiedBy || 'غير محدد';
             const lastModTime = guild.lastModifiedAt || 'لم يتم التسجيل بعد';
-
             const detailGrid = document.getElementById('guildDetailGrid');
             detailGrid.innerHTML = `
                 <div class="info-card">
@@ -1076,14 +1048,18 @@
                 </div>
             `;
             const editBtn = document.getElementById('editGuildAdminBtn');
-            if (currentUserIsAdmin) editBtn.classList.remove('hidden');
-            else editBtn.classList.add('hidden');
+            const deleteBtn = document.getElementById('deleteGuildAdminBtn');
+            if (currentUserIsAdmin) {
+                editBtn.classList.remove('hidden');
+                deleteBtn.classList.remove('hidden');
+            } else {
+                editBtn.classList.add('hidden');
+                deleteBtn.classList.add('hidden');
+            }
         }
-
         window.openAddGuildModal = function() {
             document.getElementById('addGuildModal').classList.remove('hidden');
         };
-
         window.handleSaveNewGuild = async function(e) {
             e.preventDefault();
             const name = document.getElementById('newGuildName').value.trim();
@@ -1100,7 +1076,6 @@
             
             const modifierName = currentActiveUser ? currentActiveUser.nickname || currentActiveUser.username : 'غير معروف';
             const modTime = getCurrentFormattedDate();
-
             const newGuildObj = { 
                 id: guildId, name, badge, members, rank, adminsCount, stability, interactionRate, publishRate, image: '',
                 lastModifiedBy: modifierName,
@@ -1121,7 +1096,6 @@
                 alert('تم إضافة النقابة الجديدة بنجاح! 🎉');
             }
         };
-
         window.openEditGuildModal = function() {
             const guild = (window.globalGuildsObj || {})[currentViewingGuildId];
             if (!guild) return;
@@ -1135,7 +1109,6 @@
             document.getElementById('editGuildPublishRate').value = guild.publishRate || 'ممتاز';
             document.getElementById('editGuildModal').classList.remove('hidden');
         };
-
         window.handleSaveGuildEdit = async function(e) {
             e.preventDefault();
             const name = document.getElementById('editGuildName').value.trim();
@@ -1151,7 +1124,6 @@
             
             const modifierName = currentActiveUser ? currentActiveUser.nickname || currentActiveUser.username : 'غير معروف';
             const modTime = getCurrentFormattedDate();
-
             const updateData = { 
                 name, badge, members, rank, adminsCount, stability, interactionRate, publishRate,
                 lastModifiedBy: modifierName,
@@ -1172,7 +1144,17 @@
                 alert('تم تحديث بيانات النقابة وتوثيق التغيير بنجاح! 💾');
             }
         };
-
+        window.deleteCurrentGuild = async function() {
+            if (!currentViewingGuildId) return;
+            const guild = (window.globalGuildsObj || {})[currentViewingGuildId];
+            const guildName = guild ? guild.name : 'هذه النقابة';
+            if (confirm(`⚠️ هل أنت متأكد من رغبتك في حذف ${guildName} بشكل نهائي من النظام؟`)) {
+                await remove(ref(db, 'empire_guilds/' + currentViewingGuildId));
+                alert('تم حذف النقابة بنجاح! 🗑️');
+                currentViewingGuildId = null;
+                navigateToMainNews();
+            }
+        };
         window.navigateToGuildBranches = function() {
             hideAllPages();
             const guild = (window.globalGuildsObj || {})[currentViewingGuildId];
@@ -1186,7 +1168,6 @@
             else addBranchBtn.classList.add('hidden');
             document.getElementById('guildBranchesPage').classList.remove('hidden');
         };
-
         function renderGuildBranchesPage(guild) {
             const grid = document.getElementById('guildBranchesGrid');
             grid.innerHTML = '';
@@ -1208,10 +1189,8 @@
                         <button onclick="deleteBranch('${b.id}')" class="btn-action btn-reject">حذف</button>
                     </div>
                 ` : '';
-
                 const bLastBy = b.lastModifiedBy || 'غير محدد';
                 const bLastAt = b.lastModifiedAt || 'غير معروف';
-
                 card.innerHTML = `
                     ${imgHtml}
                     <div class="guild-card-title">${b.name}</div>
@@ -1230,11 +1209,9 @@
                 grid.appendChild(card);
             });
         }
-
         window.openAddBranchModal = function() {
             document.getElementById('addBranchModal').classList.remove('hidden');
         };
-
         window.handleSaveNewBranch = async function(e) {
             e.preventDefault();
             const name = document.getElementById('newBranchName').value.trim();
@@ -1245,16 +1222,13 @@
             const fileInput = document.getElementById('newBranchImageInput');
             const file = fileInput.files[0];
             const branchId = 'branch_' + Date.now();
-
             const modifierName = currentActiveUser ? currentActiveUser.nickname || currentActiveUser.username : 'غير معروف';
             const modTime = getCurrentFormattedDate();
-
             const newBranch = { 
                 id: branchId, name, members, type, quality, requestsRate, image: '',
                 lastModifiedBy: modifierName,
                 lastModifiedAt: modTime
             };
-
             const saveBranch = async (imgData) => {
                 newBranch.image = imgData;
                 await set(ref(db, `empire_guilds/${currentViewingGuildId}/branches/${branchId}`), newBranch);
@@ -1263,7 +1237,6 @@
                 const updatedGuild = (await get(ref(db, 'empire_guilds/' + currentViewingGuildId))).val();
                 renderGuildBranchesPage(updatedGuild);
             };
-
             if (file) {
                 const reader = new FileReader();
                 reader.onload = async (evt) => saveBranch(evt.target.result);
@@ -1272,7 +1245,6 @@
                 saveBranch('');
             }
         };
-
         window.openEditBranchModal = function(branchId) {
             const guild = (window.globalGuildsObj || {})[currentViewingGuildId];
             if (!guild || !guild.branches || !guild.branches[branchId]) return;
@@ -1285,7 +1257,6 @@
             document.getElementById('editBranchRequestsRate').value = b.requestsRate || '';
             document.getElementById('editBranchModal').classList.remove('hidden');
         };
-
         window.handleSaveBranchEdit = async function(e) {
             e.preventDefault();
             const branchId = document.getElementById('editBranchId').value;
@@ -1296,16 +1267,13 @@
             const requestsRate = document.getElementById('editBranchRequestsRate').value.trim();
             const fileInput = document.getElementById('editBranchImageInput');
             const file = fileInput.files[0];
-
             const modifierName = currentActiveUser ? currentActiveUser.nickname || currentActiveUser.username : 'غير معروف';
             const modTime = getCurrentFormattedDate();
-
             const updateBranchData = { 
                 name, members, type, quality, requestsRate,
                 lastModifiedBy: modifierName,
                 lastModifiedAt: modTime
             };
-
             const performBranchUpdate = async (imgData) => {
                 if (imgData) updateBranchData.image = imgData;
                 await update(ref(db, `empire_guilds/${currentViewingGuildId}/branches/${branchId}`), updateBranchData);
@@ -1314,7 +1282,6 @@
                 const updatedGuild = (await get(ref(db, 'empire_guilds/' + currentViewingGuildId))).val();
                 renderGuildBranchesPage(updatedGuild);
             };
-
             if (file) {
                 const reader = new FileReader();
                 reader.onload = async (evt) => performBranchUpdate(evt.target.result);
@@ -1323,7 +1290,6 @@
                 performBranchUpdate(null);
             }
         };
-
         window.deleteBranch = async function(branchId) {
             if (confirm('هل أنت متأكد من حذف هذا الفرع؟')) {
                 await remove(ref(db, `empire_guilds/${currentViewingGuildId}/branches/${branchId}`));
@@ -1331,7 +1297,6 @@
                 renderGuildBranchesPage(updatedGuild);
             }
         };
-
         window.openMyProfileModal = function() {
             if (!currentActiveUser) return;
             document.getElementById('myProfileUsername').value = currentActiveUser.username;
@@ -1348,7 +1313,6 @@
             }
             document.getElementById('myProfileModal').classList.remove('hidden');
         };
-
         window.handleSaveMyProfile = async function(e) {
             e.preventDefault();
             if (!currentActiveUser) return;
@@ -1384,7 +1348,6 @@
                 await performUpdate(photoBase64);
             }
         };
-
         function renderPendingRequestsPage() {
             const users = window.globalUsersList || [];
             const container = document.getElementById('pendingRequestsList');
@@ -1415,13 +1378,11 @@
                 container.appendChild(div);
             });
         }
-
         function formatLastSeen(timestamp) {
             if (!timestamp) return 'غير محدد';
             const date = new Date(timestamp);
             return date.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) + ' - ' + date.toLocaleDateString('ar-EG');
         }
-
         function renderEmpireAccountsPage() {
             const users = window.globalUsersList || [];
             const container = document.getElementById('empireAccountsList');
@@ -1479,11 +1440,9 @@
                 container.appendChild(div);
             });
         }
-
         window.toggleUserVerification = async function(username, targetState) {
             await update(ref(db, 'users/' + username), { verified: targetState });
         };
-
         window.openEditUserModal = function(username) {
             const user = (window.globalUsersList || []).find(u => u.username === username);
             if (!user) return;
@@ -1494,7 +1453,6 @@
             document.getElementById('editPhone').value = user.phone;
             document.getElementById('editUserModal').classList.remove('hidden');
         };
-
         window.handleSaveUserEdit = async function(e) {
             e.preventDefault();
             const username = document.getElementById('editUsernameOriginal').value;
@@ -1506,21 +1464,17 @@
             closeModal('editUserModal');
             alert('تم تحديث بيانات الحساب بنجاح!');
         };
-
         window.updateUserStatus = async function(username, status) {
             await update(ref(db, 'users/' + username), { status });
         };
-
         window.updateUserRole = async function(username, role) {
             await update(ref(db, 'users/' + username), { role });
         };
-
         window.deleteUser = async function(username) {
             if(confirm(`هل أنت متأكد من حذف الحساب @${username} نهائياً؟`)) {
                 await remove(ref(db, 'users/' + username));
             }
         };
-
         window.viewUserProfile = async function(username) {
             if (!username) return;
             let user = (window.globalUsersList || []).find(u => u.username === username);
@@ -1547,7 +1501,6 @@
             `;
             document.getElementById('viewUserModal').classList.remove('hidden');
         };
-
         function renderNewsFeed(newsList = []) {
             const container = document.getElementById('newsFeed');
             if (!newsList || newsList.length === 0) {
