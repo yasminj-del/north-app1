@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>North 🌙 - نظام إدارة النقابات</title>
+    <title>North 🌙 - نظام إدارة النقابات والمملكة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -150,6 +150,16 @@
         .verified-icon { display: inline-flex; width: 18px; height: 18px; background: var(--accent-blue); color: #fff; border-radius: 50%; font-size: 0.65rem; align-items: center; justify-content: center; font-weight: bold; margin-right: 4px; }
         .role-select { padding: 6px 10px; background: #0f172a; color: #fff; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.82rem; }
         .hidden { display: none !important; }
+
+        /* الأقسام الجديدة المضافة حديثاً للمملكة */
+        .kingdom-section { background: var(--card-black); border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; margin-bottom: 40px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); text-align: right; }
+        .figures-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; margin-top: 15px; }
+        .figure-card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; text-align: center; position: relative; }
+        .figure-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-blue); margin: 0 auto 10px auto; display: block; }
+        .figure-name { font-size: 1.1rem; font-weight: bold; color: #fff; }
+        .figure-rank { font-size: 0.8rem; color: var(--accent-blue); font-weight: bold; margin-bottom: 8px; }
+        .figure-info { font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; word-break: break-word; }
+        .btn-del-fig { position: absolute; top: 8px; left: 8px; background: rgba(239, 68, 68, 0.2); border: 1px solid var(--danger-red); color: var(--danger-red); border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 0.75rem; }
     </style>
 </head>
 <body>
@@ -245,7 +255,7 @@
         <div class="auth-container" id="statusCardContent" style="text-align: center;"></div>
     </div>
     
-    <!-- 1. صفحة آخر الأخبار والنقابات الرئيسية -->
+    <!-- 1. صفحة آخر الأخبار والنقابات الرئيسية والمعلومات -->
     <div id="mainDashboardPage" class="page-screen hidden">
         <nav class="navbar">
             <div style="display: flex; align-items: center; gap: 15px;">
@@ -265,12 +275,33 @@
                 <span>📜 آخر أخبار المملكة</span>
             </div>
             <div id="newsFeed"></div>
-            <!-- قسم نقابات الإمبراطورية تحت الأخبار -->
+
+            <!-- 🟢 قسم أبرز شخصيات المملكة والرتب الملكية (قبل النقابات) -->
+            <div class="kingdom-section">
+                <div class="page-header-title" style="margin-bottom:15px; border-bottom: 1px dashed var(--border-color);">
+                    <span>👑 أبرز شخصيات المملكة والرتب الملكية</span>
+                    <button id="addFigureAdminBtn" class="btn-action btn-approve hidden" onclick="openAddFigureModal()">+ إضافة شخصية / رتبة</button>
+                </div>
+                <div id="figuresGrid" class="figures-grid"></div>
+            </div>
+
+            <!-- قسم نقابات الإمبراطورية -->
             <div class="page-header-title" style="margin-top: 40px;">
                 <span>🏰 نقابات الإمبراطورية</span>
                 <button id="addGuildAdminBtn" class="btn-action btn-approve hidden" onclick="openAddGuildModal()">+ إضافة نقابة جديدة</button>
             </div>
             <div id="empireGuildsGrid" class="empire-guilds-grid"></div>
+
+            <!-- 🟢 قسم أهم المعلومات عن المملكة (أسفل النقابات) -->
+            <div class="kingdom-section" style="margin-top: 50px;">
+                <div class="page-header-title" style="margin-bottom:15px; border-bottom: 1px dashed var(--border-color);">
+                    <span>📌 أهم المعلومات عن المملكة</span>
+                    <button id="editInfoAdminBtn" class="btn-action btn-edit hidden" onclick="openEditKingdomInfoModal()">✏️ تعديل المعلومات</button>
+                </div>
+                <div id="kingdomInfoText" style="font-size: 1rem; line-height: 1.8; color: #e2e8f0; white-space: pre-line;">
+                    لا توجد معلومات محددة حالياً عن المملكة.
+                </div>
+            </div>
         </div>
     </div>
     
@@ -369,6 +400,53 @@
     </div>
     
     <!-- MODALS -->
+
+    <!-- نافذة إضافة شخصية / رتبة ملكية للمسؤولين -->
+    <div id="addFigureModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 15px; text-align: right;">👑 إضافة شخصية / رتبة ملكية</h3>
+            <form onsubmit="handleSaveNewFigure(event)">
+                <div class="form-group">
+                    <label>الاسم *</label>
+                    <input type="text" id="figName" class="form-control" placeholder="اسم الشخصية" required>
+                </div>
+                <div class="form-group">
+                    <label>الرتبة الملكية *</label>
+                    <input type="text" id="figRank" class="form-control" placeholder="مثال: ملك / نائب إمبراطور" required>
+                </div>
+                <div class="form-group">
+                    <label>أهم المعلومات والنبذة *</label>
+                    <textarea id="figInfo" class="form-control" placeholder="اكتب أهم المعلومات عن الشخصية..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>الصورة (اختر صورة من جهازك)</label>
+                    <input type="file" id="figImageInput" class="form-control" accept="image/*">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button type="submit" class="btn-submit">حفظ الشخصية</button>
+                    <button type="button" onclick="closeModal('addFigureModal')" class="btn-submit" style="background:#334155; color:#fff;">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- نافذة تعديل أهم المعلومات عن المملكة للمسؤولين -->
+    <div id="editKingdomInfoModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 15px; text-align: right;">📌 تعديل أهم معلومات المملكة</h3>
+            <form onsubmit="handleSaveKingdomInfo(event)">
+                <div class="form-group">
+                    <label>أهم التفاصيل والمعلومات *</label>
+                    <textarea id="kingdomInfoInput" class="form-control" style="min-height: 160px;" placeholder="اكتب هنا القوانين والتفاصيل والمعلومات الإمبراطورية..." required></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button type="submit" class="btn-submit">حفظ التغييرات</button>
+                    <button type="button" onclick="closeModal('editKingdomInfoModal')" class="btn-submit" style="background:#334155; color:#fff;">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- نافذة حساب المستخدم الشخصية -->
     <div id="myProfileModal" class="modal hidden">
         <div class="modal-content">
@@ -693,7 +771,6 @@
             get: () => currentViewingGuildId,
             set: (val) => { currentViewingGuildId = val; }
         });
-
         function getCurrentFormattedDate() {
             const now = new Date();
             return now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) + ' - ' + now.toLocaleDateString('ar-EG');
@@ -703,6 +780,8 @@
             listenToNewsRealtime();
             listenToUsersRealtime();
             listenToGuildsRealtime();
+            listenToFiguresRealtime();
+            listenToKingdomInfoRealtime();
         });
         function setupUserPresence(username) {
             if (!username) return;
@@ -784,6 +863,25 @@
                 }
             });
         }
+
+        // 🟢 الاستماع اللحظي لشخصيات المملكة والمعلومات
+        function listenToFiguresRealtime() {
+            onValue(ref(db, 'kingdom_figures'), (snapshot) => {
+                const data = snapshot.val();
+                const figuresList = data ? Object.values(data) : [];
+                renderFiguresGrid(figuresList);
+            });
+        }
+        function listenToKingdomInfoRealtime() {
+            onValue(ref(db, 'kingdom_info'), (snapshot) => {
+                const info = snapshot.val();
+                const container = document.getElementById('kingdomInfoText');
+                if (container) {
+                    container.innerText = info ? info : 'لا توجد معلومات محدثة حالياً.';
+                }
+            });
+        }
+
         window.switchTab = function(tab) {
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
@@ -956,16 +1054,98 @@
             const sidebarBtn = document.getElementById('sidebarToggleBtn');
             const publishBtn = document.getElementById('adminPublishBtn');
             const addGuildBtn = document.getElementById('addGuildAdminBtn');
+            const addFigBtn = document.getElementById('addFigureAdminBtn');
+            const editInfoBtn = document.getElementById('editInfoAdminBtn');
+
             if (currentUserIsAdmin) {
                 sidebarBtn.classList.remove('hidden');
                 addGuildBtn.classList.remove('hidden');
+                addFigBtn.classList.remove('hidden');
+                editInfoBtn.classList.remove('hidden');
             } else {
                 sidebarBtn.classList.add('hidden');
                 addGuildBtn.classList.add('hidden');
+                addFigBtn.classList.add('hidden');
+                editInfoBtn.classList.add('hidden');
             }
             if (currentUserCanPublish) publishBtn.classList.remove('hidden');
             else publishBtn.classList.add('hidden');
         };
+
+        // 🟢 أفعال وإرشادات الأقسام الجديدة للمسؤولين
+        function renderFiguresGrid(figures = []) {
+            const grid = document.getElementById('figuresGrid');
+            if (!grid) return;
+            if (figures.length === 0) {
+                grid.innerHTML = '<div style="color:var(--text-muted); font-size:0.9rem; grid-column:1/-1;">لا توجد شخصيات ملكية مضافة حتى الآن.</div>';
+                return;
+            }
+            grid.innerHTML = '';
+            figures.forEach(fig => {
+                const card = document.createElement('div');
+                card.className = 'figure-card';
+                const delBtn = currentUserIsAdmin ? `<button class="btn-del-fig" onclick="deleteFigure('${fig.id}')">✕</button>` : '';
+                const img = fig.image ? `<img src="${fig.image}" class="figure-img">` : `<div class="figure-img" style="background:#1e293b; display:flex; align-items:center; justify-content:center; font-size:1.5rem;">👑</div>`;
+                card.innerHTML = `
+                    ${delBtn}
+                    ${img}
+                    <div class="figure-name">${fig.name}</div>
+                    <div class="figure-rank">${fig.rank}</div>
+                    <div class="figure-info">${fig.info}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        window.openAddFigureModal = function() {
+            document.getElementById('addFigureModal').classList.remove('hidden');
+        };
+
+        window.handleSaveNewFigure = async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('figName').value.trim();
+            const rank = document.getElementById('figRank').value.trim();
+            const info = document.getElementById('figInfo').value.trim();
+            const fileInput = document.getElementById('figImageInput');
+            const file = fileInput.files[0];
+            const figId = 'fig_' + Date.now();
+
+            const saveFig = async (imgData) => {
+                const figObj = { id: figId, name, rank, info, image: imgData };
+                await set(ref(db, 'kingdom_figures/' + figId), figObj);
+                closeModal('addFigureModal');
+                alert('تمت إضافة الشخصية/الرتبة الملكية بنجاح! 👑');
+            };
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async (evt) => saveFig(evt.target.result);
+                reader.readAsDataURL(file);
+            } else {
+                saveFig('');
+            }
+        };
+
+        window.deleteFigure = async function(figId) {
+            if (confirm('هل أنت متأكد من حذف هذه الشخصية؟')) {
+                await remove(ref(db, 'kingdom_figures/' + figId));
+            }
+        };
+
+        window.openEditKingdomInfoModal = async function() {
+            const snap = await get(ref(db, 'kingdom_info'));
+            document.getElementById('kingdomInfoInput').value = snap.exists() ? snap.val() : '';
+            document.getElementById('editKingdomInfoModal').classList.remove('hidden');
+        };
+
+        window.handleSaveKingdomInfo = async function(e) {
+            e.preventDefault();
+            const text = document.getElementById('kingdomInfoInput').value.trim();
+            await set(ref(db, 'kingdom_info'), text);
+            closeModal('editKingdomInfoModal');
+            alert('تم حفظ معلومات المملكة بنجاح! 📌');
+        };
+
         window.navigateToPendingRequests = function() {
             toggleSidebar();
             startLoadingProcess('جاري الانتقال لصفحة الطلبات المعلقة...', 1000, () => {
@@ -1507,12 +1687,10 @@
             `;
             document.getElementById('viewUserModal').classList.remove('hidden');
         };
-
         // دالة إظهار نافذة نشر خبر جديد
         window.openPublishModal = function() {
             document.getElementById('publishModal').classList.remove('hidden');
         };
-
         // دالة معالجة نشر الخبر وإضافته إلكترونياً
         window.handlePublishNews = async function(e) {
             e.preventDefault();
@@ -1520,7 +1698,6 @@
             const imageInput = document.getElementById('newsImageInput');
             const file = imageInput.files[0];
             const newsId = 'news_' + Date.now();
-
             const newsData = {
                 id: newsId,
                 content: content,
@@ -1532,7 +1709,6 @@
                 timestamp: Date.now(),
                 image: ''
             };
-
             const publishProcess = async (imgData) => {
                 newsData.image = imgData;
                 await set(ref(db, 'news/' + newsId), newsData);
@@ -1541,7 +1717,6 @@
                 closeModal('publishModal');
                 alert('تم نشر الخبر بنجاح! 📢');
             };
-
             if (file) {
                 const reader = new FileReader();
                 reader.onload = async function(evt) {
@@ -1552,7 +1727,6 @@
                 await publishProcess('');
             }
         };
-
         // دالة الإعجاب بالخبر
         window.toggleLikeNews = async function(newsId) {
             if (!currentActiveUser) return;
@@ -1564,14 +1738,12 @@
                 await set(newsRef, true);
             }
         };
-
         // دالة إضافة تعليق
         window.handleAddComment = async function(newsId) {
             const input = document.getElementById(`comment-input-${newsId}`);
             if (!input) return;
             const text = input.value.trim();
             if (!text) return;
-
             const commentId = 'comment_' + Date.now();
             const commentData = {
                 id: commentId,
@@ -1582,18 +1754,15 @@
                 authorVerified: currentActiveUser ? currentActiveUser.verified || false : false,
                 timestamp: Date.now()
             };
-
             await set(ref(db, `news/${newsId}/comments/${commentId}`), commentData);
             input.value = '';
         };
-
         // دالة حذف الخبر
         window.deleteNews = async function(newsId) {
             if (confirm('هل أنت متأكد من حذف هذا الخبر بالكامل؟')) {
                 await remove(ref(db, 'news/' + newsId));
             }
         };
-
         // دالة حذف التعليق
         window.deleteComment = async function(newsId, commentId) {
             if (currentUserIsAdmin) {
@@ -1602,7 +1771,6 @@
                 await remove(ref(db, `news/${newsId}/comments/${commentId}`));
             }
         };
-
         // دالة بناء عرض جميع الأخبار بالصفحة
         function renderNewsFeed(newsList = []) {
             const container = document.getElementById('newsFeed');
@@ -1666,7 +1834,6 @@
                         `;
                     }
                 });
-
                 const userCanComment = currentActiveUser && (currentActiveUser.verified || currentUserIsAdmin || currentActiveUser.role === 'commenter');
                 
                 div.innerHTML = `
