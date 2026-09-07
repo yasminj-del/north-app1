@@ -303,7 +303,8 @@
                 <h1 id="guildBranchesTitleNav">🌿 فروع النقابة</h1>
             </div>
             <div class="navbar-actions">
-                <button onclick="navigateToGuildDetail(currentViewingGuildId)" class="btn-back">← العودة للنقابة</button>
+                <!-- تم إصلاح الزر هنا ليستدعي المتغير الحالي مباشرة -->
+                <button onclick="navigateToGuildDetail(window.currentViewingGuildId)" class="btn-back">← العودة للنقابة</button>
             </div>
         </nav>
         <div class="page-content">
@@ -688,6 +689,12 @@
         let currentActiveUser = null; 
         let currentViewingGuildId = null;
         
+        // جعل المعرف متاحاً بشكل عام للنصوص في HTML
+        Object.defineProperty(window, 'currentViewingGuildId', {
+            get: () => currentViewingGuildId,
+            set: (val) => { currentViewingGuildId = val; }
+        });
+
         function getCurrentFormattedDate() {
             const now = new Date();
             return now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) + ' - ' + now.toLocaleDateString('ar-EG');
@@ -1003,7 +1010,7 @@
             document.getElementById('guildDetailPage').classList.remove('hidden');
         };
         function renderGuildDetailPage(guild) {
-            document.getElementById('guildDetailTitleNav').innerText = `🏰 نقابة ${guild.name}`;
+            document.getElementById('guildDetailTitleNav').innerText = `🏰 تفاصيل نقابة ${guild.name}`;
             const headerArea = document.getElementById('guildDetailHeaderArea');
             const imgHtml = guild.image ? `<img src="${guild.image}" class="user-avatar-lg" style="width:120px; height:120px;">` : `<div class="user-avatar-lg" style="width:120px; height:120px; background:#1e293b; display:flex; justify-content:center; align-items:center; font-size:3rem;">${guild.badge || '🏰'}</div>`;
             headerArea.innerHTML = `
