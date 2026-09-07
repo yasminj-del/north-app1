@@ -155,7 +155,10 @@
         .user-card-details { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 12px; }
         .user-card-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; align-items: center; }
 
-        /* شارة الدائرة الموثقة */
+        /* شارات الاتصال والتوثيق */
+        .status-badge-online { background: rgba(34, 197, 94, 0.15); color: #22c55e; border: 1px solid #22c55e; padding: 3px 8px; border-radius: 6px; font-size: 0.78rem; font-weight: bold; }
+        .status-badge-offline { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid #94a3b8; padding: 3px 8px; border-radius: 6px; font-size: 0.78rem; font-weight: bold; }
+
         .verify-badge {
             width: 26px;
             height: 26px;
@@ -431,7 +434,7 @@
     <!-- مكتبات Firebase السحابية -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, get, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, get, onValue, remove, update, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD1IdKso_sOqW3lL6Ux01fpr9GVB-OiPjA",
@@ -475,6 +478,36 @@
             listenToUsersRealtime();
         });
 
+        // تفعيل تتبع حضور المستخدم المتصل تلقائياً
+        function setupUserPresence(username) {
+            if (!username) return;
+            const userPresenceRef = ref(db, 'users/' + username + '/presence');
+            const connectedRef = ref(db, '.info/connected');
+
+            onValue(connectedRef, (snap) => {
+                if (snap.val() === true) {
+                    onDisconnect(userPresenceRef).set({
+                        state: 'offline',
+                        lastChanged: serverTimestamp()
+                    });
+                    set(userPresenceRef, {
+                        state: 'online',
+                        lastChanged: serverTimestamp()
+                    });
+                }
+            });
+        }
+
+        // إيقاف وتحديث حالة الخروج
+        async function setPresenceOffline(username) {
+            if (!username) return;
+            const userPresenceRef = ref(db, 'users/' + username + '/presence');
+            await set(userPresenceRef, {
+                state: 'offline',
+                lastChanged: serverTimestamp()
+            });
+        }
+
         function checkActiveSession() {
             const savedSession = sessionStorage.getItem('north_active_session');
             if (savedSession) {
@@ -482,6 +515,7 @@
                 currentUserIsAdmin = sessionData.isAdmin;
                 currentUserCanPublish = sessionData.canPublish;
                 currentActiveUser = sessionData.user;
+                setupUserPresence(currentActiveUser.username);
                 navigateToMainNews();
             }
         }
@@ -628,7 +662,8 @@
                 guilds: selectedGuilds,
                 status: 'pending',
                 role: 'viewer',
-                verified: false
+                verified: false,
+                presence: { state: 'offline', lastChanged: Date.now() }
             };
 
             await set(userRef, newUser);
@@ -649,6 +684,7 @@
                 currentUserCanPublish = true;
                 currentActiveUser = ADMIN_USER;
                 saveActiveSession();
+                setupUserPresence(ADMIN_USER.username);
                 startLoadingProcess('جاري الدخول بصفة مالك الموقع...', 1000, () => navigateToMainNews());
                 return;
             }
@@ -688,10 +724,14 @@
             currentActiveUser = foundUser;
 
             saveActiveSession();
+            setupUserPresence(foundUser.username);
             startLoadingProcess('جاري الدخول بالنظام...', 1000, () => navigateToMainNews());
         };
 
-        window.handleLogout = function() {
+        window.handleLogout = async function() {
+            if (currentActiveUser) {
+                await setPresenceOffline(currentActiveUser.username);
+            }
             startLoadingProcess('جاري تسجيل الخروج...', 1000, () => {
                 clearActiveSession();
                 hideAllPages();
@@ -815,6 +855,12 @@
             });
         }
 
+        function formatLastSeen(timestamp) {
+            if (!timestamp) return 'غير محدد';
+            const date = new Date(timestamp);
+            return date.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) + ' - ' + date.toLocaleDateString('ar-EG');
+        }
+
         function renderEmpireAccountsPage() {
             const users = window.globalUsersList || [];
             const container = document.getElementById('empireAccountsList');
@@ -831,6 +877,13 @@
                 const isBanned = (u.status === 'banned');
                 const isVerified = u.verified || false;
 
+                const isOnline = u.presence && u.presence.state === 'online';
+                const lastSeenText = u.presence && u.presence.lastChanged ? formatLastSeen(u.presence.lastChanged) : 'لم يسجل دخول بعد';
+
+                const presenceBadge = isOnline 
+                    ? `<span class="status-badge-online">🟢 متصل الآن</span>` 
+                    : `<span class="status-badge-offline">⚪ غير متصل (آخر ظهور: ${lastSeenText})</span>`;
+
                 const div = document.createElement('div');
                 div.className = 'user-card';
                 div.innerHTML = `
@@ -841,7 +894,10 @@
                             </span>
                             <strong>${u.nickname} ${isVerified ? '<span class="verified-icon">✔</span>' : ''}</strong>
                         </div>
-                        <span style="font-size:0.8rem;">${isBanned ? '<span style="color:var(--danger-red); font-weight:bold;">[محظور ⛔]</span>' : '<span style="color:var(--accent-blue); font-weight:bold;">[نشط]</span>'}</span>
+                        <div>
+                            ${presenceBadge}
+                            <span style="font-size:0.8rem; margin-right:6px;">${isBanned ? '<span style="color:var(--danger-red); font-weight:bold;">[محظور ⛔]</span>' : '<span style="color:var(--accent-blue); font-weight:bold;">[نشط]</span>'}</span>
+                        </div>
                     </div>
                     <div class="user-card-details">
                         اسم المستخدم: @${u.username}<br>
