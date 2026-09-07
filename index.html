@@ -9,7 +9,7 @@
         :root {
             --bg-black: #0a0a0c;
             --card-black: #141419;
-            --accent-gold: #ffffff;
+            --accent-gold: #ffd700;
             --text-light: #f1f1f1;
             --text-muted: #8a8a93;
             --glossy-border: rgba(255, 255, 255, 0.12);
@@ -88,7 +88,7 @@
         .news-item { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 18px; text-align: right; position: relative; width: 100%; max-width: 600px; box-shadow: 0 8px 20px rgba(0,0,0,0.4); overflow: hidden; }
         .news-item-img { width: auto; max-width: 100%; max-height: 500px; border-radius: 12px; display: block; margin: 0 auto 15px auto; object-fit: contain; border: 1px solid rgba(255, 255, 255, 0.1); }
         .news-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .news-author { font-size: 0.9rem; font-weight: bold; color: #ffffff; }
+        .news-author { font-size: 0.9rem; font-weight: bold; color: #ffffff; display: flex; align-items: center; gap: 5px; }
         .news-author-badge { background: rgba(255, 255, 255, 0.15); padding: 2px 8px; border-radius: 6px; font-size: 0.75rem; margin-right: 5px; color: #fff; }
         .news-item-time { font-size: 0.8rem; color: var(--text-muted); }
         .news-item-text { font-size: 0.98rem; line-height: 1.7; white-space: pre-line; word-break: break-word; }
@@ -100,9 +100,11 @@
         .btn-approve { background: #28a745; color: #fff; }
         .btn-reject { background: #dc3545; color: #fff; }
         .btn-ban { background: #ffc107; color: #000; }
+        .btn-unban { background: #17a2b8; color: #fff; }
+        .btn-edit { background: #6c757d; color: #fff; }
 
         .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
-        .modal-content { background: #141419; border: 1px solid var(--glossy-border); border-radius: 15px; width: 100%; max-width: 550px; padding: 25px; }
+        .modal-content { background: #141419; border: 1px solid var(--glossy-border); border-radius: 15px; width: 100%; max-width: 550px; padding: 25px; max-height: 90vh; overflow-y: auto; }
 
         /* القائمة الجانبية (Sidebar) للمالك */
         .sidebar-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; opacity: 0; visibility: hidden; transition: 0.3s; }
@@ -112,10 +114,78 @@
         .sidebar-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px; }
         .sidebar-close { background: transparent; border: none; color: #fff; font-size: 1.5rem; cursor: pointer; }
 
-        .user-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 15px; margin-bottom: 15px; text-align: right; }
+        /* أزرار القائمة الجانبية */
+        .sidebar-menu-btn {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glossy-border);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: right;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+            position: relative;
+        }
+        .sidebar-menu-btn:hover { background: rgba(255, 255, 255, 0.08); border-color: #fff; }
+        
+        /* شارة التنبيه للنقطة الحمراء */
+        .notification-dot {
+            width: 12px;
+            height: 12px;
+            background-color: #ff3b30;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 10px #ff3b30;
+        }
+
+        .user-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; padding: 15px; margin-bottom: 15px; text-align: right; position: relative; }
         .user-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .user-card-details { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px; }
         .user-card-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+
+        /* شارة الدائرة الموثقة */
+        .verify-badge {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #555;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: 0.3s;
+            background: rgba(255,255,255,0.05);
+            color: #888;
+            user-select: none;
+        }
+        .verify-badge.verified {
+            border-color: var(--accent-gold);
+            background: var(--accent-gold);
+            color: #000;
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+        }
+
+        .verified-icon {
+            display: inline-flex;
+            width: 18px;
+            height: 18px;
+            background: var(--accent-gold);
+            color: #000;
+            border-radius: 50%;
+            font-size: 0.65rem;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 4px;
+        }
 
         .role-select { padding: 4px 8px; background: #000; color: #fff; border: 1px solid var(--glossy-border); border-radius: 6px; font-size: 0.8rem; margin-top: 5px; }
 
@@ -251,17 +321,71 @@
     <div id="sidebarOverlay" class="sidebar-overlay" onclick="toggleSidebar()"></div>
     <div id="sidebar" class="sidebar">
         <div class="sidebar-header">
-            <h3>⚙️ لوحة التحكم القارية (Maki)</h3>
+            <h3>⚙️ لوحة التحكم الإمبراطورية</h3>
             <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
         </div>
 
-        <h4 style="margin-bottom: 12px; color: #ffc107;">📩 طلبات الانضمام المعلقة</h4>
-        <div id="pendingRequestsContainer"></div>
+        <button class="sidebar-menu-btn" onclick="navigateToPendingRequests()">
+            <span>📩 الطلبات المعلقة</span>
+            <span id="pendingDot" class="notification-dot hidden"></span>
+        </button>
 
-        <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
+        <button class="sidebar-menu-btn" onclick="navigateToEmpireAccounts()">
+            <span>👑 حسابات الإمبراطورية</span>
+            <span>➔</span>
+        </button>
+    </div>
 
-        <h4 style="margin-bottom: 12px; color: #fff;">👥 كافة مستخدمي الموقع والتفاصيل</h4>
-        <div id="allUsersContainer"></div>
+    <!-- صفحة الطلبات المعلقة الفرعية -->
+    <div id="pendingModal" class="modal hidden">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3>📩 طلبات الانضمام المعلقة</h3>
+                <button class="sidebar-close" onclick="closeModal('pendingModal')">✕</button>
+            </div>
+            <div id="pendingRequestsContainer"></div>
+        </div>
+    </div>
+
+    <!-- صفحة حسابات الإمبراطورية الفرعية -->
+    <div id="accountsModal" class="modal hidden">
+        <div class="modal-content" style="max-width: 650px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3>👑 كافة حسابات الإمبراطورية</h3>
+                <button class="sidebar-close" onclick="closeModal('accountsModal')">✕</button>
+            </div>
+            <div id="allUsersContainer"></div>
+        </div>
+    </div>
+
+    <!-- نافذة تعديل بيانات حساب تفصيلي -->
+    <div id="editUserModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 15px; text-align: right;">تعديل تفاصيل الحساب ✏️</h3>
+            <form onsubmit="handleSaveUserEdit(event)">
+                <input type="hidden" id="editUsernameOriginal">
+                <div class="form-group">
+                    <label>اللقب</label>
+                    <input type="text" id="editNickname" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="text" id="editPassword" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>الرتبة</label>
+                    <input type="text" id="editRank" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف / الواتساب</label>
+                    <input type="tel" id="editPhone" class="form-control" required dir="ltr">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button type="submit" class="btn-submit">حفظ التغييرات</button>
+                    <button type="button" onclick="closeModal('editUserModal')" class="btn-submit" style="background:#444; color:#fff;">إلغاء</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- نافذة نشر خبر -->
@@ -279,7 +403,7 @@
                 </div>
                 <div style="display: flex; gap: 10px;">
                     <button type="submit" class="btn-submit">نشر الخبر</button>
-                    <button type="button" onclick="closePublishModal()" class="btn-submit" style="background:#444; color:#fff;">إلغاء</button>
+                    <button type="button" onclick="closeModal('publishModal')" class="btn-submit" style="background:#444; color:#fff;">إلغاء</button>
                 </div>
             </form>
         </div>
@@ -288,7 +412,7 @@
     <!-- مكتبات Firebase السحابية المحدثة -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, get, child, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, get, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD1IdKso_sOqW3lL6Ux01fpr9GVB-OiPjA",
@@ -318,7 +442,8 @@
             username: "Makinorth1",
             code: "250702011yy",
             nickname: "Maki 👑",
-            rank: "مالك الموقع"
+            rank: "مالك الموقع",
+            verified: true
         };
 
         let currentUserIsAdmin = false; 
@@ -370,8 +495,20 @@
                 const data = snapshot.val();
                 const usersList = data ? Object.values(data) : [];
                 window.globalUsersList = usersList;
-                if(document.getElementById('sidebar').classList.contains('open')) {
-                    renderSidebarContent();
+
+                // تحديث النقطة الحمراء
+                const pendingCount = usersList.filter(u => u.status === 'pending').length;
+                const pendingDot = document.getElementById('pendingDot');
+                if (pendingDot) {
+                    if (pendingCount > 0) pendingDot.classList.remove('hidden');
+                    else pendingDot.classList.add('hidden');
+                }
+
+                if (!document.getElementById('pendingModal').classList.contains('hidden')) {
+                    renderPendingRequests();
+                }
+                if (!document.getElementById('accountsModal').classList.contains('hidden')) {
+                    renderEmpireAccounts();
                 }
             });
         }
@@ -408,7 +545,6 @@
 
             fieldsArea.innerHTML = '';
 
-            // استثناء امبراطور ونائب امبراطور من اختيار أي نقابات
             if (rank === "امبراطور" || rank === "نائب امبراطور") {
                 container.classList.add('hidden');
                 return;
@@ -473,12 +609,13 @@
                 phone,
                 guilds: selectedGuilds,
                 status: 'pending',
-                role: 'viewer'
+                role: 'viewer',
+                verified: false
             };
 
             await set(userRef, newUser);
 
-            alert('تم إرسال طلب الانضمام بنجاح للسحابة! ينتظر مراجعة Maki.');
+            alert('تم إرسال طلب الانضمام بنجاح! ينتظر مراجعة الإدارة.');
             switchTab('login');
             document.getElementById('loginUsername').value = username;
             document.getElementById('loginCode').value = password;
@@ -494,7 +631,7 @@
                 currentUserCanPublish = true;
                 currentActiveUser = ADMIN_USER;
                 saveActiveSession();
-                startLoadingProcess('جاري الدخول بصفة مالك الموقع...', () => openMainDashboard());
+                startLoadingProcess('جاري الدخول بصفة مالك الموقع...', 1000, () => openMainDashboard());
                 return;
             }
 
@@ -519,7 +656,7 @@
             }
 
             if (foundUser.status === 'pending') {
-                showStatusScreen('⏳ طلبك قيد المراجعة', 'لم يتم مراجعة طلب انضمامك بعد من قبل Maki. يرجى الانتظار.');
+                showStatusScreen('⏳ طلبك قيد المراجعة', 'لم يتم مراجعة طلب انضمامك بعد من قبل الإدارة. يرجى الانتظار.');
                 return;
             }
 
@@ -533,11 +670,11 @@
             currentActiveUser = foundUser;
 
             saveActiveSession();
-            startLoadingProcess('جاري الدخول بالنظام...', () => openMainDashboard());
+            startLoadingProcess('جاري الدخول بالنظام...', 1000, () => openMainDashboard());
         };
 
         window.handleLogout = function() {
-            startLoadingProcess('جاري تسجيل الخروج...', () => {
+            startLoadingProcess('جاري تسجيل الخروج...', 1000, () => {
                 clearActiveSession();
                 hideAllViews();
                 document.getElementById('authWrapper').classList.remove('hidden');
@@ -549,7 +686,7 @@
             });
         };
 
-        function startLoadingProcess(msg, callback) {
+        function startLoadingProcess(msg, delay, callback) {
             hideAllViews();
             document.getElementById('loaderText').innerText = msg;
             document.getElementById('loaderScreen').classList.remove('hidden');
@@ -557,7 +694,7 @@
             setTimeout(() => {
                 document.getElementById('loaderScreen').classList.add('hidden');
                 callback();
-            }, 1000);
+            }, delay);
         }
 
         function hideAllViews() {
@@ -603,87 +740,156 @@
             const isOpen = sidebar.classList.contains('open');
 
             if (!isOpen) {
-                renderSidebarContent();
                 sidebar.classList.add('open');
-                overlay.classList.add('active');
+                overlay.classList.active ? null : overlay.classList.add('active');
             } else {
                 sidebar.classList.remove('open');
                 overlay.classList.remove('active');
             }
         };
 
-        function renderSidebarContent() {
-            const users = window.globalUsersList || [];
-            const pendingContainer = document.getElementById('pendingRequestsContainer');
-            const allContainer = document.getElementById('allUsersContainer');
+        // الانتقال للطلبات المعلقة مع الانتظار ثانيتين
+        window.navigateToPendingRequests = function() {
+            toggleSidebar();
+            startLoadingProcess('جاري الانتقال لصفحة الطلبات المعلقة...', 2000, () => {
+                document.getElementById('mainDashboardScreen').classList.remove('hidden');
+                renderPendingRequests();
+                document.getElementById('pendingModal').classList.remove('hidden');
+            });
+        };
 
+        // الانتقال لحسابات الإمبراطورية
+        window.navigateToEmpireAccounts = function() {
+            toggleSidebar();
+            renderEmpireAccounts();
+            document.getElementById('accountsModal').classList.remove('hidden');
+        };
+
+        window.closeModal = function(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        };
+
+        function renderPendingRequests() {
+            const users = window.globalUsersList || [];
+            const container = document.getElementById('pendingRequestsContainer');
             const pendingUsers = users.filter(u => u.status === 'pending');
 
             if (pendingUsers.length === 0) {
-                pendingContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">لا توجد طلبات انضمام جديدة.</p>';
-            } else {
-                pendingContainer.innerHTML = '';
-                pendingUsers.forEach(u => {
-                    const div = document.createElement('div');
-                    div.className = 'user-card';
-                    div.innerHTML = `
-                        <div class="user-card-header">
-                            <strong>${u.nickname}</strong>
-                            <span style="color:#ffc107; font-size:0.75rem;">طلب معلق</span>
-                        </div>
-                        <div class="user-card-details">
-                            اسم المستخدم: @${u.username}<br>
-                            الرتبة: ${u.rank} | الهاتف: ${u.phone}<br>
-                            النقابات: ${u.guilds && u.guilds.length > 0 ? u.guilds.join(', ') : 'لا يوجد'}
-                        </div>
-                        <div class="user-card-actions">
-                            <button onclick="updateUserStatus('${u.username}', 'approved')" class="btn-action btn-approve">قبول</button>
-                            <button onclick="updateUserStatus('${u.username}', 'rejected')" class="btn-action btn-reject">رفض</button>
-                        </div>
-                    `;
-                    pendingContainer.appendChild(div);
-                });
-            }
-
-            if (users.length === 0) {
-                allContainer.innerHTML = '<p style="color:var(--text-muted); font-size:0.85rem;">لا يوجد مسجلين بالنظام.</p>';
+                container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding: 20px;">لا توجد طلبات انضمام جديدة معلقة حالياً.</p>';
                 return;
             }
 
-            allContainer.innerHTML = '';
-            users.forEach((u) => {
-                let statusBadge = '';
-                if(u.status === 'approved') statusBadge = '<span style="color:#28a745; font-size:0.75rem;">[مقبول]</span>';
-                else if(u.status === 'pending') statusBadge = '<span style="color:#ffc107; font-size:0.75rem;">[معلق]</span>';
-                else if(u.status === 'rejected') statusBadge = '<span style="color:#dc3545; font-size:0.75rem;">[مرفوض]</span>';
-                else if(u.status === 'banned') statusBadge = '<span style="color:#dc3545; font-weight:bold; font-size:0.75rem;">[محظور ⛔]</span>';
+            container.innerHTML = '';
+            pendingUsers.forEach(u => {
+                const div = document.createElement('div');
+                div.className = 'user-card';
+                div.innerHTML = `
+                    <div class="user-card-header">
+                        <strong>${u.nickname}</strong>
+                        <span style="color:#ffc107; font-size:0.75rem;">[طلب معلق]</span>
+                    </div>
+                    <div class="user-card-details">
+                        اسم المستخدم: @${u.username}<br>
+                        الرتبة: ${u.rank} | الهاتف: ${u.phone}<br>
+                        النقابات: ${u.guilds && u.guilds.length > 0 ? u.guilds.join(', ') : 'لا يوجد'}
+                    </div>
+                    <div class="user-card-actions">
+                        <button onclick="updateUserStatus('${u.username}', 'approved')" class="btn-action btn-approve">قبول الطلب</button>
+                        <button onclick="updateUserStatus('${u.username}', 'rejected')" class="btn-action btn-reject">رفض</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderEmpireAccounts() {
+            const users = window.globalUsersList || [];
+            const container = document.getElementById('allUsersContainer');
+
+            // عرض الحسابات التي تمت الموافقة عليها أو المحظورة
+            const activeUsers = users.filter(u => u.status === 'approved' || u.status === 'banned');
+
+            if (activeUsers.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding: 20px;">لا توجد حسابات مسجلة بالمملكة.</p>';
+                return;
+            }
+
+            container.innerHTML = '';
+            activeUsers.forEach((u) => {
+                const isBanned = (u.status === 'banned');
+                const isVerified = u.verified || false;
 
                 const div = document.createElement('div');
                 div.className = 'user-card';
                 div.innerHTML = `
                     <div class="user-card-header">
-                        <strong>${u.nickname} (@${u.username})</strong>
-                        ${statusBadge}
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="verify-badge ${isVerified ? 'verified' : ''}" onclick="toggleUserVerification('${u.username}', ${!isVerified})" title="توثيق الحساب">
+                                ✔
+                            </span>
+                            <strong>${u.nickname} ${isVerified ? '<span class="verified-icon">✔</span>' : ''}</strong>
+                        </div>
+                        <span style="font-size:0.75rem;">${isBanned ? '<span style="color:#dc3545; font-weight:bold;">[محظور ⛔]</span>' : '<span style="color:#28a745;">[نشط]</span>'}</span>
                     </div>
                     <div class="user-card-details">
+                        اسم المستخدم: @${u.username}<br>
                         🔑 كلمة المرور: <span style="color:#fff;">${u.password}</span><br>
-                        🎖️ الرتبة: ${u.rank}<br>
-                        📞 الهاتف: ${u.phone}<br>
+                        🎖️ الرتبة: ${u.rank} | 📞 الهاتف: ${u.phone}<br>
                         🏰 النقابات: ${u.guilds && u.guilds.length > 0 ? u.guilds.join(', ') : 'لا يوجد'}
                     </div>
                     <div class="user-card-actions">
                         <select onchange="updateUserRole('${u.username}', this.value)" class="role-select">
                             <option value="viewer" ${u.role === 'viewer' ? 'selected' : ''}>مشاهد</option>
-                            <option value="commenter" ${u.role === 'commenter' ? 'selected' : ''}>ناشر للأخبار</option>
-                            <option value="owner" ${u.role === 'owner' ? 'selected' : ''}>مالك/مسؤول</option>
+                            <option value="commenter" ${u.role === 'commenter' ? 'selected' : ''}>ناشر أفراد</option>
+                            <option value="owner" ${u.role === 'owner' ? 'selected' : ''}>مالك مسؤول</option>
                         </select>
-                        <button onclick="updateUserStatus('${u.username}', 'banned')" class="btn-action btn-ban">حظر</button>
+                        <button onclick="openEditUserModal('${u.username}')" class="btn-action btn-edit">تعديل التفاصيل ✏️</button>
+                        ${isBanned 
+                            ? `<button onclick="updateUserStatus('${u.username}', 'approved')" class="btn-action btn-unban">فك الحظر 🔓</button>`
+                            : `<button onclick="updateUserStatus('${u.username}', 'banned')" class="btn-action btn-ban">حظر ⛔</button>`
+                        }
                         <button onclick="deleteUser('${u.username}')" class="btn-action btn-reject">حذف</button>
                     </div>
                 `;
-                allContainer.appendChild(div);
+                container.appendChild(div);
             });
         }
+
+        window.toggleUserVerification = async function(username, targetState) {
+            await update(ref(db, 'users/' + username), { verified: targetState });
+        };
+
+        window.openEditUserModal = function(username) {
+            const user = (window.globalUsersList || []).find(u => u.username === username);
+            if (!user) return;
+
+            document.getElementById('editUsernameOriginal').value = user.username;
+            document.getElementById('editNickname').value = user.nickname;
+            document.getElementById('editPassword').value = user.password;
+            document.getElementById('editRank').value = user.rank;
+            document.getElementById('editPhone').value = user.phone;
+
+            document.getElementById('editUserModal').classList.remove('hidden');
+        };
+
+        window.handleSaveUserEdit = async function(e) {
+            e.preventDefault();
+            const username = document.getElementById('editUsernameOriginal').value;
+            const nickname = document.getElementById('editNickname').value.trim();
+            const password = document.getElementById('editPassword').value.trim();
+            const rank = document.getElementById('editRank').value.trim();
+            const phone = document.getElementById('editPhone').value.trim();
+
+            await update(ref(db, 'users/' + username), {
+                nickname,
+                password,
+                rank,
+                phone
+            });
+
+            closeModal('editUserModal');
+            alert('تم تحديث بيانات الحساب بنجاح!');
+        };
 
         window.updateUserStatus = async function(username, status) {
             await update(ref(db, 'users/' + username), { status });
@@ -721,11 +927,13 @@
                     deleteBtnHtml = `<button onclick="deleteNews('${news.id}')" class="btn-delete-news">حذف الخبر</button>`;
                 }
 
+                const authorVerified = news.authorVerified ? '<span class="verified-icon">✔</span>' : '';
+
                 div.innerHTML = `
                     ${imgHtml}
                     <div class="news-item-header">
                         <div class="news-author">
-                            ${news.authorNickname}
+                            ${news.authorNickname} ${authorVerified}
                             <span class="news-author-badge">${news.authorRank}</span>
                         </div>
                         <div class="news-item-time">${news.date}</div>
@@ -739,12 +947,6 @@
 
         window.openPublishModal = function() {
             document.getElementById('publishModal').classList.remove('hidden');
-        };
-
-        window.closePublishModal = function() {
-            document.getElementById('publishModal').classList.add('hidden');
-            document.getElementById('newsContent').value = '';
-            document.getElementById('newsImageInput').value = '';
         };
 
         window.handlePublishNews = async function(e) {
@@ -762,6 +964,7 @@
                 image: '',
                 authorNickname: currentActiveUser ? currentActiveUser.nickname : 'Maki 👑',
                 authorRank: currentActiveUser ? currentActiveUser.rank : 'مالك الموقع',
+                authorVerified: currentActiveUser ? (currentActiveUser.verified || false) : true,
                 timestamp: Date.now(),
                 date: new Date().toLocaleDateString('ar-EG', { hour: '2-digit', minute: '2-digit' })
             };
@@ -771,12 +974,12 @@
                 reader.onload = async function(evt) {
                     newsData.image = evt.target.result;
                     await set(ref(db, 'news/' + newNewsId), newsData);
-                    closePublishModal();
+                    closeModal('publishModal');
                 };
                 reader.readAsDataURL(file);
             } else {
                 await set(ref(db, 'news/' + newNewsId), newsData);
-                closePublishModal();
+                closeModal('publishModal');
             }
         };
 
