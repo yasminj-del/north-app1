@@ -24,7 +24,7 @@
             min-height: 100vh;
             background-image: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.15) 0%, transparent 75%);
             overflow-x: hidden;
-            padding-bottom: 70px; /* مسافة للتنقل السفلي */
+            padding-bottom: 70px;
         }
         .auth-wrapper {
             min-height: 100vh;
@@ -70,13 +70,16 @@
         .icon-btn:hover { background: var(--accent-blue); color: #fff; border-color: var(--accent-blue); }
         .page-content { flex: 1; max-width: 1000px; width: 100%; margin: 0 auto; padding: 40px 20px; }
         .page-header-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; color: #fff; }
-        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-blue); }
         .user-avatar-lg { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-blue); margin: 0 auto 15px auto; display: block; box-shadow: 0 0 15px rgba(37, 99, 235, 0.4); }
-        .avatar-placeholder { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-blue); color: #fff; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 1rem; }
         
         #newsFeed { display: flex; flex-direction: column; align-items: center; gap: 25px; margin-bottom: 50px; }
         .news-item { background: var(--card-black); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; text-align: right; position: relative; width: 100%; max-width: 650px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
-        
+        .news-item-img { width: 100%; max-height: 350px; object-fit: cover; border-radius: 12px; margin: 12px 0; }
+        .news-item-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 10px; }
+        .news-author { font-weight: bold; color: var(--accent-blue); }
+        .news-item-time { font-size: 0.75rem; color: var(--text-muted); }
+        .btn-delete-news { background: rgba(239, 68, 68, 0.2); border: 1px solid var(--danger-red); color: var(--danger-red); padding: 5px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; margin-top: 10px; }
+
         .empire-guilds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 15px; }
         .guild-card-box { background: var(--card-black); border: 1px solid var(--border-color); border-radius: 16px; padding: 20px; text-align: center; transition: 0.3s; cursor: pointer; position: relative; overflow: hidden; }
         .guild-card-box:hover { border-color: var(--accent-blue); transform: translateY(-4px); box-shadow: 0 10px 25px rgba(37, 99, 235, 0.25); }
@@ -94,6 +97,7 @@
         .btn-edit { background: #334155; color: #fff; border: 1px solid var(--border-color); }
         .btn-back { background: rgba(255,255,255,0.05); color: #fff; border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: 0.3s; }
         .btn-back:hover { background: var(--accent-blue); border-color: var(--accent-blue); }
+        
         .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
         .modal-content { background: var(--card-black); border: 1px solid var(--border-color); border-radius: 15px; width: 100%; max-width: 550px; padding: 25px; max-height: 90vh; overflow-y: auto; }
         
@@ -117,8 +121,6 @@
         .verify-toggle-circle.verified { border-color: var(--accent-blue); background: var(--accent-blue); box-shadow: 0 0 10px rgba(37, 99, 235, 0.8); }
         .verify-toggle-circle::after { content: '✓'; color: #fff; font-size: 0.75rem; font-weight: bold; opacity: 0; transition: 0.2s; }
         .verify-toggle-circle.verified::after { opacity: 1; }
-        .verified-icon { display: inline-flex; width: 18px; height: 18px; background: var(--accent-blue); color: #fff; border-radius: 50%; font-size: 0.65rem; align-items: center; justify-content: center; font-weight: bold; margin-right: 4px; }
-        .role-select { padding: 6px 10px; background: #0f172a; color: #fff; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.82rem; }
         .hidden { display: none !important; }
         
         .kingdom-section { background: var(--card-black); border: 1px solid var(--border-color); border-radius: 16px; padding: 25px; margin-bottom: 40px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); text-align: right; }
@@ -129,8 +131,18 @@
         .figure-rank { font-size: 0.8rem; color: var(--accent-blue); font-weight: bold; margin-bottom: 8px; }
         .figure-info { font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; word-break: break-word; }
         .btn-del-fig { position: absolute; top: 8px; left: 8px; background: rgba(239, 68, 68, 0.2); border: 1px solid var(--danger-red); color: var(--danger-red); border-radius: 50%; width: 24px; height: 24px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 0.75rem; }
+
+        .royal-branches-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 15px; }
+        .royal-branch-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 14px; padding: 18px; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+        .royal-branch-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .royal-branch-icon { font-size: 2rem; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; background: rgba(37,99,235,0.1); border-radius: 10px; border: 1px solid var(--accent-blue); object-fit: cover; }
+        .royal-branch-title { font-size: 1.1rem; font-weight: bold; color: #fff; }
+        .royal-branch-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px; line-height: 1.5; }
+        .royal-branch-meta { font-size: 0.8rem; color: #cbd5e1; margin-bottom: 15px; border-top: 1px dashed var(--border-color); padding-top: 8px; }
+        .royal-branch-btn { background: var(--accent-blue); color: #fff; text-decoration: none; padding: 8px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: bold; text-align: center; display: block; transition: 0.3s; }
+        .royal-branch-btn:hover { background: var(--hover-blue); }
+        .btn-del-royal-branch { position: absolute; top: 10px; left: 10px; background: rgba(239, 68, 68, 0.2); border: 1px solid var(--danger-red); color: var(--danger-red); border-radius: 6px; padding: 2px 8px; font-size: 0.75rem; cursor: pointer; }
         
-        /* شريط التنقل السفلي الثابت */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -165,11 +177,8 @@
             color: var(--accent-blue);
             border-top: 3px solid var(--accent-blue);
         }
-        .bottom-nav-icon {
-            font-size: 1.2rem;
-        }
+        .bottom-nav-icon { font-size: 1.2rem; }
         
-        /* تنسيقات أزرار قائمة النقابات الخاصة */
         .my-guilds-list { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
         .my-guild-btn {
             background: var(--card-black);
@@ -190,8 +199,6 @@
             background: var(--light-blue-bg);
             transform: translateY(-2px);
         }
-
-        /* تنسيقات أقسام تفاصيل النقابة الخاصة */
         .guild-detail-section {
             background: rgba(255,255,255,0.02);
             border: 1px solid var(--border-color);
@@ -356,6 +363,7 @@
                     لا توجد معلومات محددة حالياً عن المملكة.
                 </div>
             </div>
+            
             <!-- 👑 قسم الفروع الملكية -->
             <div class="kingdom-section" style="margin-top: 40px;">
                 <div class="page-header-title" style="margin-bottom:15px; border-bottom: 1px dashed var(--border-color);">
@@ -379,7 +387,7 @@
         </nav>
         <div class="page-content">
             <div class="page-header-title">
-                <span>قائمة النقابات التابعة لك</span>
+                <span>قائمة جميع النقابات والمؤسسات التابعة لك</span>
             </div>
             <div id="myGuildsList" class="my-guilds-list"></div>
         </div>
@@ -399,27 +407,22 @@
             <div id="guildDetailHeaderArea"></div>
             <div id="guildDetailGrid" class="detail-info-grid"></div>
             
-            <!-- الأقسام الجديدة المطلوبة للنقابة -->
             <div class="guild-detail-section">
                 <div class="guild-detail-section-title">🎖️ الألقاب المأخوذة</div>
                 <div id="guildTakenTitles" class="guild-detail-section-content">لا توجد ألقاب مأخوذة مسجلة.</div>
             </div>
-
             <div class="guild-detail-section">
                 <div class="guild-detail-section-title">🔒 الألقاب المحجوزة</div>
                 <div id="guildReservedTitles" class="guild-detail-section-content">لا توجد ألقاب محجوزة مسجلة.</div>
             </div>
-
             <div class="guild-detail-section">
                 <div class="guild-detail-section-title">🌟 أبرز الشخصيات (الموجودين والمعتزلين)</div>
                 <div id="guildTopFigures" class="guild-detail-section-content">لا يوجد شخصيات مضافة.</div>
             </div>
-
             <div class="guild-detail-section">
                 <div class="guild-detail-section-title">🏆 إنجازات النقابة</div>
                 <div id="guildAchievements" class="guild-detail-section-content">لا توجد إنجازات مسجلة.</div>
             </div>
-
             <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px; flex-wrap: wrap;">
                 <button id="editGuildAdminBtn" class="btn-action btn-edit hidden" onclick="openEditGuildModal()" style="padding: 12px 25px; font-size: 1rem;">✏️ تعديل تفاصيل النقابة</button>
                 <button id="deleteGuildAdminBtn" class="btn-action btn-reject hidden" onclick="deleteCurrentGuild()" style="padding: 12px 25px; font-size: 1rem;">🗑️ حذف النقابة</button>
@@ -483,7 +486,7 @@
         </div>
     </div>
     
-    <!-- شريط التنقل السفلي الثابت بين الصفحات -->
+    <!-- شريط التنقل السفلي الثابت -->
     <div id="bottomNav" class="bottom-nav hidden">
         <button id="navHomeBtn" class="bottom-nav-item active" onclick="switchBottomTab('home')">
             <span class="bottom-nav-icon">🏰</span>
@@ -738,8 +741,6 @@
                     <label>معدل النشر اليومي</label>
                     <input type="text" id="editGuildPublishRate" class="form-control" required>
                 </div>
-
-                <!-- الخانات الجديدة للتفاصيل المضافة -->
                 <div class="form-group">
                     <label>الألقاب المأخوذة (افصل بينها بأسطر)</label>
                     <textarea id="editGuildTakenTitles" class="form-control" placeholder="اكتب الألقاب المأخوذة..."></textarea>
@@ -756,7 +757,6 @@
                     <label>إنجازات النقابة</label>
                     <textarea id="editGuildAchievements" class="form-control" placeholder="اكتب أهم إنجازات النقابة..."></textarea>
                 </div>
-
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
                     <button type="submit" class="btn-submit">حفظ التغييرات</button>
                     <button type="button" onclick="closeModal('editGuildModal')" class="btn-submit" style="background:#334155; color:#fff;">إلغاء</button>
@@ -874,7 +874,6 @@
                 <div id="managedGuildGroup" class="form-group hidden">
                     <label>النقابة المسؤول عنها بالتحديد</label>
                     <select id="editManagedGuild" class="form-control">
-                        <!-- خيارات النقابات Dynamic -->
                     </select>
                 </div>
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
@@ -959,12 +958,10 @@
             get: () => currentViewingGuildId,
             set: (val) => { currentViewingGuildId = val; }
         });
-
         function getCurrentFormattedDate() {
             const now = new Date();
             return now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) + ' - ' + now.toLocaleDateString('ar-EG');
         }
-
         window.addEventListener('DOMContentLoaded', () => {
             checkActiveSession();
             listenToNewsRealtime();
@@ -974,7 +971,6 @@
             listenToKingdomInfoRealtime();
             listenToRoyalBranchesRealtime();
         });
-
         function setupUserPresence(username) {
             if (!username) return;
             const userPresenceRef = ref(db, 'users/' + username + '/presence');
@@ -986,12 +982,10 @@
                 }
             });
         }
-
         async function setPresenceOffline(username) {
             if (!username) return;
             await set(ref(db, 'users/' + username + '/presence'), { state: 'offline', lastChanged: serverTimestamp() });
         }
-
         function checkActiveSession() {
             const savedSession = sessionStorage.getItem('north_active_session');
             if (savedSession) {
@@ -1003,7 +997,6 @@
                 switchBottomTab('home');
             }
         }
-
         function saveActiveSession() {
             sessionStorage.setItem('north_active_session', JSON.stringify({
                 isAdmin: currentUserIsAdmin,
@@ -1011,11 +1004,9 @@
                 user: currentActiveUser
             }));
         }
-
         function clearActiveSession() {
             sessionStorage.removeItem('north_active_session');
         }
-
         function listenToNewsRealtime() {
             onValue(ref(db, 'news'), (snapshot) => {
                 const data = snapshot.val();
@@ -1024,12 +1015,11 @@
                 renderNewsFeed(newsList);
             });
         }
-
         function renderNewsFeed(newsList) {
             const container = document.getElementById('newsFeed');
             if (!container) return;
             if (newsList.length === 0) {
-                container.innerHTML = '<div class="empty-news-state">لا توجد أخبار منشورة حالياً في الإمبراطورية.</div>';
+                container.innerHTML = '<div style="color:var(--text-muted); font-size:0.95rem;">لا توجد أخبار منشورة حالياً في الإمبراطورية.</div>';
                 return;
             }
             container.innerHTML = '';
@@ -1046,19 +1036,17 @@
                         <div class="news-item-time">${news.date || ''}</div>
                     </div>
                     ${imgHtml}
-                    <div class="news-item-text">${news.content || ''}</div>
+                    <div style="font-size:0.95rem; line-height:1.7; white-space:pre-line;">${news.content || ''}</div>
                     ${delBtn}
                 `;
                 container.appendChild(div);
             });
         }
-
         window.deleteNewsItem = async function(newsId) {
             if (confirm('هل أنت متأكد من حذف هذا الخبر؟')) {
                 await remove(ref(db, 'news/' + newsId));
             }
         };
-
         function listenToUsersRealtime() {
             onValue(ref(db, 'users'), (snapshot) => {
                 const data = snapshot.val();
@@ -1081,7 +1069,6 @@
                 if (!document.getElementById('empireAccountsPage').classList.contains('hidden')) renderEmpireAccountsPage();
             });
         }
-
         function listenToGuildsRealtime() {
             onValue(ref(db, 'empire_guilds'), (snapshot) => {
                 const data = snapshot.val();
@@ -1094,9 +1081,11 @@
                 if (currentViewingGuildId && data[currentViewingGuildId]) {
                     renderGuildDetailPage(data[currentViewingGuildId]);
                 }
+                if (!document.getElementById('myGuildsPage').classList.contains('hidden')) {
+                    renderMyGuildsPage();
+                }
             });
         }
-
         function listenToFiguresRealtime() {
             onValue(ref(db, 'kingdom_figures'), (snapshot) => {
                 const data = snapshot.val();
@@ -1104,7 +1093,6 @@
                 renderFiguresGrid(figuresList);
             });
         }
-
         function listenToKingdomInfoRealtime() {
             onValue(ref(db, 'kingdom_info'), (snapshot) => {
                 const info = snapshot.val();
@@ -1114,7 +1102,6 @@
                 }
             });
         }
-
         function listenToRoyalBranchesRealtime() {
             onValue(ref(db, 'royal_branches'), (snapshot) => {
                 const data = snapshot.val();
@@ -1122,7 +1109,6 @@
                 renderRoyalBranchesGrid(branchesList);
             });
         }
-
         function renderRoyalBranchesGrid(branches = []) {
             const grid = document.getElementById('royalBranchesGrid');
             if (!grid) return;
@@ -1159,11 +1145,9 @@
                 grid.appendChild(card);
             });
         }
-
         window.openAddRoyalBranchModal = function() {
             document.getElementById('addRoyalBranchModal').classList.remove('hidden');
         };
-
         window.handleSaveRoyalBranch = async function(e) {
             e.preventDefault();
             if (!currentUserIsAdmin) {
@@ -1198,7 +1182,6 @@
                 saveBranchData('');
             }
         };
-
         window.deleteRoyalBranch = async function(branchId) {
             if (!currentUserIsAdmin) {
                 alert('عذراً، هذه الصلاحية للمسؤولين فقط!');
@@ -1209,7 +1192,6 @@
                 alert('تم حذف الفرع الملكي بنجاح! 🗑️');
             }
         };
-
         window.switchTab = function(tab) {
             const loginForm = document.getElementById('loginForm');
             const registerForm = document.getElementById('registerForm');
@@ -1226,14 +1208,12 @@
                 tabBtns[1].classList.add('active');
             }
         };
-
         function createGuildSelectOptions(isRequired = true) {
             let options = `<option value="" ${isRequired ? 'disabled selected' : 'selected'}>${isRequired ? 'اختر النقابة...' : 'اختر نقابة (اختياري)...'}</option>`;
             const guildsList = window.globalGuildsObj ? Object.values(window.globalGuildsObj) : DEFAULT_GUILDS;
             guildsList.forEach(g => { options += `<option value="${g.name}">${g.badge || '🏰'} ${g.name}</option>`; });
             return options;
         }
-
         window.onRankChange = function() {
             const rank = document.getElementById('regRank').value;
             const container = document.getElementById('guildsContainer');
@@ -1266,7 +1246,6 @@
                 fieldsArea.appendChild(div);
             }
         };
-
         window.handleRegister = async function(e) {
             e.preventDefault();
             const username = document.getElementById('regUsername').value.trim();
@@ -1299,7 +1278,6 @@
             document.getElementById('loginUsername').value = username;
             document.getElementById('loginCode').value = password;
         };
-
         window.handleLogin = async function(e) {
             e.preventDefault();
             const user = document.getElementById('loginUsername').value.trim();
@@ -1328,7 +1306,6 @@
             setupUserPresence(foundUser.username);
             startLoadingProcess('جاري الدخول للنظام...', 1000, () => switchBottomTab('home'));
         };
-
         window.handleLogout = async function() {
             if (currentActiveUser) await setPresenceOffline(currentActiveUser.username);
             startLoadingProcess('جاري تسجيل الخروج...', 1000, () => {
@@ -1343,7 +1320,6 @@
                 currentActiveUser = null;
             });
         };
-
         function startLoadingProcess(msg, delay, callback) {
             hideAllPages();
             document.getElementById('loaderText').innerText = msg;
@@ -1353,7 +1329,6 @@
                 callback();
             }, delay);
         }
-
         function hideAllPages() {
             document.getElementById('authWrapper').classList.add('hidden');
             document.getElementById('statusWrapper').classList.add('hidden');
@@ -1364,7 +1339,6 @@
             document.getElementById('pendingRequestsPage').classList.add('hidden');
             document.getElementById('empireAccountsPage').classList.add('hidden');
         }
-
         function showStatusScreen(title, message) {
             hideAllPages();
             document.getElementById('bottomNav').classList.add('hidden');
@@ -1383,7 +1357,6 @@
             document.getElementById('bottomNav').classList.remove('hidden');
             document.getElementById('navHomeBtn').classList.remove('active');
             document.getElementById('navGuildsBtn').classList.remove('active');
-
             if (tab === 'home') {
                 document.getElementById('navHomeBtn').classList.add('active');
                 navigateToMainNews();
@@ -1394,32 +1367,36 @@
             }
         };
 
-        /* صفحة النقابات الخاصة بالمسؤولين والأعضاء */
+        /* صفحة النقابات الخاصة بك (تعرض جميع النقابات لحساب المالك Makinorth1، أو النقابات المحددة للمستخدم) */
         function renderMyGuildsPage() {
             const container = document.getElementById('myGuildsList');
             container.innerHTML = '';
+            
+            const allGuilds = window.globalGuildsObj ? Object.values(window.globalGuildsObj) : DEFAULT_GUILDS;
+            let guildsToShow = [];
 
-            if (!currentActiveUser || !currentActiveUser.guilds || currentActiveUser.guilds.length === 0) {
-                container.innerHTML = '<div class="empty-news-state">أنت غير مسجل في أي نقابة حالياً.</div>';
+            if (currentActiveUser && (currentUserIsAdmin || currentActiveUser.username === ADMIN_USER.username)) {
+                // المالك Makinorth1 أو الإدارة تظهر لهم جميع النقابات للتحكم الكامل بها
+                guildsToShow = allGuilds;
+            } else if (currentActiveUser && currentActiveUser.guilds && currentActiveUser.guilds.length > 0) {
+                // باقي الأعضاء تظهر لهم النقابات التابعة لهم فقط
+                guildsToShow = allGuilds.filter(g => currentActiveUser.guilds.some(ug => ug.trim().toLowerCase() === g.name.trim().toLowerCase()));
+            }
+
+            if (guildsToShow.length === 0) {
+                container.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding:30px;">لا توجد نقابات متوفرة حالياً للعرض.</div>';
                 return;
             }
 
-            const allGuilds = window.globalGuildsObj ? Object.values(window.globalGuildsObj) : DEFAULT_GUILDS;
-
-            currentActiveUser.guilds.forEach(guildName => {
-                const foundGuild = allGuilds.find(g => g.name.trim().toLowerCase() === guildName.trim().toLowerCase()) || { id: null, name: guildName, badge: '🛡️' };
+            guildsToShow.forEach(guild => {
                 const btn = document.createElement('button');
                 btn.className = 'my-guild-btn';
                 btn.innerHTML = `
-                    <span>${foundGuild.badge || '🛡️'} ${foundGuild.name}</span>
-                    <span>➔</span>
+                    <span>${guild.badge || '🛡️'} ${guild.name}</span>
+                    <span>تعديل التفاصيل ➔</span>
                 `;
                 btn.onclick = () => {
-                    if (foundGuild.id) {
-                        navigateToGuildDetail(foundGuild.id);
-                    } else {
-                        alert('تعذر الوصول لتفاصيل النقابة، قد تكون النقابة حذفت من قبل الإدارة.');
-                    }
+                    navigateToGuildDetail(guild.id);
                 };
                 container.appendChild(btn);
             });
@@ -1436,7 +1413,6 @@
                 overlay.classList.remove('active');
             }
         };
-
         window.navigateToMainNews = function() {
             hideAllPages();
             document.getElementById('mainDashboardPage').classList.remove('hidden');
@@ -1488,11 +1464,9 @@
                 grid.appendChild(card);
             });
         }
-
         window.openAddFigureModal = function() {
             document.getElementById('addFigureModal').classList.remove('hidden');
         };
-
         window.handleSaveNewFigure = async function(e) {
             e.preventDefault();
             const name = document.getElementById('figName').value.trim();
@@ -1515,19 +1489,16 @@
                 saveFig('');
             }
         };
-
         window.deleteFigure = async function(figId) {
             if (confirm('هل أنت متأكد من حذف هذه الشخصية؟')) {
                 await remove(ref(db, 'kingdom_figures/' + figId));
             }
         };
-
         window.openEditKingdomInfoModal = async function() {
             const snap = await get(ref(db, 'kingdom_info'));
             document.getElementById('kingdomInfoInput').value = snap.exists() ? snap.val() : '';
             document.getElementById('editKingdomInfoModal').classList.remove('hidden');
         };
-
         window.handleSaveKingdomInfo = async function(e) {
             e.preventDefault();
             const text = document.getElementById('kingdomInfoInput').value.trim();
@@ -1535,11 +1506,9 @@
             closeModal('editKingdomInfoModal');
             alert('تم حفظ معلومات المملكة بنجاح! 📌');
         };
-
         window.openPublishModal = function() {
             document.getElementById('publishModal').classList.remove('hidden');
         };
-
         window.handlePublishNews = async function(e) {
             e.preventDefault();
             const content = document.getElementById('newsContent').value.trim();
@@ -1570,7 +1539,6 @@
                 saveNews('');
             }
         };
-
         window.navigateToPendingRequests = function() {
             toggleSidebar();
             startLoadingProcess('جاري الانتقال لصفحة الطلبات المعلقة...', 1000, () => {
@@ -1579,18 +1547,15 @@
                 document.getElementById('pendingRequestsPage').classList.remove('hidden');
             });
         };
-
         window.navigateToEmpireAccounts = function() {
             toggleSidebar();
             hideAllPages();
             renderEmpireAccountsPage();
             document.getElementById('empireAccountsPage').classList.remove('hidden');
         };
-
         window.closeModal = function(modalId) {
             document.getElementById(modalId).classList.add('hidden');
         };
-
         function renderEmpireGuildsGrid(guildsList = []) {
             const grid = document.getElementById('empireGuildsGrid');
             if (!grid) return;
@@ -1609,7 +1574,6 @@
                 grid.appendChild(card);
             });
         }
-
         window.navigateToGuildDetail = function(guildId) {
             currentViewingGuildId = guildId;
             hideAllPages();
@@ -1617,8 +1581,6 @@
             if (guild) renderGuildDetailPage(guild);
             document.getElementById('guildDetailPage').classList.remove('hidden');
         };
-
-        /* التحقق من صلاحية تعديل التفاصيل الخاصة بالنقابة */
         function canUserManageGuild(guild) {
             if (!currentActiveUser) return false;
             if (currentUserIsAdmin || currentActiveUser.role === 'owner') return true;
@@ -1632,7 +1594,6 @@
             }
             return false;
         }
-
         function renderGuildDetailPage(guild) {
             document.getElementById('guildDetailTitleNav').innerText = `🏰 تفاصيل نقابة ${guild.name}`;
             const headerArea = document.getElementById('guildDetailHeaderArea');
@@ -1678,13 +1639,11 @@
                     </div>
                 </div>
             `;
-
-            // ملء بيانات الأقسام الإضافية
             document.getElementById('guildTakenTitles').innerText = guild.takenTitles || 'لا توجد ألقاب مأخوذة مسجلة.';
             document.getElementById('guildReservedTitles').innerText = guild.reservedTitles || 'لا توجد ألقاب محجوزة مسجلة.';
             document.getElementById('guildTopFigures').innerText = guild.topFigures || 'لا يوجد شخصيات مضافة.';
             document.getElementById('guildAchievements').innerText = guild.achievements || 'لا توجد إنجازات مسجلة.';
-
+            
             const editBtn = document.getElementById('editGuildAdminBtn');
             const deleteBtn = document.getElementById('deleteGuildAdminBtn');
             
@@ -1697,11 +1656,9 @@
                 deleteBtn.classList.add('hidden');
             }
         }
-
         window.openAddGuildModal = function() {
             document.getElementById('addGuildModal').classList.remove('hidden');
         };
-
         window.handleSaveNewGuild = async function(e) {
             e.preventDefault();
             const name = document.getElementById('newGuildName').value.trim();
@@ -1714,29 +1671,24 @@
             const publishRate = document.getElementById('newGuildPublishRate').value.trim();
             const fileInput = document.getElementById('newGuildImageInput');
             const file = fileInput.files[0];
-            const guildId = 'guild_' + Date.now();
-            
-            const modifierName = currentActiveUser ? currentActiveUser.nickname || currentActiveUser.username : 'غير معروف';
-            const modTime = getCurrentFormattedDate();
-            const newGuildObj = { 
-                id: guildId, name, badge, members, rank, adminsCount, stability, interactionRate, publishRate, image: '',
-                takenTitles: '', reservedTitles: '', topFigures: '', achievements: '',
-                lastModifiedBy: modifierName,
-                lastModifiedAt: modTime
+            const guildId = 'g_' + Date.now();
+            const authorName = currentActiveUser ? (currentActiveUser.nickname || currentActiveUser.username) : 'Maki 👑';
+
+            const saveGuild = async (imgData) => {
+                const guildObj = {
+                    id: guildId, name, badge, members, rank, adminsCount, stability, interactionRate, publishRate,
+                    image: imgData, lastModifiedBy: authorName, lastModifiedAt: getCurrentFormattedDate()
+                };
+                await set(ref(db, 'empire_guilds/' + guildId), guildObj);
+                closeModal('addGuildModal');
+                alert('تمت إضافة النقابة الجديدة بنجاح! 🏰');
             };
             if (file) {
                 const reader = new FileReader();
-                reader.onload = async function(evt) {
-                    newGuildObj.image = evt.target.result;
-                    await set(ref(db, 'empire_guilds/' + guildId), newGuildObj);
-                    closeModal('addGuildModal');
-                    alert('تم إضافة النقابة الجديدة بنجاح! 🎉');
-                };
+                reader.onload = async (evt) => saveGuild(evt.target.result);
                 reader.readAsDataURL(file);
             } else {
-                await set(ref(db, 'empire_guilds/' + guildId), newGuildObj);
-                closeModal('addGuildModal');
-                alert('تم إضافة النقابة الجديدة بنجاح! 🎉');
+                saveGuild('');
             }
         };
 
@@ -1746,22 +1698,23 @@
             document.getElementById('editGuildName').value = guild.name || '';
             document.getElementById('editGuildBadge').value = guild.badge || '';
             document.getElementById('editGuildMembers').value = guild.members || 0;
-            document.getElementById('editGuildRank').value = guild.rank || 'S';
+            document.getElementById('editGuildRank').value = guild.rank || '';
             document.getElementById('editGuildAdmins').value = guild.adminsCount || 1;
             document.getElementById('editGuildStability').value = guild.stability || 'مستقرة';
-            document.getElementById('editGuildInteraction').value = guild.interactionRate || '90%';
-            document.getElementById('editGuildPublishRate').value = guild.publishRate || 'ممتاز';
-            
+            document.getElementById('editGuildInteraction').value = guild.interactionRate || '';
+            document.getElementById('editGuildPublishRate').value = guild.publishRate || '';
             document.getElementById('editGuildTakenTitles').value = guild.takenTitles || '';
             document.getElementById('editGuildReservedTitles').value = guild.reservedTitles || '';
             document.getElementById('editGuildTopFigures').value = guild.topFigures || '';
             document.getElementById('editGuildAchievements').value = guild.achievements || '';
-
             document.getElementById('editGuildModal').classList.remove('hidden');
         };
 
         window.handleSaveGuildEdit = async function(e) {
             e.preventDefault();
+            const guild = (window.globalGuildsObj || {})[currentViewingGuildId];
+            if (!guild) return;
+
             const name = document.getElementById('editGuildName').value.trim();
             const badge = document.getElementById('editGuildBadge').value.trim();
             const members = parseInt(document.getElementById('editGuildMembers').value) || 0;
@@ -1770,113 +1723,93 @@
             const stability = document.getElementById('editGuildStability').value;
             const interactionRate = document.getElementById('editGuildInteraction').value.trim();
             const publishRate = document.getElementById('editGuildPublishRate').value.trim();
-            
             const takenTitles = document.getElementById('editGuildTakenTitles').value.trim();
             const reservedTitles = document.getElementById('editGuildReservedTitles').value.trim();
             const topFigures = document.getElementById('editGuildTopFigures').value.trim();
             const achievements = document.getElementById('editGuildAchievements').value.trim();
-
             const fileInput = document.getElementById('editGuildImageInput');
             const file = fileInput.files[0];
-            
-            const modifierName = currentActiveUser ? currentActiveUser.nickname || currentActiveUser.username : 'غير معروف';
-            const modTime = getCurrentFormattedDate();
-            const updateData = { 
-                name, badge, members, rank, adminsCount, stability, interactionRate, publishRate,
-                takenTitles, reservedTitles, topFigures, achievements,
-                lastModifiedBy: modifierName,
-                lastModifiedAt: modTime
+            const authorName = currentActiveUser ? (currentActiveUser.nickname || currentActiveUser.username) : 'Maki 👑';
+
+            const updateGuildData = async (imgData) => {
+                const updatedObj = {
+                    ...guild, name, badge, members, rank, adminsCount, stability, interactionRate, publishRate,
+                    takenTitles, reservedTitles, topFigures, achievements,
+                    lastModifiedBy: authorName, lastModifiedAt: getCurrentFormattedDate()
+                };
+                if (imgData) updatedObj.image = imgData;
+                await set(ref(db, 'empire_guilds/' + guild.id), updatedObj);
+                closeModal('editGuildModal');
+                alert('تم التحديث بنجاح! ✏️');
             };
+
             if (file) {
                 const reader = new FileReader();
-                reader.onload = async function(evt) {
-                    updateData.image = evt.target.result;
-                    await update(ref(db, 'empire_guilds/' + currentViewingGuildId), updateData);
-                    closeModal('editGuildModal');
-                    alert('تم تحديث بيانات النقابة وتوثيق التغيير بنجاح! 💾');
-                };
+                reader.onload = async (evt) => updateGuildData(evt.target.result);
                 reader.readAsDataURL(file);
             } else {
-                await update(ref(db, 'empire_guilds/' + currentViewingGuildId), updateData);
-                closeModal('editGuildModal');
-                alert('تم تحديث بيانات النقابة وتوثيق التغيير بنجاح! 💾');
+                updateGuildData(null);
             }
         };
 
         window.deleteCurrentGuild = async function() {
-            if (!currentViewingGuildId) return;
-            const guild = (window.globalGuildsObj || {})[currentViewingGuildId];
-            const guildName = guild ? guild.name : 'هذه النقابة';
-            if (confirm(`⚠️ هل أنت متأكد من رغبتك في حذف ${guildName} بشكل نهائي من النظام؟`)) {
+            if (!currentUserIsAdmin) return;
+            if (confirm('هل أنت متأكد من حذف هذه النقابة نهائياً من الإمبراطورية؟')) {
                 await remove(ref(db, 'empire_guilds/' + currentViewingGuildId));
                 alert('تم حذف النقابة بنجاح! 🗑️');
-                currentViewingGuildId = null;
                 switchBottomTab('home');
             }
         };
 
+        /* إدارة الفروع */
         window.navigateToGuildBranches = function() {
             hideAllPages();
-            const guild = (window.globalGuildsObj || {})[currentViewingGuildId];
-            if (guild) {
-                document.getElementById('guildBranchesTitleNav').innerText = `🌿 فروع نقابة ${guild.name}`;
-                document.getElementById('guildBranchesHeaderTitle').innerText = `قائمة فروع نقابة ${guild.name}`;
-                renderGuildBranchesPage(guild);
-            }
-            const addBranchBtn = document.getElementById('addBranchAdminBtn');
-            if (canUserManageGuild(guild)) addBranchBtn.classList.remove('hidden');
-            else addBranchBtn.classList.add('hidden');
+            renderGuildBranchesPage();
             document.getElementById('guildBranchesPage').classList.remove('hidden');
         };
+        function renderGuildBranchesPage() {
+            const guild = (window.globalGuildsObj || {})[currentViewingGuildId];
+            if (!guild) return;
+            document.getElementById('guildBranchesTitleNav').innerText = `🌿 فروع نقابة ${guild.name}`;
+            document.getElementById('guildBranchesHeaderTitle').innerText = `فروع نقابة ${guild.name}`;
+            const addBtn = document.getElementById('addBranchAdminBtn');
+            if (canUserManageGuild(guild)) addBtn.classList.remove('hidden');
+            else addBtn.classList.add('hidden');
 
-        function renderGuildBranchesPage(guild) {
             const grid = document.getElementById('guildBranchesGrid');
             grid.innerHTML = '';
-            const branchesObj = guild.branches || {};
-            const branchesList = Object.values(branchesObj);
-            if (branchesList.length === 0) {
-                grid.innerHTML = '<div class="empty-news-state">لا توجد فروع مسجلة لهذه النقابة حالياً.</div>';
+            const branches = guild.branches ? Object.values(guild.branches) : [];
+            if (branches.length === 0) {
+                grid.innerHTML = '<div style="color:var(--text-muted); padding:20px; grid-column:1/-1;">لا توجد فروع مضافة لهذه النقابة بعد.</div>';
                 return;
             }
-            branchesList.forEach(b => {
-                const imgHtml = b.image ? `<img src="${b.image}" class="guild-card-img">` : `<div class="guild-card-img" style="background:#1e293b; display:flex; justify-content:center; align-items:center; font-size:2rem;">🌿</div>`;
+            branches.forEach(b => {
                 const card = document.createElement('div');
                 card.className = 'guild-card-box';
-                card.style.cursor = 'default';
-                
-                let adminBranchActions = canUserManageGuild(guild) ? `
-                    <div style="margin-top:12px; display:flex; gap:8px; justify-content:center;">
-                        <button onclick="openEditBranchModal('${b.id}')" class="btn-action btn-edit">تعديل ✏️</button>
-                        <button onclick="deleteBranch('${b.id}')" class="btn-action btn-reject">حذف</button>
+                const imgHtml = b.image ? `<img src="${b.image}" class="guild-card-img">` : `<div class="guild-card-img" style="background:#1e293b; display:flex; justify-content:center; align-items:center; font-size:2rem;">🌿</div>`;
+                const manageBtns = canUserManageGuild(guild) ? `
+                    <div style="display:flex; gap:8px; justify-content:center; margin-top:12px;">
+                        <button class="btn-action btn-edit" onclick="openEditBranchModal('${b.id}')">تعديل ✏️</button>
+                        <button class="btn-action btn-reject" onclick="deleteGuildBranch('${b.id}')">حذف 🗑️</button>
                     </div>
                 ` : '';
-                const bLastBy = b.lastModifiedBy || 'غير محدد';
-                const bLastAt = b.lastModifiedAt || 'غير معروف';
                 card.innerHTML = `
                     ${imgHtml}
                     <div class="guild-card-title">${b.name}</div>
-                    <span class="guild-card-badge">نوع الفرع: ${b.type || 'رئيسي'}</span>
-                    <div style="font-size:0.85rem; color:var(--text-muted); margin-top:8px; line-height:1.6; text-align:right;">
-                        👥 <strong>عدد الأعضاء:</strong> ${b.members || 0} عضو<br>
-                        ✨ <strong>جودة الفرع:</strong> ${b.quality || 'عالية'}<br>
-                        📊 <strong>معدل الطلبات:</strong> ${b.requestsRate || 'مرتفع'}
-                    </div>
-                    <div style="margin-top:10px; padding-top:8px; border-top:1px dashed var(--border-color); font-size:0.75rem; color:#94a3b8; text-align:right;">
-                        👤 <strong>آخر تعديل بواسطة:</strong> <span style="color:#60a5fa;">${bLastBy}</span><br>
-                        📅 <strong>التاريخ:</strong> ${bLastAt}
-                    </div>
-                    ${adminBranchActions}
+                    <span class="guild-card-badge">${b.type || 'فرع فرعي'}</span>
+                    <div style="font-size:0.85rem; color:var(--text-muted); margin-top:8px;">👥 الأعضاء: ${b.members || 0}</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">✨ الجودة: ${b.quality || 'عالية'} | الطلبات: ${b.requestsRate || 'مرتفع'}</div>
+                    ${manageBtns}
                 `;
                 grid.appendChild(card);
             });
         }
-
-        window.openAddBranchModal = function() {
-            document.getElementById('addBranchModal').classList.remove('hidden');
-        };
-
+        window.openAddBranchModal = function() { document.getElementById('addBranchModal').classList.remove('hidden'); };
         window.handleSaveNewBranch = async function(e) {
             e.preventDefault();
+            const guild = (window.globalGuildsObj || {})[currentViewingGuildId];
+            if (!guild) return;
+
             const name = document.getElementById('newBranchName').value.trim();
             const members = parseInt(document.getElementById('newBranchMembers').value) || 0;
             const type = document.getElementById('newBranchType').value.trim();
@@ -1884,21 +1817,14 @@
             const requestsRate = document.getElementById('newBranchRequestsRate').value.trim();
             const fileInput = document.getElementById('newBranchImageInput');
             const file = fileInput.files[0];
-            const branchId = 'branch_' + Date.now();
-            const modifierName = currentActiveUser ? currentActiveUser.nickname || currentActiveUser.username : 'غير معروف';
-            const modTime = getCurrentFormattedDate();
-            const newBranch = { 
-                id: branchId, name, members, type, quality, requestsRate, image: '',
-                lastModifiedBy: modifierName,
-                lastModifiedAt: modTime
-            };
+            const branchId = 'b_' + Date.now();
+
             const saveBranch = async (imgData) => {
-                newBranch.image = imgData;
-                await set(ref(db, `empire_guilds/${currentViewingGuildId}/branches/${branchId}`), newBranch);
+                const branchObj = { id: branchId, name, members, type, quality, requestsRate, image: imgData };
+                await set(ref(db, `empire_guilds/${guild.id}/branches/${branchId}`), branchObj);
                 closeModal('addBranchModal');
-                alert('تم نشر الفرع وتوثيق التغيير بنجاح! 🌿');
-                const updatedGuild = (await get(ref(db, 'empire_guilds/' + currentViewingGuildId))).val();
-                renderGuildBranchesPage(updatedGuild);
+                alert('تمت إضافة الفرع بنجاح! 🌿');
+                renderGuildBranchesPage();
             };
             if (file) {
                 const reader = new FileReader();
@@ -1924,7 +1850,10 @@
 
         window.handleSaveBranchEdit = async function(e) {
             e.preventDefault();
+            const guild = (window.globalGuildsObj || {})[currentViewingGuildId];
             const branchId = document.getElementById('editBranchId').value;
+            if (!guild || !guild.branches || !guild.branches[branchId]) return;
+
             const name = document.getElementById('editBranchName').value.trim();
             const members = parseInt(document.getElementById('editBranchMembers').value) || 0;
             const type = document.getElementById('editBranchType').value.trim();
@@ -1932,189 +1861,148 @@
             const requestsRate = document.getElementById('editBranchRequestsRate').value.trim();
             const fileInput = document.getElementById('editBranchImageInput');
             const file = fileInput.files[0];
-            const modifierName = currentActiveUser ? currentActiveUser.nickname || currentActiveUser.username : 'غير معروف';
-            const modTime = getCurrentFormattedDate();
-            const updateBranchData = { 
-                name, members, type, quality, requestsRate,
-                lastModifiedBy: modifierName,
-                lastModifiedAt: modTime
-            };
-            const performBranchUpdate = async (imgData) => {
-                if (imgData) updateBranchData.image = imgData;
-                await update(ref(db, `empire_guilds/${currentViewingGuildId}/branches/${branchId}`), updateBranchData);
+
+            const updateBranch = async (imgData) => {
+                const updatedObj = { ...guild.branches[branchId], name, members, type, quality, requestsRate };
+                if (imgData) updatedObj.image = imgData;
+                await set(ref(db, `empire_guilds/${guild.id}/branches/${branchId}`), updatedObj);
                 closeModal('editBranchModal');
-                alert('تم تحديث الفرع وتوثيق التغيير بنجاح! 💾');
-                const updatedGuild = (await get(ref(db, 'empire_guilds/' + currentViewingGuildId))).val();
-                renderGuildBranchesPage(updatedGuild);
+                alert('تم تعديل بيانات الفرع بنجاح! ✏️');
+                renderGuildBranchesPage();
             };
             if (file) {
                 const reader = new FileReader();
-                reader.onload = async (evt) => performBranchUpdate(evt.target.result);
+                reader.onload = async (evt) => updateBranch(evt.target.result);
                 reader.readAsDataURL(file);
             } else {
-                performBranchUpdate(null);
+                updateBranch(null);
             }
         };
 
-        window.deleteBranch = async function(branchId) {
+        window.deleteGuildBranch = async function(branchId) {
             if (confirm('هل أنت متأكد من حذف هذا الفرع؟')) {
                 await remove(ref(db, `empire_guilds/${currentViewingGuildId}/branches/${branchId}`));
-                const updatedGuild = (await get(ref(db, 'empire_guilds/' + currentViewingGuildId))).val();
-                renderGuildBranchesPage(updatedGuild);
+                alert('تم حذف الفرع بنجاح! 🗑️');
+                renderGuildBranchesPage();
             }
         };
 
-        window.openMyProfileModal = function() {
-            if (!currentActiveUser) return;
-            document.getElementById('myProfileUsername').value = currentActiveUser.username;
-            document.getElementById('myProfileNickname').value = currentActiveUser.nickname || '';
-            document.getElementById('myProfilePassword').value = currentActiveUser.password || currentActiveUser.code || '';
-            document.getElementById('myProfileRank').value = currentActiveUser.rank || '';
-            document.getElementById('myProfilePhone').value = currentActiveUser.phone || '';
-            document.getElementById('myProfileGuilds').value = (currentActiveUser.guilds && currentActiveUser.guilds.length) ? currentActiveUser.guilds.join(', ') : 'لا يوجد';
-            const previewArea = document.getElementById('myProfileAvatarPreview');
-            if (currentActiveUser.photo) {
-                previewArea.innerHTML = `<img src="${currentActiveUser.photo}" class="user-avatar-lg">`;
-            } else {
-                previewArea.innerHTML = `<div class="user-avatar-lg" style="background:#2563eb; display:flex; align-items:center; justify-content:center; font-size:2.2rem; font-weight:bold; color:#fff;">${(currentActiveUser.nickname || 'U').charAt(0)}</div>`;
-            }
-            document.getElementById('myProfileModal').classList.remove('hidden');
-        };
-
-        window.handleSaveMyProfile = async function(e) {
-            e.preventDefault();
-            if (!currentActiveUser) return;
-            const nickname = document.getElementById('myProfileNickname').value.trim();
-            const password = document.getElementById('myProfilePassword').value.trim();
-            const phone = document.getElementById('myProfilePhone').value.trim();
-            const photoInput = document.getElementById('myProfilePhotoInput');
-            const file = photoInput.files[0];
-            let photoBase64 = currentActiveUser.photo || "";
-            const performUpdate = async (finalPhoto) => {
-                if (currentActiveUser.username === ADMIN_USER.username) {
-                    ADMIN_USER.nickname = nickname;
-                    ADMIN_USER.code = password;
-                    ADMIN_USER.phone = phone;
-                    ADMIN_USER.photo = finalPhoto;
-                    currentActiveUser = ADMIN_USER;
-                } else {
-                    await update(ref(db, 'users/' + currentActiveUser.username), { nickname, password, phone, photo: finalPhoto });
-                    currentActiveUser.nickname = nickname;
-                    currentActiveUser.password = password;
-                    currentActiveUser.phone = phone;
-                    currentActiveUser.photo = finalPhoto;
-                }
-                saveActiveSession();
-                closeModal('myProfileModal');
-                alert('تم تحديث تفاصيل حسابك بنجاح! ✨');
-            };
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = async function(evt) { await performUpdate(evt.target.result); };
-                reader.readAsDataURL(file);
-            } else {
-                await performUpdate(photoBase64);
-            }
-        };
-
+        /* إدارة الحسابات والطلبات المعلقة للمالك */
         function renderPendingRequestsPage() {
+            const list = document.getElementById('pendingRequestsList');
+            if (!list) return;
             const users = window.globalUsersList || [];
-            const container = document.getElementById('pendingRequestsList');
             const pendingUsers = users.filter(u => u.status === 'pending');
+            list.innerHTML = '';
             if (pendingUsers.length === 0) {
-                container.innerHTML = '<div class="empty-news-state">لا توجد طلبات انضمام معلقة في الوقت الحالي.</div>';
+                list.innerHTML = '<div style="color:var(--text-muted); text-align:center; padding:30px;">لا توجد طلبات انضمام معلقة حالياً.</div>';
                 return;
             }
-            container.innerHTML = '';
             pendingUsers.forEach(u => {
-                const div = document.createElement('div');
-                div.className = 'user-card';
-                div.innerHTML = `
+                const card = document.createElement('div');
+                card.className = 'user-card';
+                card.innerHTML = `
                     <div class="user-card-header">
-                        <strong>${u.nickname}</strong>
-                        <span style="color:var(--accent-blue); font-size:0.8rem; font-weight:bold;">[طلب معلق]</span>
+                        <strong>👤 ${u.nickname || u.username} (@${u.username})</strong>
+                        <span style="color:var(--accent-blue); font-size:0.85rem;">الرتبة: ${u.rank}</span>
                     </div>
                     <div class="user-card-details">
-                        اسم المستخدم: @${u.username}<br>
-                        الرتبة: ${u.rank} | الهاتف: ${u.phone}<br>
-                        النقابات: ${u.guilds && u.guilds.length > 0 ? u.guilds.join(', ') : 'لا يوجد'}
+                        📞 <strong>الويند/الواتساب:</strong> ${u.phone || 'غير مدخل'}<br>
+                        🛡️ <strong>النقابات الاختيارية:</strong> ${(u.guilds && u.guilds.length > 0) ? u.guilds.join(' - ') : 'لا يوجد'}
                     </div>
                     <div class="user-card-actions">
-                        <button onclick="updateUserStatus('${u.username}', 'approved')" class="btn-action btn-approve">قبول الطلب</button>
-                        <button onclick="updateUserStatus('${u.username}', 'rejected')" class="btn-action btn-reject">رفض</button>
+                        <button class="btn-action btn-approve" onclick="approveUserRequest('${u.username}')">موافقة وتفعيل ✓</button>
+                        <button class="btn-action btn-reject" onclick="rejectUserRequest('${u.username}')">رفض الطلب ✕</button>
                     </div>
                 `;
-                container.appendChild(div);
+                list.appendChild(card);
             });
         }
 
-        function formatLastSeen(timestamp) {
-            if (!timestamp) return 'غير محدد';
-            const date = new Date(timestamp);
-            return date.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) + ' - ' + date.toLocaleDateString('ar-EG');
-        }
+        window.approveUserRequest = async function(username) {
+            await update(ref(db, 'users/' + username), { status: 'approved', role: 'viewer', verified: true });
+            alert('تم الموافقة على الحساب وتفعيله بنجاح! ✓');
+        };
+        window.rejectUserRequest = async function(username) {
+            await update(ref(db, 'users/' + username), { status: 'rejected' });
+            alert('تم رفض طلب الحساب. ✕');
+        };
 
         function renderEmpireAccountsPage() {
+            const list = document.getElementById('empireAccountsList');
+            if (!list) return;
             const users = window.globalUsersList || [];
-            const container = document.getElementById('empireAccountsList');
-            const activeUsers = users.filter(u => u.status === 'approved' || u.status === 'banned');
-            if (activeUsers.length === 0) {
-                container.innerHTML = '<div class="empty-news-state">لا توجد حسابات مسجلة بالمملكة.</div>';
-                return;
-            }
-            container.innerHTML = '';
-            activeUsers.forEach((u) => {
-                const isBanned = (u.status === 'banned');
-                const isVerified = u.verified || false;
+            list.innerHTML = '';
+            
+            // وضع حساب المالك المباشر بالبداية
+            const allAccounts = [ADMIN_USER, ...users.filter(u => u.username !== ADMIN_USER.username)];
+            
+            allAccounts.forEach(u => {
+                const card = document.createElement('div');
+                card.className = 'user-card';
                 const isOnline = u.presence && u.presence.state === 'online';
-                const lastSeenText = u.presence && u.presence.lastChanged ? formatLastSeen(u.presence.lastChanged) : 'لم يسجل دخول بعد';
-                const presenceBadge = isOnline 
-                    ? `<span class="status-badge-online">🟢 متصل الآن</span>` 
-                    : `<span class="status-badge-offline">⚪ غير متصل (${lastSeenText})</span>`;
-                const avatarHtml = u.photo 
-                    ? `<img src="${u.photo}" class="user-avatar" style="margin-left: 8px;">` 
-                    : `<div class="avatar-placeholder" style="margin-left: 8px;">${(u.nickname || 'U').charAt(0)}</div>`;
-                const div = document.createElement('div');
-                div.className = 'user-card';
-                div.innerHTML = `
+                const statusBadge = isOnline ? '<span class="status-badge-online">متصل الآن 🟢</span>' : '<span class="status-badge-offline">غير متصل 🔴</span>';
+                const isVerified = u.verified;
+                const verifyToggleClass = isVerified ? 'verified' : '';
+
+                const roleBadge = u.role === 'owner' ? '👑 مالك مسؤول' : (u.role === 'guild_manager' ? '🛡️ مسؤول نقابة' : (u.role === 'commenter' ? '✍️ ناشر' : '👁️ مشاهد'));
+                const actionsHtml = u.username !== ADMIN_USER.username ? `
+                    <button class="btn-action btn-edit" onclick="openEditUserModal('${u.username}')">تعديل الصلاحيات والحساب ✏️</button>
+                    <button class="btn-action btn-reject" onclick="toggleBanUser('${u.username}', '${u.status}')">${u.status === 'banned' ? 'إلغاء الحظر 🔓' : 'حظر الحساب ⛔'}</button>
+                ` : '<span style="color:var(--accent-blue); font-weight:bold; font-size:0.85rem;">الحساب الرئيسي الأعلى</span>';
+
+                card.innerHTML = `
                     <div class="user-card-header">
-                        <div style="display:flex; align-items:center;">
-                            ${avatarHtml}
-                            <span class="verify-toggle-circle ${isVerified ? 'verified' : ''}" onclick="toggleUserVerification('${u.username}', ${!isVerified})" title="توثيق / إلغاء توثيق الحساب"></span>
-                            <strong style="margin-right: 5px;">${u.nickname} ${isVerified ? '<span class="verified-icon">✔</span>' : ''}</strong>
-                        </div>
                         <div>
-                            ${presenceBadge}
-                            <span style="font-size:0.8rem; margin-right:6px;">${isBanned ? '<span style="color:var(--danger-red); font-weight:bold;">[محظور ⛔]</span>' : '<span style="color:var(--accent-blue); font-weight:bold;">[نشط]</span>'}</span>
+                            <strong>👤 ${u.nickname || u.username} (@${u.username})</strong>
+                            <span class="verify-toggle-circle ${verifyToggleClass}" onclick="toggleUserVerify('${u.username}', ${isVerified})" title="تغيير شارة التوثيق"></span>
                         </div>
+                        ${statusBadge}
                     </div>
                     <div class="user-card-details">
-                        اسم المستخدم: @${u.username}<br>
-                        🔑 كلمة المرور: <span style="color:#fff;">${u.password}</span><br>
-                        🎖️ الرتبة: ${u.rank} | 📞 الهاتف: ${u.phone}<br>
-                        🏰 النقابات: ${u.guilds && u.guilds.length > 0 ? u.guilds.join(', ') : 'لا يوجد'}
+                        👑 <strong>الرتبة:</strong> ${u.rank || 'عضو'}<br>
+                        🔑 <strong>الصلاحية:</strong> ${roleBadge}<br>
+                        📞 <strong>الهاتف:</strong> ${u.phone || 'غير مسجل'}<br>
+                        🛡️ <strong>النقابات:</strong> ${(u.guilds && u.guilds.length > 0) ? u.guilds.join(', ') : 'لا يوجد'}
                     </div>
                     <div class="user-card-actions">
-                        <select onchange="updateUserRole('${u.username}', this.value)" class="role-select">
-                            <option value="viewer" ${u.role === 'viewer' ? 'selected' : ''}>مشاهد</option>
-                            <option value="commenter" ${u.role === 'commenter' ? 'selected' : ''}>ناشر أفراد</option>
-                            <option value="guild_manager" ${u.role === 'guild_manager' ? 'selected' : ''}>مسؤول نقابة</option>
-                            <option value="owner" ${u.role === 'owner' ? 'selected' : ''}>مالك مسؤول</option>
-                        </select>
-                        <button onclick="openEditUserModal('${u.username}')" class="btn-action btn-edit">تعديل التفاصيل ✏️</button>
-                        ${isBanned 
-                            ? `<button onclick="updateUserStatus('${u.username}', 'approved')" class="btn-action btn-unban">فك الحظر 🔓</button>`
-                            : `<button onclick="updateUserStatus('${u.username}', 'banned')" class="btn-action btn-ban">حظر ⛔</button>`
-                        }
-                        <button onclick="deleteUser('${u.username}')" class="btn-action btn-reject">حذف</button>
+                        ${actionsHtml}
+                        <button class="btn-action btn-edit" onclick="viewUserDetailsModal('${u.username}')">تفاصيل 👁️</button>
                     </div>
                 `;
-                container.appendChild(div);
+                list.appendChild(card);
             });
         }
 
-        window.toggleUserVerification = async function(username, targetState) {
-            await update(ref(db, 'users/' + username), { verified: targetState });
+        window.toggleUserVerify = async function(username, currentVerified) {
+            if (!currentUserIsAdmin) return;
+            if (username === ADMIN_USER.username) return;
+            await update(ref(db, 'users/' + username), { verified: !currentVerified });
+        };
+
+        window.toggleBanUser = async function(username, currentStatus) {
+            if (!currentUserIsAdmin) return;
+            const newStatus = currentStatus === 'banned' ? 'approved' : 'banned';
+            await update(ref(db, 'users/' + username), { status: newStatus });
+            alert(newStatus === 'banned' ? 'تم حظر الحساب بنجاح! ⛔' : 'تم إلغاء حظر الحساب! 🔓');
+        };
+
+        window.openEditUserModal = function(username) {
+            const user = (window.globalUsersList || []).find(u => u.username === username);
+            if (!user) return;
+            document.getElementById('editUsernameOriginal').value = user.username;
+            document.getElementById('editNickname').value = user.nickname || '';
+            document.getElementById('editPassword').value = user.password || '';
+            document.getElementById('editRank').value = user.rank || '';
+            document.getElementById('editPhone').value = user.phone || '';
+            document.getElementById('editRole').value = user.role || 'viewer';
+
+            const managedSelect = document.getElementById('editManagedGuild');
+            managedSelect.innerHTML = createGuildSelectOptions(false);
+            if (user.managedGuild) managedSelect.value = user.managedGuild;
+
+            toggleManagedGuildsSelect();
+            document.getElementById('editUserModal').classList.remove('hidden');
         };
 
         window.toggleManagedGuildsSelect = function() {
@@ -2122,40 +2010,6 @@
             const group = document.getElementById('managedGuildGroup');
             if (role === 'guild_manager') group.classList.remove('hidden');
             else group.classList.add('hidden');
-        };
-
-        window.openEditUserModal = function(username) {
-            const user = (window.globalUsersList || []).find(u => u.username === username);
-            if (!user) return;
-            document.getElementById('editUsernameOriginal').value = user.username;
-            document.getElementById('editNickname').value = user.nickname;
-            document.getElementById('editPassword').value = user.password;
-            document.getElementById('editRank').value = user.rank;
-            document.getElementById('editPhone').value = user.phone;
-            document.getElementById('editRole').value = user.role || 'viewer';
-
-            const selectGuild = document.getElementById('editManagedGuild');
-            selectGuild.innerHTML = '';
-
-            const userGuilds = user.guilds || [];
-            if (userGuilds.length > 0) {
-                userGuilds.forEach(g => {
-                    const opt = document.createElement('option');
-                    opt.value = g;
-                    opt.innerText = g;
-                    selectGuild.appendChild(opt);
-                });
-            } else {
-                const opt = document.createElement('option');
-                opt.value = '';
-                opt.innerText = 'لا توجد نقابات مسجلة لهذا العضو';
-                selectGuild.appendChild(opt);
-            }
-
-            if (user.managedGuild) selectGuild.value = user.managedGuild;
-
-            toggleManagedGuildsSelect();
-            document.getElementById('editUserModal').classList.remove('hidden');
         };
 
         window.handleSaveUserEdit = async function(e) {
@@ -2168,29 +2022,82 @@
             const role = document.getElementById('editRole').value;
             const managedGuild = document.getElementById('editManagedGuild').value;
 
-            await update(ref(db, 'users/' + username), { 
+            await update(ref(db, 'users/' + username), {
                 nickname, password, rank, phone, role, managedGuild: role === 'guild_manager' ? managedGuild : ''
             });
-
             closeModal('editUserModal');
-            alert('تم تحديث بيانات الحساب والصلاحيات بنجاح!');
+            alert('تم حفظ وتعديل كافة صلاحيات الحساب بنجاح! ✏️');
         };
 
-        window.updateUserStatus = async function(username, status) {
-            await update(ref(db, 'users/' + username), { status });
+        window.viewUserDetailsModal = function(username) {
+            let u = (window.globalUsersList || []).find(user => user.username === username);
+            if (username === ADMIN_USER.username) u = ADMIN_USER;
+            if (!u) return;
+
+            const viewDiv = document.getElementById('viewUserDetails');
+            viewDiv.innerHTML = `
+                👤 <strong>الاسم المستعار/اللقب:</strong> ${u.nickname || u.username}<br>
+                🆔 <strong>اسم المستخدم:</strong> @${u.username}<br>
+                🔑 <strong>كلمة المرور:</strong> ${u.password || u.code || 'محمية'}<br>
+                👑 <strong>الرتبة بالمملكة:</strong> ${u.rank}<br>
+                🛡️ <strong>النقابات التابعة:</strong> ${(u.guilds && u.guilds.length > 0) ? u.guilds.join(' - ') : 'لا يوجد'}<br>
+                📞 <strong>الهاتف / الواتساب:</strong> ${u.phone || 'غير مسجل'}<br>
+                ✨ <strong>الحالة بالحساب:</strong> ${u.status || 'نشط'}<br>
+                🎖️ <strong>موثق:</strong> ${u.verified ? 'نعم ✓' : 'لا ✕'}
+            `;
+            document.getElementById('viewUserModal').classList.remove('hidden');
         };
 
-        window.updateUserRole = async function(username, role) {
-            await update(ref(db, 'users/' + username), { role });
+        /* حسابي الشخصي */
+        window.openMyProfileModal = function() {
+            if (!currentActiveUser) return;
+            const u = currentActiveUser;
+            document.getElementById('myProfileUsername').value = u.username || '';
+            document.getElementById('myProfileNickname').value = u.nickname || '';
+            document.getElementById('myProfilePassword').value = u.password || u.code || '';
+            document.getElementById('myProfileRank').value = u.rank || '';
+            document.getElementById('myProfilePhone').value = u.phone || '';
+            document.getElementById('myProfileGuilds').value = (u.guilds && u.guilds.length > 0) ? u.guilds.join(', ') : 'لا يوجد';
+            
+            const prev = document.getElementById('myProfileAvatarPreview');
+            prev.innerHTML = u.photo ? `<img src="${u.photo}" class="user-avatar-lg">` : `<div class="user-avatar-lg" style="background:#1e293b; display:flex; justify-content:center; align-items:center; font-size:2rem;">👤</div>`;
+            document.getElementById('myProfileModal').classList.remove('hidden');
         };
 
-        window.deleteUser = async function(username) {
-            if(confirm(`هل أنت متأكد من حذف الحساب @${username} نهائياً؟`)) {
-                await remove(ref(db, 'users/' + username));
+        window.handleSaveMyProfile = async function(e) {
+            e.preventDefault();
+            if (!currentActiveUser) return;
+            const nickname = document.getElementById('myProfileNickname').value.trim();
+            const password = document.getElementById('myProfilePassword').value.trim();
+            const phone = document.getElementById('myProfilePhone').value.trim();
+            const fileInput = document.getElementById('myProfilePhotoInput');
+            const file = fileInput.files[0];
+
+            const updateProfile = async (imgData) => {
+                if (currentActiveUser.username === ADMIN_USER.username) {
+                    ADMIN_USER.nickname = nickname;
+                    ADMIN_USER.code = password;
+                    if (imgData) ADMIN_USER.photo = imgData;
+                    currentActiveUser = ADMIN_USER;
+                } else {
+                    const updateObj = { nickname, password, phone };
+                    if (imgData) updateObj.photo = imgData;
+                    await update(ref(db, 'users/' + currentActiveUser.username), updateObj);
+                    currentActiveUser = { ...currentActiveUser, ...updateObj };
+                }
+                saveActiveSession();
+                closeModal('myProfileModal');
+                alert('تم تحديث بيانات ملفك الشخصي بنجاح! 💾');
+            };
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async (evt) => updateProfile(evt.target.result);
+                reader.readAsDataURL(file);
+            } else {
+                updateProfile(null);
             }
         };
     </script>
 </body>
 </html>
-
-
