@@ -340,6 +340,36 @@
 
         .my-guild-sub { display: block; font-size: 0.82rem; color: var(--text-muted); font-weight: 600; margin-top: 4px; }
 
+        .notif-actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+
+        .guild-member-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 14px; margin-bottom: 8px; text-align: right; }
+
+        .guild-member-info { display: flex; flex-direction: column; gap: 2px; }
+
+        .guild-member-username { color: var(--text-muted); font-size: 0.8rem; direction: ltr; text-align: right; }
+
+        .guild-member-nickname { font-weight: 800; font-size: 0.98rem; }
+
+        .guild-member-rank { color: var(--accent-blue); font-size: 0.85rem; font-weight: 700; }
+
+        .chat-list-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px 16px; margin-bottom: 8px; cursor: pointer; text-align: right; transition: 0.2s; }
+
+        .chat-list-item:hover { border-color: var(--accent-blue); background: var(--light-blue-bg); }
+
+        .chat-list-name { font-weight: 800; font-size: 0.98rem; }
+
+        .chat-list-last { font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; }
+
+        .chat-messages-box { display: flex; flex-direction: column; gap: 8px; min-height: 300px; max-height: 55vh; overflow-y: auto; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; }
+
+        .chat-bubble-row { display: flex; justify-content: flex-start; }
+
+        .chat-bubble-row.mine { justify-content: flex-end; }
+
+        .chat-bubble { max-width: 70%; background: #1e293b; color: #fff; padding: 10px 14px; border-radius: 14px; font-size: 0.92rem; line-height: 1.5; word-break: break-word; text-align: right; }
+
+        .chat-bubble.mine { background: var(--accent-blue); }
+
     </style>
 
 </head>
@@ -546,6 +576,8 @@
 
                 <button id="notifBtn" class="icon-btn" onclick="openNotifPanel()" title="الإشعارات">🔔<span id="notifBadge" class="notif-badge-count hidden">0</span></button>
 
+                <button id="chatBtn" class="icon-btn" onclick="navigateToChat()" title="المحادثات">💬</button>
+
                 <button id="myProfileBtn" class="icon-btn" onclick="openMyProfileModal()" title="حسابي وتفاصيلي">👤</button>
 
                 <button id="adminPublishBtn" class="icon-btn hidden" onclick="openPublishModal()" title="نشر خبر جديد">+</button>
@@ -728,6 +760,14 @@
 
             <div class="guild-detail-section">
 
+                <div class="guild-detail-section-title">🧑‍🤝‍🧑 أعضاء النقابة المسجلين</div>
+
+                <div id="guildMembersList">لا يوجد أعضاء مسجلون بعد.</div>
+
+            </div>
+
+            <div class="guild-detail-section">
+
                 <div class="guild-detail-section-title">🌟 أبرز الشخصيات (الموجودين والمعتزلين)</div>
 
                 <div id="guildTopFigures" class="guild-detail-section-content">لا يوجد شخصيات مضافة.</div>
@@ -800,7 +840,6 @@
 
                 <button onclick="switchBottomTab('home')" class="btn-back">← العودة للرئيسية</button>
 
-
             </div>
 
         </nav>
@@ -864,6 +903,68 @@
             <div class="page-header-title"><span>📰 أرشيف أخبار المملكة (كامل)</span></div>
 
             <div id="permanentNewsFeed"></div>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="chatPage" class="page-screen hidden">
+
+        <nav class="navbar">
+
+            <div class="navbar-brand"><h1>💬 المحادثات</h1></div>
+
+            <div class="navbar-actions">
+
+                <button onclick="switchBottomTab('home')" class="btn-back">← العودة للرئيسية</button>
+
+            </div>
+
+        </nav>
+
+        <div class="page-content">
+
+            <div id="chatListView">
+
+                <div class="form-group">
+
+                    <label>ابحث عن مستخدم لبدء محادثة</label>
+
+                    <input type="text" id="chatSearchInput" class="form-control" placeholder="اكتب اسم المستخدم (username)..." oninput="handleChatSearch()" dir="ltr">
+
+                </div>
+
+                <div id="chatSearchResults" style="margin-bottom:25px;"></div>
+
+                <div class="page-header-title" style="font-size:1.2rem;"><span>محادثاتك الأخيرة</span></div>
+
+                <div id="chatRecentList"></div>
+
+            </div>
+
+            <div id="chatConversationView" class="hidden">
+
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:15px;">
+
+                    <button class="btn-back" onclick="backToChatList()">← رجوع</button>
+
+                    <h3 id="chatConversationTitle" style="font-weight:800; font-size:1.1rem;"></h3>
+
+                </div>
+
+                <div id="chatMessagesBox" class="chat-messages-box"></div>
+
+                <form onsubmit="handleSendChatMessage(event)" style="display:flex; gap:10px; margin-top:12px;">
+
+                    <input type="text" id="chatMessageInput" class="form-control" placeholder="اكتب رسالتك هنا...">
+
+                    <button type="submit" class="btn-submit" style="width:auto; padding:12px 22px; margin-top:0;">إرسال</button>
+
+                </form>
+
+            </div>
 
         </div>
 
@@ -1081,7 +1182,15 @@
 
                 <div class="form-group"><label>كلمة المرور</label><input type="text" id="myProfilePassword" class="form-control" required minlength="8" dir="ltr"></div>
 
-                <div class="form-group"><label>الرتبة</label><input type="text" id="myProfileRank" class="form-control" disabled style="opacity: 0.6;"></div>
+                <div class="form-group">
+
+                    <label>الرتبة</label>
+
+                    <input type="text" id="myProfileRank" class="form-control" disabled style="opacity: 0.6;">
+
+                    <button type="button" class="btn-action btn-edit" style="margin-top:8px;" onclick="closeModal('myProfileModal'); openRequestRankChangeModal();">📝 طلب تغيير الرتبة</button>
+
+                </div>
 
                 <div class="form-group"><label>رقم الهاتف / الواتساب</label><input type="tel" id="myProfilePhone" class="form-control" required dir="ltr"></div>
 
@@ -1349,6 +1458,16 @@
 
                 </div>
 
+                <div class="form-group">
+
+                    <label>نقابات المستخدم (بصلاحية المسؤول الشامل يمكنك تغييرها مباشرة)</label>
+
+                    <div id="editUserGuildsBox" style="max-height:200px; overflow-y:auto; border:1px solid var(--border-color); border-radius:10px; padding:10px; text-align:right;"></div>
+
+                </div>
+
+                <div class="hint">تغيير الرتبة هنا يتم مباشرة فوراً، وسيصل للمستخدم إشعار بذلك.</div>
+
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
 
                     <button type="submit" class="btn-submit">حفظ التغييرات</button>
@@ -1497,6 +1616,66 @@
 
 
 
+    <div id="editMemberRankModal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <h3 id="memberRankModalTitle" style="margin-bottom: 15px; text-align: right;">✏️ تعديل رتبة العضو</h3>
+
+            <form onsubmit="handleSaveMemberRank(event)">
+
+                <input type="hidden" id="memberRankUsername">
+
+                <div class="form-group"><label>الرتبة الحالية</label><input type="text" id="memberRankCurrentLabel" class="form-control" disabled style="opacity:0.6;"></div>
+
+                <div class="form-group"><label>الرتبة الجديدة *</label><select id="memberRankNewSelect" class="form-control" required></select></div>
+
+                <div class="hint">سيصل للعضو إشعار بهذا التغيير يمكنه من خلاله الموافقة أو الرفض؛ الرفض يعيد رتبته كما كانت. يختفي الإشعار تلقائياً بعد أسبوع.</div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+
+                    <button type="submit" class="btn-submit">حفظ وإرسال الإشعار</button>
+
+                    <button type="button" onclick="closeModal('editMemberRankModal')" class="btn-submit" style="background:#334155; color:#fff;">إلغاء</button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="requestRankModal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <h3 style="margin-bottom: 15px; text-align: right;">📝 طلب تغيير الرتبة</h3>
+
+            <form onsubmit="handleSubmitRankChangeRequest(event)">
+
+                <div class="form-group"><label>الرتبة المطلوبة *</label><select id="requestRankNewSelect" class="form-control" required></select></div>
+
+                <div class="hint">سيتم إرسال طلبك لمسؤول نقابتك، وستُحدَّث رتبتك تلقائياً فور موافقته.</div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+
+                    <button type="submit" class="btn-submit">إرسال الطلب</button>
+
+                    <button type="button" onclick="closeModal('requestRankModal')" class="btn-submit" style="background:#334155; color:#fff;">إلغاء</button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
     <script type="module">
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -1604,6 +1783,16 @@
         let contactWhatsappLink = "";
 
         let syncingAllGuilds = false;
+
+        let userNotifUnsubscribe = null;
+
+        let myChatsUnsub = null;
+
+        let chatMessagesUnsub = null;
+
+        let currentChatWithUsername = null;
+
+        const NOTIF_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
 
 
 
@@ -1829,9 +2018,51 @@
 
             currentUserCanPublish = currentUserIsAdmin || getUserRoles(user).includes("broadcaster") || getUserRoles(user).includes("owner");
 
+            subscribeToUserNotifications(user ? user.username : null);
+
             updateNotifBadge();
 
         }
+
+
+
+        function subscribeToUserNotifications(username) {
+
+            if (userNotifUnsubscribe) { userNotifUnsubscribe(); userNotifUnsubscribe = null; }
+
+            window.globalUserNotifications = [];
+
+            if (!username) { updateNotifBadge(); return; }
+
+            userNotifUnsubscribe = onValue(ref(db, "user_notifications/" + username), (snapshot) => {
+
+                const data = snapshot.val();
+
+                let list = data ? Object.values(data) : [];
+
+                const now = Date.now();
+
+                const expired = list.filter(n => (now - (n.timestamp || 0)) >= NOTIF_EXPIRY_MS);
+
+                expired.forEach(n => { remove(ref(db, "user_notifications/" + username + "/" + n.id)); });
+
+                list = list.filter(n => (now - (n.timestamp || 0)) < NOTIF_EXPIRY_MS);
+
+                list.sort((a,b) => (b.timestamp||0) - (a.timestamp||0));
+
+                window.globalUserNotifications = list;
+
+                updateNotifBadge();
+
+                const notifModal = document.getElementById("notifModal");
+
+                if (notifModal && !notifModal.classList.contains("hidden")) renderNotifList();
+
+            });
+
+        }
+
+
 
         function isSiteAdminFromUser(user) {
 
@@ -1977,21 +2208,25 @@
 
             }
 
+            const seenAt = getNotifSeenTime();
+
+            const personal = window.globalUserNotifications || [];
+
+            count += personal.filter(n => n.status === "pending").length;
+
+            count += personal.filter(n => n.status !== "pending" && (n.timestamp||0) > seenAt).length;
+
             if (isSiteAdmin()) {
 
                 const usersList = window.globalUsersList || [];
 
-                count = usersList.filter(u => u.status === "pending").length;
-
-            } else {
-
-                const list = window.globalNotifications || [];
-
-                const seenAt = getNotifSeenTime();
-
-                count = list.filter(n => (n.timestamp||0) > seenAt).length;
+                count += usersList.filter(u => u.status === "pending").length;
 
             }
+
+            const list = window.globalNotifications || [];
+
+            count += list.filter(n => (n.timestamp||0) > seenAt).length;
 
             if (count > 0) {
 
@@ -2049,11 +2284,71 @@
 
 
 
+        function renderPersonalNotifItem(n) {
+
+            let actions = "";
+
+            if (n.status === "pending" && n.type === "rank_change_by_admin") {
+
+                actions = `<div class="notif-actions">
+
+                    <button class="btn-action btn-approve" onclick="respondToRankChangeByAdmin('${n.id}','approve')">أوافق</button>
+
+                    <button class="btn-action btn-reject" onclick="respondToRankChangeByAdmin('${n.id}','reject')">لا أوافق</button>
+
+                </div>`;
+
+            } else if (n.status === "pending" && n.type === "rank_change_request") {
+
+                actions = `<div class="notif-actions">
+
+                    <button class="btn-action btn-approve" onclick="respondToRankChangeRequest('${n.id}','approve')">موافقة</button>
+
+                    <button class="btn-action btn-reject" onclick="respondToRankChangeRequest('${n.id}','reject')">رفض</button>
+
+                </div>`;
+
+            } else if (n.status === "approved") {
+
+                actions = `<div class="hint">✅ تمت الموافقة على هذا الإشعار.</div>`;
+
+            } else if (n.status === "rejected") {
+
+                actions = `<div class="hint">❌ تم رفض هذا الإشعار.</div>`;
+
+            }
+
+            return `<div class="notif-panel-item">
+
+                <div class="notif-panel-meta"><span>👤 ${n.fromName || n.requesterName || "إشعار"}</span><span>${n.date || ""}</span></div>
+
+                <div class="notif-panel-text">${n.text || ""}</div>
+
+                ${actions}
+
+            </div>`;
+
+        }
+
+
+
         function renderNotifList() {
 
             const box = document.getElementById("notifList");
 
             if (!box) return;
+
+            const personal = window.globalUserNotifications || [];
+
+            let html = "";
+
+            if (personal.length) {
+
+                html += `<div style="font-weight:800; margin-bottom:8px;">🔔 إشعاراتك الخاصة</div>`;
+
+                html += personal.map(renderPersonalNotifItem).join("");
+
+            }
 
             if (isSiteAdmin()) {
 
@@ -2063,11 +2358,9 @@
 
                 const broadcasts = window.globalNotifications || [];
 
-                let html = "";
-
                 if (pending.length) {
 
-                    html += `<div style="font-weight:800; margin-bottom:8px;">📩 طلبات انضمام معلقة (${pending.length})</div>`;
+                    html += `<div style="font-weight:800; margin:14px 0 8px;">📩 طلبات انضمام معلقة (${pending.length})</div>`;
 
                     html += pending.map(u => `<div class="notif-panel-item" style="cursor:pointer;" onclick="closeModal('notifModal'); navigateToPendingRequests();">
 
@@ -2081,15 +2374,17 @@
 
                 html += broadcasts.length ? broadcasts.map(renderNotifItem).join("") : '<div class="hint">لا توجد إشعارات مُرسلة بعد.</div>';
 
-                box.innerHTML = html;
-
             } else {
 
                 const broadcasts = window.globalNotifications || [];
 
-                box.innerHTML = broadcasts.length ? broadcasts.map(renderNotifItem).join("") : '<div class="empty-news-state">لا توجد إشعارات حالياً.</div>';
+                html += `<div style="font-weight:800; margin:14px 0 8px;">📢 إشعارات عامة</div>`;
+
+                html += broadcasts.length ? broadcasts.map(renderNotifItem).join("") : '<div class="hint">لا توجد إشعارات عامة حالياً.</div>';
 
             }
+
+            box.innerHTML = html || '<div class="empty-news-state">لا توجد إشعارات حالياً.</div>';
 
         }
 
@@ -2146,6 +2441,154 @@
                 await remove(ref(db, "notifications/" + notifId));
 
             }
+
+        };
+
+
+
+        window.respondToRankChangeByAdmin = async function(notifId, decision) {
+
+            if (!currentActiveUser) return;
+
+            const list = window.globalUserNotifications || [];
+
+            const n = list.find(x => x.id === notifId);
+
+            if (!n) return;
+
+            if (decision === "reject") {
+
+                await update(ref(db, "users/" + currentActiveUser.username), { rank: n.oldRank || "" });
+
+            }
+
+            await update(ref(db, "user_notifications/" + currentActiveUser.username + "/" + notifId), {
+
+                status: decision === "approve" ? "approved" : "rejected"
+
+            });
+
+        };
+
+
+
+        window.respondToRankChangeRequest = async function(notifId, decision) {
+
+            if (!currentActiveUser) return;
+
+            const list = window.globalUserNotifications || [];
+
+            const n = list.find(x => x.id === notifId);
+
+            if (!n || !n.requesterUsername) return;
+
+            const resultNotifId = "unotif_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+
+            if (decision === "approve") {
+
+                await update(ref(db, "users/" + n.requesterUsername), { rank: n.newRank });
+
+                await set(ref(db, "user_notifications/" + n.requesterUsername + "/" + resultNotifId), {
+
+                    id: resultNotifId, type: "rank_request_result", status: "info",
+
+                    text: `تمت الموافقة على طلبك بتغيير رتبتك إلى "${n.newRank}".`,
+
+                    date: getCurrentFormattedDate(), timestamp: Date.now()
+
+                });
+
+            } else {
+
+                await set(ref(db, "user_notifications/" + n.requesterUsername + "/" + resultNotifId), {
+
+                    id: resultNotifId, type: "rank_request_result", status: "info",
+
+                    text: `تم رفض طلبك بتغيير رتبتك إلى "${n.newRank}".`,
+
+                    date: getCurrentFormattedDate(), timestamp: Date.now()
+
+                });
+
+            }
+
+            await update(ref(db, "user_notifications/" + currentActiveUser.username + "/" + notifId), {
+
+                status: decision === "approve" ? "approved" : "rejected"
+
+            });
+
+        };
+
+
+
+        window.openRequestRankChangeModal = function() {
+
+            if (!currentActiveUser) return;
+
+            const select = document.getElementById("requestRankNewSelect");
+
+            select.innerHTML = ALL_RANKS_LIST.map(r => `<option value="${r}" ${r === currentActiveUser.rank ? "selected" : ""}>${r}</option>`).join("");
+
+            document.getElementById("requestRankModal").classList.remove("hidden");
+
+        };
+
+
+
+        window.handleSubmitRankChangeRequest = async function(e) {
+
+            e.preventDefault();
+
+            if (!currentActiveUser) return;
+
+            const newRank = document.getElementById("requestRankNewSelect").value;
+
+            const oldRank = currentActiveUser.rank || "";
+
+            if (newRank === oldRank) { alert("الرتبة المختارة مطابقة لرتبتك الحالية."); return; }
+
+            const myGuilds = toArray(currentActiveUser.guilds);
+
+            const usersList = window.globalUsersList || [];
+
+            const admins = usersList.filter(u => {
+
+                if (!getUserRoles(u).includes("guild_manager")) return false;
+
+                const managed = toArray(u.managedGuilds);
+
+                if (u.managedGuild) managed.push(u.managedGuild);
+
+                return managed.some(g => myGuilds.some(mg => String(mg).trim().toLowerCase() === String(g).trim().toLowerCase()));
+
+            });
+
+            if (!admins.length) { alert("لا يوجد مسؤول نقابة متاح حالياً لإرسال الطلب إليه."); return; }
+
+            const requesterName = currentActiveUser.nickname || currentActiveUser.username;
+
+            for (const admin of admins) {
+
+                const notifId = "unotif_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+
+                await set(ref(db, "user_notifications/" + admin.username + "/" + notifId), {
+
+                    id: notifId, type: "rank_change_request",
+
+                    text: `طلب ${requesterName} (@${currentActiveUser.username}) تغيير رتبته من "${oldRank}" إلى "${newRank}".`,
+
+                    requesterUsername: currentActiveUser.username, requesterName, oldRank, newRank,
+
+                    status: "pending", date: getCurrentFormattedDate(), timestamp: Date.now()
+
+                });
+
+            }
+
+            closeModal("requestRankModal");
+
+            alert("تم إرسال طلبك لمسؤول نقابتك، بانتظار الموافقة.");
 
         };
 
@@ -2493,6 +2936,22 @@
 
                 if (!document.getElementById("empireAccountsPage").classList.contains("hidden")) renderEmpireAccountsPage();
 
+                if (currentViewingGuildId && !document.getElementById("guildDetailPage").classList.contains("hidden")) {
+
+                    const viewedGuild = (window.globalGuildsObj || {})[currentViewingGuildId];
+
+                    if (viewedGuild) renderGuildMembersSection(viewedGuild);
+
+                }
+
+                if (!document.getElementById("chatPage").classList.contains("hidden")) {
+
+                    const searchInput = document.getElementById("chatSearchInput");
+
+                    if (searchInput && searchInput.value.trim()) handleChatSearch();
+
+                }
+
                 if (window.globalGuildsObj) syncUsersToAllGuilds();
 
             });
@@ -2612,8 +3071,7 @@
                     ${delBtn}
 
                     <div>
-
-                        <div class="royal-branch-header">${iconHtml}<div class="royal-branch-title">${b.name}</div></div>
+                      <div class="royal-branch-header">${iconHtml}<div class="royal-branch-title">${b.name}</div></div>
 
                         <div class="royal-branch-desc">${b.desc}</div>
 
@@ -3001,6 +3459,12 @@
 
                 currentActiveUser = null;
 
+                subscribeToUserNotifications(null);
+
+                if (myChatsUnsub) { myChatsUnsub(); myChatsUnsub = null; }
+
+                if (chatMessagesUnsub) { chatMessagesUnsub(); chatMessagesUnsub = null; }
+
                 updateNotifBadge();
 
             });
@@ -3031,7 +3495,7 @@
 
         function hideAllPages() {
 
-            ["authWrapper","statusWrapper","mainDashboardPage","myGuildsPage","guildDetailPage","guildBranchesPage","pendingRequestsPage","empireAccountsPage","permanentNewsPage"].forEach(id => {
+            ["authWrapper","statusWrapper","mainDashboardPage","myGuildsPage","guildDetailPage","guildBranchesPage","pendingRequestsPage","empireAccountsPage","permanentNewsPage","chatPage"].forEach(id => {
 
                 document.getElementById(id).classList.add("hidden");
 
@@ -3495,6 +3959,148 @@
 
 
 
+        function renderGuildMembersSection(guild) {
+
+            const box = document.getElementById("guildMembersList");
+
+            if (!box || !guild) return;
+
+            const usersList = window.globalUsersList || [];
+
+            const members = usersList.filter(u => u.status === "approved" && toArray(u.guilds).some(g => String(g).trim().toLowerCase() === guild.name.trim().toLowerCase()));
+
+            if (!members.length) {
+
+                box.innerHTML = '<div class="empty-news-state">لا يوجد أعضاء مسجلون لهذه النقابة حتى الآن.</div>';
+
+                return;
+
+            }
+
+            const canFullEdit = isSiteAdmin();
+
+            const canGuildEdit = !canFullEdit && canUserManageGuild(guild);
+
+            box.innerHTML = members.map(u => {
+
+                let editBtn = "";
+
+                if (canFullEdit) editBtn = `<button class="btn-action btn-edit" onclick="openEditUserModal('${u.username}')">✏️ تعديل التفاصيل</button>`;
+
+                else if (canGuildEdit) editBtn = `<button class="btn-action btn-edit" onclick="openChangeMemberRankModal('${u.username}')">✏️ تعديل الرتبة</button>`;
+
+                return `<div class="guild-member-row">
+
+                    <div class="guild-member-info">
+
+                        <span class="guild-member-username">@${u.username}</span>
+
+                        <span class="guild-member-nickname">${u.nickname || ""}</span>
+
+                        <span class="guild-member-rank">🎖️ ${u.rank || ""}</span>
+
+                    </div>
+
+                    ${editBtn}
+
+                </div>`;
+
+            }).join("");
+
+        }
+
+
+
+        window.openChangeMemberRankModal = function(username) {
+
+            const guild = (window.globalGuildsObj || {})[currentViewingGuildId];
+
+            const member = (window.globalUsersList || []).find(u => u.username === username);
+
+            if (!guild || !member) return;
+
+            if (!(isSiteAdmin() || canUserManageGuild(guild))) return;
+
+            document.getElementById("memberRankUsername").value = username;
+
+            document.getElementById("memberRankCurrentLabel").value = member.rank || "";
+
+            const select = document.getElementById("memberRankNewSelect");
+
+            select.innerHTML = ALL_RANKS_LIST.map(r => `<option value="${r}" ${r === member.rank ? "selected" : ""}>${r}</option>`).join("");
+
+            document.getElementById("memberRankModalTitle").innerText = `✏️ تعديل رتبة ${member.nickname || member.username}`;
+
+            document.getElementById("editMemberRankModal").classList.remove("hidden");
+
+        };
+
+
+
+        window.handleSaveMemberRank = async function(e) {
+
+            e.preventDefault();
+
+            const guild = (window.globalGuildsObj || {})[currentViewingGuildId];
+
+            const username = document.getElementById("memberRankUsername").value;
+
+            const member = (window.globalUsersList || []).find(u => u.username === username);
+
+            if (!guild || !member) return;
+
+            if (!(isSiteAdmin() || canUserManageGuild(guild))) return;
+
+            const newRank = document.getElementById("memberRankNewSelect").value;
+
+            const oldRank = member.rank || "";
+
+            if (newRank === oldRank) { closeModal("editMemberRankModal"); return; }
+
+            await update(ref(db, "users/" + username), { rank: newRank });
+
+            const actingName = currentActiveUser ? (currentActiveUser.nickname || currentActiveUser.username) : "الإدارة";
+
+            const notifId = "unotif_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+
+            if (isSiteAdmin()) {
+
+                await set(ref(db, "user_notifications/" + username + "/" + notifId), {
+
+                    id: notifId, type: "rank_change_info", status: "info",
+
+                    text: `قام ${actingName} بتغيير رتبتك من "${oldRank || "غير محددة"}" إلى "${newRank}".`,
+
+                    fromName: actingName, oldRank, newRank,
+
+                    date: getCurrentFormattedDate(), timestamp: Date.now()
+
+                });
+
+            } else {
+
+                await set(ref(db, "user_notifications/" + username + "/" + notifId), {
+
+                    id: notifId, type: "rank_change_by_admin", status: "pending",
+
+                    text: `قام ${actingName} (مسؤول نقابة ${guild.name}) بتغيير رتبتك من "${oldRank || "غير محددة"}" إلى "${newRank}".`,
+
+                    fromName: actingName, oldRank, newRank,
+
+                    date: getCurrentFormattedDate(), timestamp: Date.now()
+
+                });
+
+            }
+
+            closeModal("editMemberRankModal");
+
+            alert("تم تحديث رتبة العضو وإرسال إشعار له بنجاح!");
+
+        };
+
+
+
         function renderGuildImportantLinks(guild) {
 
             const box = document.getElementById("guildImportantLinks");
@@ -3686,6 +4292,8 @@
             document.getElementById("guildPrivateSections").classList.toggle("hidden", !showPrivate);
 
             renderGuildImportantLinks(guild);
+
+            renderGuildMembersSection(guild);
 
             const addLinkBtn = document.getElementById("addGuildLinkBtn");
 
@@ -4151,7 +4759,7 @@
 
                 renderGuildBranchesPage(updatedGuild);
 
-                    };
+            };
 
             if (file) { const reader = new FileReader(); reader.onload = async (evt) => performBranchUpdate(evt.target.result); reader.readAsDataURL(file); }
 
@@ -4527,6 +5135,16 @@
 
             }, 0);
 
+            const guildsList = window.globalGuildsObj ? Object.values(window.globalGuildsObj) : DEFAULT_GUILDS;
+
+            const userGuilds = toArray(user.guilds);
+
+            document.getElementById("editUserGuildsBox").innerHTML = guildsList.map(g =>
+
+                `<label class="rank-check-item"><input type="checkbox" class="edit-user-guild-check" value="${g.name}" ${userGuilds.some(ug => String(ug).trim().toLowerCase() === g.name.trim().toLowerCase()) ? "checked" : ""}> ${g.badge || "🏰"} ${g.name}</label>`
+
+            ).join("");
+
             document.getElementById("editUserModal").classList.remove("hidden");
 
         };
@@ -4538,6 +5156,10 @@
             e.preventDefault();
 
             const username = document.getElementById("editUsernameOriginal").value;
+
+            const existingUser = (window.globalUsersList || []).find(u => u.username === username) || {};
+
+            const oldRank = existingUser.rank || "";
 
             const nickname = document.getElementById("editNickname").value.trim();
 
@@ -4569,13 +5191,35 @@
 
             }
 
+            let selectedGuilds = Array.from(document.querySelectorAll(".edit-user-guild-check:checked")).map(c => c.value);
+
             const primaryRole = roles.includes("owner") ? "owner" : roles.includes("guild_manager") ? "guild_manager" : roles.includes("broadcaster") ? "broadcaster" : "viewer";
 
-            const payload = { nickname, password, rank, phone, role: primaryRole, roles, managedGuilds, managedGuild: managedGuilds[0] || "" };
+            const payload = { nickname, password, rank, phone, role: primaryRole, roles, managedGuilds, managedGuild: managedGuilds[0] || "", guilds: selectedGuilds };
 
             if (ranksNeedAllGuilds(rank)) payload.guilds = getAllGuildNames();
 
             await update(ref(db, "users/" + username), payload);
+
+            if (rank !== oldRank) {
+
+                const actingName = currentActiveUser ? (currentActiveUser.nickname || currentActiveUser.username) : "الإدارة";
+
+                const notifId = "unotif_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+
+                await set(ref(db, "user_notifications/" + username + "/" + notifId), {
+
+                    id: notifId, type: "rank_change_info", status: "info",
+
+                    text: `قام ${actingName} بتغيير رتبتك من "${oldRank || "غير محددة"}" إلى "${rank}".`,
+
+                    fromName: actingName, oldRank, newRank: rank,
+
+                    date: getCurrentFormattedDate(), timestamp: Date.now()
+
+                });
+
+            }
 
             closeModal("editUserModal");
 
@@ -4601,12 +5245,265 @@
 
         };
 
+
+
+        function getChatId(a, b) {
+
+            return [a, b].sort().join("__");
+
+        }
+
+
+
+        window.navigateToChat = function() {
+
+            if (!currentActiveUser) return;
+
+            hideAllPages();
+
+            document.getElementById("chatPage").classList.remove("hidden");
+
+            document.getElementById("bottomNav").classList.remove("hidden");
+
+            showChatListView();
+
+            listenToMyChatsRealtime();
+
+        };
+
+
+
+        function showChatListView() {
+
+            document.getElementById("chatListView").classList.remove("hidden");
+
+            document.getElementById("chatConversationView").classList.add("hidden");
+
+            currentChatWithUsername = null;
+
+            if (chatMessagesUnsub) { chatMessagesUnsub(); chatMessagesUnsub = null; }
+
+            const searchInput = document.getElementById("chatSearchInput");
+
+            if (searchInput) searchInput.value = "";
+
+            const resultsBox = document.getElementById("chatSearchResults");
+
+            if (resultsBox) resultsBox.innerHTML = "";
+
+        }
+
+
+
+        window.backToChatList = function() {
+
+            showChatListView();
+
+            listenToMyChatsRealtime();
+
+        };
+
+
+
+        function listenToMyChatsRealtime() {
+
+            if (!currentActiveUser) return;
+
+            if (myChatsUnsub) { myChatsUnsub(); myChatsUnsub = null; }
+
+            myChatsUnsub = onValue(ref(db, "user_chats/" + currentActiveUser.username), (snapshot) => {
+
+                const data = snapshot.val();
+
+                const list = data ? Object.entries(data).map(([uname, v]) => ({ username: uname, ...v })) : [];
+
+                list.sort((a, b) => (b.lastTimestamp || 0) - (a.lastTimestamp || 0));
+
+                renderChatList(list);
+
+            });
+
+        }
+
+
+
+        function renderChatList(list) {
+
+            const box = document.getElementById("chatRecentList");
+
+            if (!box) return;
+
+            if (!list.length) {
+
+                box.innerHTML = '<div class="empty-news-state">لا توجد محادثات بعد. ابحث عن مستخدم لبدء محادثة جديدة.</div>';
+
+                return;
+
+            }
+
+            box.innerHTML = list.map(c => {
+
+                const u = (window.globalUsersList || []).find(x => x.username === c.username);
+
+                const label = u ? (u.nickname || u.username) : c.username;
+
+                return `<div class="chat-list-item" onclick="openChatWith('${c.username}')">
+
+                    <div class="chat-list-name">${label} <span style="color:var(--text-muted); font-size:0.8rem;">@${c.username}</span></div>
+
+                    <div class="chat-list-last">${(c.lastMessage || "").toString().slice(0, 70)}</div>
+
+                </div>`;
+
+            }).join("");
+
+        }
+
+
+
+        window.handleChatSearch = function() {
+
+            const input = document.getElementById("chatSearchInput");
+
+            const resultsBox = document.getElementById("chatSearchResults");
+
+            if (!input || !resultsBox) return;
+
+            const q = input.value.trim().toLowerCase();
+
+            if (!q) { resultsBox.innerHTML = ""; return; }
+
+            const usersList = window.globalUsersList || [];
+
+            const matches = usersList.filter(u =>
+
+                u.status === "approved" &&
+
+                currentActiveUser &&
+
+                u.username !== currentActiveUser.username &&
+
+                u.username.toLowerCase().includes(q)
+
+            ).slice(0, 15);
+
+            if (!matches.length) {
+
+                resultsBox.innerHTML = '<div class="hint">لا يوجد مستخدم مطابق لهذا الاسم.</div>';
+
+                return;
+
+            }
+
+            resultsBox.innerHTML = matches.map(u => `<div class="chat-list-item" onclick="openChatWith('${u.username}')">
+
+                <div class="chat-list-name">${u.nickname || u.username} <span style="color:var(--text-muted); font-size:0.8rem;">@${u.username}</span></div>
+
+            </div>`).join("");
+
+        };
+
+
+
+        window.openChatWith = function(username) {
+
+            if (!currentActiveUser || username === currentActiveUser.username) return;
+
+            currentChatWithUsername = username;
+
+            document.getElementById("chatListView").classList.add("hidden");
+
+            document.getElementById("chatConversationView").classList.remove("hidden");
+
+            const otherUser = (window.globalUsersList || []).find(u => u.username === username);
+
+            document.getElementById("chatConversationTitle").innerText = otherUser ? `${otherUser.nickname || otherUser.username} (@${username})` : ("@" + username);
+
+            const chatId = getChatId(currentActiveUser.username, username);
+
+            if (chatMessagesUnsub) { chatMessagesUnsub(); chatMessagesUnsub = null; }
+
+            chatMessagesUnsub = onValue(ref(db, "chats/" + chatId + "/messages"), (snapshot) => {
+
+                const data = snapshot.val();
+
+                const list = data ? Object.values(data) : [];
+
+                list.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+                renderChatMessages(list);
+
+            });
+
+        };
+
+
+
+        function renderChatMessages(list) {
+
+            const box = document.getElementById("chatMessagesBox");
+
+            if (!box) return;
+
+            if (!list.length) {
+
+                box.innerHTML = '<div class="empty-news-state">لا توجد رسائل بعد، ابدأ المحادثة الآن.</div>';
+
+                return;
+
+            }
+
+            box.innerHTML = list.map(m => {
+
+                const mine = currentActiveUser && m.from === currentActiveUser.username;
+
+                return `<div class="chat-bubble-row ${mine ? "mine" : ""}"><div class="chat-bubble ${mine ? "mine" : ""}">${m.text || ""}</div></div>`;
+
+            }).join("");
+
+            box.scrollTop = box.scrollHeight;
+
+        }
+
+
+
+        window.handleSendChatMessage = async function(e) {
+
+            e.preventDefault();
+
+            if (!currentActiveUser || !currentChatWithUsername) return;
+
+            const input = document.getElementById("chatMessageInput");
+
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            const chatId = getChatId(currentActiveUser.username, currentChatWithUsername);
+
+            const msgId = "msg_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+
+            await set(ref(db, "chats/" + chatId + "/messages/" + msgId), {
+
+                id: msgId, from: currentActiveUser.username, to: currentChatWithUsername, text, timestamp: Date.now()
+
+            });
+
+            const now = Date.now();
+
+            await update(ref(db, "user_chats/" + currentActiveUser.username + "/" + currentChatWithUsername), { lastMessage: text, lastTimestamp: now });
+
+            await update(ref(db, "user_chats/" + currentChatWithUsername + "/" + currentActiveUser.username), { lastMessage: text, lastTimestamp: now });
+
+            input.value = "";
+
+        };
+
     </script>
 
 </body>
 
 </html>
-
 
 
 
