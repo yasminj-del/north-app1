@@ -370,6 +370,20 @@
 
         .chat-bubble.mine { background: var(--accent-blue); }
 
+        .lesson-message-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; text-align: right; animation: fadeInMsg 0.4s ease; }
+
+        .lesson-message-card .msg-text { white-space: pre-line; line-height: 1.7; margin-bottom: 10px; }
+
+        @keyframes fadeInMsg { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .form-card { background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; text-align: right; }
+
+        .form-card .form-card-title { font-weight: 800; margin-bottom: 6px; font-size: 1rem; }
+
+        .form-card .form-card-text { white-space: pre-line; color: var(--text-muted); font-size: 0.88rem; margin-bottom: 10px; line-height: 1.6; }
+
+        .form-card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
     </style>
 
 </head>
@@ -425,6 +439,10 @@
                 </div>
 
                 <button type="submit" class="btn-submit">دخول النظام</button>
+
+                <button type="button" class="btn-submit" style="background:#334155; color:#fff; margin-top:10px;" onclick="handleGuestLogin()">🧑‍💼 الدخول كضيف</button>
+
+                <div class="hint">حساب الضيف للتصفح فقط، بدون تعليق أو الوصول لنقاباتك الخاصة أو المحادثات.</div>
 
             </form>
 
@@ -576,7 +594,7 @@
 
                 <button id="notifBtn" class="icon-btn" onclick="openNotifPanel()" title="الإشعارات">🔔<span id="notifBadge" class="notif-badge-count hidden">0</span></button>
 
-                <button id="chatBtn" class="icon-btn" onclick="navigateToChat()" title="المحادثات">💬</button>
+                <button id="chatBtn" class="icon-btn" onclick="navigateToChat()" title="المحادثات">💬<span id="chatBadge" class="notif-badge-count hidden">0</span></button>
 
                 <button id="myProfileBtn" class="icon-btn" onclick="openMyProfileModal()" title="حسابي وتفاصيلي">👤</button>
 
@@ -655,6 +673,24 @@
                 </div>
 
                 <div id="royalBranchesGrid" class="royal-branches-grid"></div>
+
+            </div>
+
+
+
+            <div class="kingdom-section" style="margin-top: 30px; display:flex; flex-direction:column; gap:14px;">
+
+                <button class="my-guild-btn" onclick="navigateToTrainingPage()">
+
+                    <span>📚 قسم تعليم المشرفين وشروحات النقابات</span><span>➔</span>
+
+                </button>
+
+                <button class="my-guild-btn" onclick="navigateToEmpireForms()">
+
+                    <span>📋 استمارات الامبراطورية</span><span>➔</span>
+
+                </button>
 
             </div>
 
@@ -956,7 +992,13 @@
 
                 <div id="chatMessagesBox" class="chat-messages-box"></div>
 
-                <form onsubmit="handleSendChatMessage(event)" style="display:flex; gap:10px; margin-top:12px;">
+                <div id="chatImagePreviewBox" class="hidden" style="margin-top:8px;"></div>
+
+                <form onsubmit="handleSendChatMessage(event)" style="display:flex; gap:10px; margin-top:12px; align-items:center;">
+
+                    <input type="file" id="chatImageInput" accept="image/*" class="hidden" onchange="handleChatImageSelected(event)">
+
+                    <button type="button" class="btn-action btn-edit" style="padding:12px 14px;" onclick="document.getElementById('chatImageInput').click()">📷</button>
 
                     <input type="text" id="chatMessageInput" class="form-control" placeholder="اكتب رسالتك هنا...">
 
@@ -965,6 +1007,158 @@
                 </form>
 
             </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="trainingPage" class="page-screen hidden">
+
+        <nav class="navbar">
+
+            <div class="navbar-brand"><h1>📚 تعليم المشرفين وشروحات النقابات</h1></div>
+
+            <div class="navbar-actions">
+
+                <button onclick="switchBottomTab('home')" class="btn-back">← العودة للرئيسية</button>
+
+            </div>
+
+        </nav>
+
+        <div class="page-content">
+
+            <div class="page-header-title" style="margin-bottom:15px;">
+
+                <span>🎓 دروس تعليم المشرفين</span>
+
+                <button id="addLessonAdminBtn" class="btn-action btn-approve hidden" onclick="openAddLessonModal()">+ إضافة درس</button>
+
+            </div>
+
+            <div id="lessonsListBox" style="margin-bottom:35px; display:flex; flex-direction:column; gap:12px;"></div>
+
+
+
+            <div class="page-header-title" style="margin-bottom:15px; border-top:1px dashed var(--border-color); padding-top:25px;">
+
+                <span>🧾 شروحات المملكة</span>
+
+                <button id="addExplanationAdminBtn" class="btn-action btn-approve hidden" onclick="openAddExplanationFormModal()">+ إضافة استمارة شرح</button>
+
+            </div>
+
+            <div id="guildExplanationFormsBox"></div>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="lessonDetailPage" class="page-screen hidden">
+
+        <nav class="navbar">
+
+            <div class="navbar-brand"><h1 id="lessonDetailTitle">📖 الدرس</h1></div>
+
+            <div class="navbar-actions">
+
+                <button id="addLessonMessageAdminBtn" class="btn-action btn-approve hidden" onclick="openAddLessonMessageModal()">+ رسالة</button>
+
+                <button onclick="navigateToTrainingPage()" class="btn-back">← العودة</button>
+
+            </div>
+
+        </nav>
+
+        <div class="page-content">
+
+            <div id="lessonStartBox" style="text-align:center; padding:40px 0;">
+
+                <button class="btn-submit" style="width:auto; padding:14px 40px;" onclick="startLesson()">▶️ ابدأ</button>
+
+            </div>
+
+            <div id="lessonMessagesBox" class="hidden" style="min-height:150px;"></div>
+
+            <div id="lessonContinueBox" class="hidden" style="text-align:center; margin-top:20px;">
+
+                <button class="btn-submit" style="width:auto; padding:12px 30px;" onclick="continueLesson()">➡️ اكمل</button>
+
+            </div>
+
+            <div id="lessonFinishBox" class="hidden" style="text-align:center; margin-top:20px;">
+
+                <div style="font-weight:800; font-size:1.2rem; margin-bottom:15px;">🏁 انتهى الدرس</div>
+
+                <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+
+                    <button class="btn-submit" style="width:auto; padding:12px 25px;" onclick="navigateToTrainingPage()">⬅️ العودة للصفحة السابقة</button>
+
+                    <button class="btn-submit" style="width:auto; padding:12px 25px; background:#334155;" onclick="restartLesson()">🔄 إعادة الدرس</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="empireFormsPage" class="page-screen hidden">
+
+        <nav class="navbar">
+
+            <div class="navbar-brand"><h1>📋 استمارات الامبراطورية</h1></div>
+
+            <div class="navbar-actions">
+
+                <button onclick="switchBottomTab('home')" class="btn-back">← العودة للرئيسية</button>
+
+            </div>
+
+        </nav>
+
+        <div class="page-content">
+
+            <div class="page-header-title" style="margin-bottom:15px;">
+
+                <span>🎉 استمارات فعاليات</span>
+
+                <button class="btn-action btn-approve empire-forms-admin-btn hidden" onclick="openAddEmpireFormModal('events')">+ إضافة استمارة</button>
+
+            </div>
+
+            <div id="empireFormsBox-events" style="margin-bottom:35px;"></div>
+
+
+
+            <div class="page-header-title" style="margin-bottom:15px; border-top:1px dashed var(--border-color); padding-top:25px;">
+
+                <span>🗂️ استمارات إدارية</span>
+
+                <button class="btn-action btn-approve empire-forms-admin-btn hidden" onclick="openAddEmpireFormModal('admin')">+ إضافة استمارة</button>
+
+            </div>
+
+            <div id="empireFormsBox-admin" style="margin-bottom:35px;"></div>
+
+
+
+            <div class="page-header-title" style="margin-bottom:15px; border-top:1px dashed var(--border-color); padding-top:25px;">
+
+                <span>🏆 استمارات جوائز</span>
+
+                <button class="btn-action btn-approve empire-forms-admin-btn hidden" onclick="openAddEmpireFormModal('awards')">+ إضافة استمارة</button>
+
+            </div>
+
+            <div id="empireFormsBox-awards"></div>
 
         </div>
 
@@ -1025,6 +1219,14 @@
         <button class="sidebar-menu-btn" onclick="navigateToEmpireAccounts()">
 
             <span>👑 حسابات الإمبراطورية</span>
+
+            <span>➔</span>
+
+        </button>
+
+        <button class="sidebar-menu-btn" onclick="toggleSidebar(); openImportantNoticeModal();">
+
+            <span>📣 إرسال إشعار مهم</span>
 
             <span>➔</span>
 
@@ -1676,6 +1878,166 @@
 
 
 
+    <div id="addLessonModal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <h3 style="margin-bottom: 15px; text-align: right;">🎓 إضافة درس جديد</h3>
+
+            <form onsubmit="handleSaveLesson(event)">
+
+                <div class="form-group"><label>اسم الدرس *</label><input type="text" id="newLessonTitle" class="form-control" required></div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+
+                    <button type="submit" class="btn-submit">إضافة الدرس</button>
+
+                    <button type="button" onclick="closeModal('addLessonModal')" class="btn-submit" style="background:#334155; color:#fff;">إلغاء</button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="addLessonMessageModal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <h3 style="margin-bottom: 15px; text-align: right;">✉️ إضافة رسالة للدرس</h3>
+
+            <form onsubmit="handleSaveLessonMessage(event)">
+
+                <div class="form-group"><label>نص الرسالة *</label><textarea id="newLessonMessageText" class="form-control" rows="5" required></textarea></div>
+
+                <div class="hint">ستظهر هذه الرسالة بشكل متدرج للمستخدم ضمن ترتيب رسائل الدرس.</div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+
+                    <button type="submit" class="btn-submit">إرسال الرسالة</button>
+
+                    <button type="button" onclick="closeModal('addLessonMessageModal')" class="btn-submit" style="background:#334155; color:#fff;">إلغاء</button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="addExplanationFormModal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <h3 style="margin-bottom: 15px; text-align: right;">🧾 إضافة استمارة شرح</h3>
+
+            <form onsubmit="handleSaveExplanationForm(event)">
+
+                <div class="form-group"><label>عنوان الاستمارة *</label><input type="text" id="newExplanationTitle" class="form-control" required></div>
+
+                <div class="form-group"><label>نص الاستمارة *</label><textarea id="newExplanationText" class="form-control" rows="6" required></textarea></div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+
+                    <button type="submit" class="btn-submit">إضافة الاستمارة</button>
+
+                    <button type="button" onclick="closeModal('addExplanationFormModal')" class="btn-submit" style="background:#334155; color:#fff;">إلغاء</button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="addEmpireFormModal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <h3 id="addEmpireFormTitle" style="margin-bottom: 15px; text-align: right;">📋 إضافة استمارة</h3>
+
+            <form onsubmit="handleSaveEmpireForm(event)">
+
+                <input type="hidden" id="newEmpireFormCategory">
+
+                <div class="form-group"><label>عنوان الاستمارة *</label><input type="text" id="newEmpireFormTitle" class="form-control" required></div>
+
+                <div class="form-group"><label>نص الاستمارة *</label><textarea id="newEmpireFormText" class="form-control" rows="6" required></textarea></div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+
+                    <button type="submit" class="btn-submit">إضافة الاستمارة</button>
+
+                    <button type="button" onclick="closeModal('addEmpireFormModal')" class="btn-submit" style="background:#334155; color:#fff;">إلغاء</button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="importantNoticeModal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <h3 style="margin-bottom: 15px; text-align: right;">📣 إرسال إشعار مهم للجميع</h3>
+
+            <form onsubmit="handleSendImportantNotice(event)">
+
+                <div class="form-group"><label>نص الإشعار *</label><textarea id="importantNoticeText" class="form-control" rows="5" required></textarea></div>
+
+                <div class="hint">سيظهر هذا الإشعار لكل المستخدمين كنافذة إجبارية بمجرد فتحهم لحساباتهم وعلى الصفحة الرئيسية، ويجب عليهم الضغط على "حسناً" لإغلاقها.</div>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+
+                    <button type="submit" class="btn-submit">إرسال الإشعار للجميع</button>
+
+                    <button type="button" onclick="closeModal('importantNoticeModal')" class="btn-submit" style="background:#334155; color:#fff;">إلغاء</button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="mandatoryNoticeModal" class="modal hidden">
+
+        <div class="modal-content" style="text-align:center;">
+
+            <div style="font-size:2.2rem; margin-bottom:10px;">📣</div>
+
+            <h3 style="margin-bottom:15px;">إشعار مهم من الإدارة</h3>
+
+            <div id="mandatoryNoticeText" style="line-height:1.8; white-space:pre-line; margin-bottom:10px; text-align:right;"></div>
+
+            <div id="mandatoryNoticeSender" style="color:var(--text-muted); font-size:0.85rem; margin-bottom:20px;"></div>
+
+            <button class="btn-submit" onclick="acknowledgeImportantNotice()">✅ حسناً</button>
+
+        </div>
+
+    </div>
+
+
+
     <script type="module">
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -1750,7 +2112,35 @@
 
             photo: "",
 
-            guilds: []
+guilds: []
+
+        };
+
+        const GUEST_USER = {
+
+            username: "guest",
+
+            nickname: "زائر 🧑‍💼",
+
+            password: "",
+
+            rank: "زائر",
+
+            phone: "",
+
+            role: "guest",
+
+            roles: ["guest"],
+
+            verified: false,
+
+            photo: "",
+
+            guilds: [],
+
+            status: "approved",
+
+            isGuest: true
 
         };
 
@@ -1791,6 +2181,14 @@
         let chatMessagesUnsub = null;
 
         let currentChatWithUsername = null;
+
+        let pendingChatImage = null;
+
+        let currentLessonId = null;
+
+        let currentLessonMessages = [];
+
+        let currentLessonRevealCount = 0;
 
         const NOTIF_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -1866,11 +2264,19 @@
 
         function canComment() {
 
-            if (!currentActiveUser) return false;
+            if (!currentActiveUser || currentActiveUser.isGuest) return false;
 
             if (isSiteAdmin()) return true;
 
             return !!currentActiveUser.verified;
+
+        }
+
+
+
+        function isGuestUser() {
+
+            return !!(currentActiveUser && currentActiveUser.isGuest);
 
         }
 
@@ -1972,13 +2378,21 @@
 
             listenToNotificationsRealtime();
 
+            listenToLessonsRealtime();
+
+            listenToExplanationFormsRealtime();
+
+            listenToEmpireFormsRealtime();
+
+            listenToImportantNoticeRealtime();
+
         });
 
 
 
         function setupUserPresence(username) {
 
-            if (!username) return;
+            if (!username || username === GUEST_USER.username) return;
 
             const userPresenceRef = ref(db, "users/" + username + "/presence");
 
@@ -2002,7 +2416,7 @@
 
         async function setPresenceOffline(username) {
 
-            if (!username) return;
+            if (!username || username === GUEST_USER.username) return;
 
             await set(ref(db, "users/" + username + "/presence"), { state: "offline", lastChanged: serverTimestamp() });
 
@@ -2018,9 +2432,23 @@
 
             currentUserCanPublish = currentUserIsAdmin || getUserRoles(user).includes("broadcaster") || getUserRoles(user).includes("owner");
 
-            subscribeToUserNotifications(user ? user.username : null);
+            if (user && user.isGuest) {
+
+                subscribeToUserNotifications(null);
+
+                subscribeToMyChats(null);
+
+            } else {
+
+                subscribeToUserNotifications(user ? user.username : null);
+
+                subscribeToMyChats(user ? user.username : null);
+
+            }
 
             updateNotifBadge();
+
+            maybeShowImportantNotice();
 
         }
 
@@ -3071,7 +3499,8 @@
                     ${delBtn}
 
                     <div>
-                      <div class="royal-branch-header">${iconHtml}<div class="royal-branch-title">${b.name}</div></div>
+
+                        <div class="royal-branch-header">${iconHtml}<div class="royal-branch-title">${b.name}</div></div>
 
                         <div class="royal-branch-desc">${b.desc}</div>
 
@@ -3435,9 +3864,21 @@
 
 
 
+        window.handleGuestLogin = function() {
+
+            applyUserPermissions(GUEST_USER);
+
+            saveActiveSession();
+
+            startLoadingProcess("جاري الدخول كضيف...", 1000, () => switchBottomTab("home"));
+
+        };
+
+
+
         window.handleLogout = async function() {
 
-            if (currentActiveUser) await setPresenceOffline(currentActiveUser.username);
+            if (currentActiveUser && !currentActiveUser.isGuest) await setPresenceOffline(currentActiveUser.username);
 
             startLoadingProcess("جاري تسجيل الخروج...", 1000, () => {
 
@@ -3461,7 +3902,7 @@
 
                 subscribeToUserNotifications(null);
 
-                if (myChatsUnsub) { myChatsUnsub(); myChatsUnsub = null; }
+                subscribeToMyChats(null);
 
                 if (chatMessagesUnsub) { chatMessagesUnsub(); chatMessagesUnsub = null; }
 
@@ -3493,9 +3934,17 @@
 
 
 
+        function showLoaderThen(callback, msg) {
+
+            startLoadingProcess(msg || "جاري التحميل...", 2000, callback);
+
+        }
+
+
+
         function hideAllPages() {
 
-            ["authWrapper","statusWrapper","mainDashboardPage","myGuildsPage","guildDetailPage","guildBranchesPage","pendingRequestsPage","empireAccountsPage","permanentNewsPage","chatPage"].forEach(id => {
+            ["authWrapper","statusWrapper","mainDashboardPage","myGuildsPage","guildDetailPage","guildBranchesPage","pendingRequestsPage","empireAccountsPage","permanentNewsPage","chatPage","trainingPage","lessonDetailPage","empireFormsPage"].forEach(id => {
 
                 document.getElementById(id).classList.add("hidden");
 
@@ -3529,37 +3978,47 @@
 
         window.switchBottomTab = function(tab) {
 
-            hideAllPages();
+            if (tab === "myGuilds" && isGuestUser()) {
 
-            document.getElementById("bottomNav").classList.remove("hidden");
+                alert("ميزة النقابات الخاصة بك غير متاحة لحساب الضيف، الرجاء تسجيل الدخول بحساب حقيقي.");
 
-            document.getElementById("navHomeBtn").classList.remove("active");
-
-            document.getElementById("navGuildsBtn").classList.remove("active");
-
-            document.getElementById("navPermNewsBtn").classList.remove("active");
-
-            if (tab === "home") {
-
-                document.getElementById("navHomeBtn").classList.add("active");
-
-                navigateToMainNews();
-
-            } else if (tab === "myGuilds") {
-
-                document.getElementById("navGuildsBtn").classList.add("active");
-
-                renderMyGuildsPage();
-
-                document.getElementById("myGuildsPage").classList.remove("hidden");
-
-            } else if (tab === "permNews") {
-
-                document.getElementById("navPermNewsBtn").classList.add("active");
-
-                navigateToPermanentNews();
+                return;
 
             }
+
+            showLoaderThen(() => {
+
+                document.getElementById("bottomNav").classList.remove("hidden");
+
+                document.getElementById("navHomeBtn").classList.remove("active");
+
+                document.getElementById("navGuildsBtn").classList.remove("active");
+
+                document.getElementById("navPermNewsBtn").classList.remove("active");
+
+                if (tab === "home") {
+
+                    document.getElementById("navHomeBtn").classList.add("active");
+
+                    navigateToMainNews();
+
+                } else if (tab === "myGuilds") {
+
+                    document.getElementById("navGuildsBtn").classList.add("active");
+
+                    renderMyGuildsPage();
+
+                    document.getElementById("myGuildsPage").classList.remove("hidden");
+
+                } else if (tab === "permNews") {
+
+                    document.getElementById("navPermNewsBtn").classList.add("active");
+
+                    navigateToPermanentNews();
+
+                }
+
+            });
 
         };
 
@@ -3668,6 +4127,32 @@
             if (currentUserCanPublish) publishBtn.classList.remove("hidden");
 
             else publishBtn.classList.add("hidden");
+
+            const guestHiddenIds = ["chatBtn","myProfileBtn"];
+
+            guestHiddenIds.forEach(id => {
+
+                const el = document.getElementById(id);
+
+                if (!el) return;
+
+                if (isGuestUser()) el.classList.add("hidden");
+
+                else el.classList.remove("hidden");
+
+            });
+
+            const guildsTabBtn = document.getElementById("navGuildsBtn");
+
+            if (guildsTabBtn) {
+
+                if (isGuestUser()) guildsTabBtn.classList.add("hidden");
+
+                else guildsTabBtn.classList.remove("hidden");
+
+            }
+
+            maybeShowImportantNotice();
 
         };
 
@@ -3847,15 +4332,13 @@
 
             toggleSidebar();
 
-            startLoadingProcess("جاري الانتقال لصفحة الطلبات المعلقة...", 1000, () => {
-
-                hideAllPages();
+            showLoaderThen(() => {
 
                 renderPendingRequestsPage();
 
                 document.getElementById("pendingRequestsPage").classList.remove("hidden");
 
-            });
+            }, "جاري الانتقال لصفحة الطلبات المعلقة...");
 
         };
 
@@ -3863,11 +4346,13 @@
 
             toggleSidebar();
 
-            hideAllPages();
+            showLoaderThen(() => {
 
-            renderEmpireAccountsPage();
+                renderEmpireAccountsPage();
 
-            document.getElementById("empireAccountsPage").classList.remove("hidden");
+                document.getElementById("empireAccountsPage").classList.remove("hidden");
+
+            });
 
         };
 
@@ -3921,19 +4406,21 @@
 
             guildDetailFromMyGuilds = !!fromMyGuilds;
 
-            hideAllPages();
+            showLoaderThen(() => {
 
-            const guild = (window.globalGuildsObj || {})[guildId];
+                const guild = (window.globalGuildsObj || {})[guildId];
 
-            if (guild) renderGuildDetailPage(guild);
+                if (guild) renderGuildDetailPage(guild);
 
-            const backBtn = document.getElementById("guildDetailBackBtn");
+                const backBtn = document.getElementById("guildDetailBackBtn");
 
-            backBtn.onclick = () => switchBottomTab(guildDetailFromMyGuilds ? "myGuilds" : "home");
+                backBtn.onclick = () => switchBottomTab(guildDetailFromMyGuilds ? "myGuilds" : "home");
 
-            backBtn.innerText = guildDetailFromMyGuilds ? "← العودة للنقابات الخاصة بك" : "← العودة للرئيسية";
+                backBtn.innerText = guildDetailFromMyGuilds ? "← العودة للنقابات الخاصة بك" : "← العودة للرئيسية";
 
-            document.getElementById("guildDetailPage").classList.remove("hidden");
+                document.getElementById("guildDetailPage").classList.remove("hidden");
+
+            });
 
         };
 
@@ -4052,7 +4539,6 @@
             if (!(isSiteAdmin() || canUserManageGuild(guild))) return;
 
             const newRank = document.getElementById("memberRankNewSelect").value;
-
             const oldRank = member.rank || "";
 
             if (newRank === oldRank) { closeModal("editMemberRankModal"); return; }
@@ -4545,27 +5031,29 @@
 
         window.navigateToGuildBranches = function() {
 
-            hideAllPages();
+            showLoaderThen(() => {
 
-            const guild = (window.globalGuildsObj || {})[currentViewingGuildId];
+                const guild = (window.globalGuildsObj || {})[currentViewingGuildId];
 
-            if (guild) {
+                if (guild) {
 
-                document.getElementById("guildBranchesTitleNav").innerText = `🌿 فروع نقابة ${guild.name}`;
+                    document.getElementById("guildBranchesTitleNav").innerText = `🌿 فروع نقابة ${guild.name}`;
 
-                document.getElementById("guildBranchesHeaderTitle").innerText = `قائمة فروع نقابة ${guild.name}`;
+                    document.getElementById("guildBranchesHeaderTitle").innerText = `قائمة فروع نقابة ${guild.name}`;
 
-                renderGuildBranchesPage(guild);
+                    renderGuildBranchesPage(guild);
 
-            }
+                }
 
-            const addBranchBtn = document.getElementById("addBranchAdminBtn");
+                const addBranchBtn = document.getElementById("addBranchAdminBtn");
 
-            if (isSiteAdmin() || canUserManageGuild(guild)) addBranchBtn.classList.remove("hidden");
+                if (isSiteAdmin() || canUserManageGuild(guild)) addBranchBtn.classList.remove("hidden");
 
-            else addBranchBtn.classList.add("hidden");
+                else addBranchBtn.classList.add("hidden");
 
-            document.getElementById("guildBranchesPage").classList.remove("hidden");
+                document.getElementById("guildBranchesPage").classList.remove("hidden");
+
+            });
 
         };
 
@@ -4788,6 +5276,14 @@
         window.openMyProfileModal = function() {
 
             if (!currentActiveUser) return;
+
+            if (currentActiveUser.isGuest) {
+
+                alert("حساب الضيف لا يملك ملفاً شخصياً، الرجاء تسجيل الدخول أو إنشاء حساب.");
+
+                return;
+
+            }
 
             document.getElementById("myProfileUsername").value = currentActiveUser.username;
 
@@ -5259,15 +5755,25 @@
 
             if (!currentActiveUser) return;
 
-            hideAllPages();
+            if (currentActiveUser.isGuest) {
 
-            document.getElementById("chatPage").classList.remove("hidden");
+                alert("المحادثات غير متاحة لحساب الضيف، الرجاء تسجيل الدخول بحساب حقيقي.");
 
-            document.getElementById("bottomNav").classList.remove("hidden");
+                return;
 
-            showChatListView();
+            }
 
-            listenToMyChatsRealtime();
+            showLoaderThen(() => {
+
+                document.getElementById("chatPage").classList.remove("hidden");
+
+                document.getElementById("bottomNav").classList.remove("hidden");
+
+                showChatListView();
+
+                renderChatList(window.globalMyChats || []);
+
+            });
 
         };
 
@@ -5299,19 +5805,21 @@
 
             showChatListView();
 
-            listenToMyChatsRealtime();
+            renderChatList(window.globalMyChats || []);
 
         };
 
 
 
-        function listenToMyChatsRealtime() {
-
-            if (!currentActiveUser) return;
+        function subscribeToMyChats(username) {
 
             if (myChatsUnsub) { myChatsUnsub(); myChatsUnsub = null; }
 
-            myChatsUnsub = onValue(ref(db, "user_chats/" + currentActiveUser.username), (snapshot) => {
+            window.globalMyChats = [];
+
+            if (!username) { updateChatBadge(); return; }
+
+            myChatsUnsub = onValue(ref(db, "user_chats/" + username), (snapshot) => {
 
                 const data = snapshot.val();
 
@@ -5319,9 +5827,47 @@
 
                 list.sort((a, b) => (b.lastTimestamp || 0) - (a.lastTimestamp || 0));
 
-                renderChatList(list);
+                window.globalMyChats = list;
+
+                updateChatBadge();
+
+                const chatPage = document.getElementById("chatPage");
+
+                const listView = document.getElementById("chatListView");
+
+                if (chatPage && !chatPage.classList.contains("hidden") && listView && !listView.classList.contains("hidden")) {
+
+                    renderChatList(list);
+
+                }
 
             });
+
+        }
+
+
+
+        function updateChatBadge() {
+
+            const badge = document.getElementById("chatBadge");
+
+            if (!badge) return;
+
+            const list = window.globalMyChats || [];
+
+            const unreadCount = list.filter(c => c.unread).length;
+
+            if (unreadCount > 0) {
+
+                badge.innerText = unreadCount > 99 ? "99+" : String(unreadCount);
+
+                badge.classList.remove("hidden");
+
+            } else {
+
+                badge.classList.add("hidden");
+
+            }
 
         }
 
@@ -5347,11 +5893,13 @@
 
                 const label = u ? (u.nickname || u.username) : c.username;
 
+                const unreadMark = c.unread ? '<span style="color:var(--danger-red); font-weight:800;">● رسالة جديدة</span>' : "";
+
                 return `<div class="chat-list-item" onclick="openChatWith('${c.username}')">
 
                     <div class="chat-list-name">${label} <span style="color:var(--text-muted); font-size:0.8rem;">@${c.username}</span></div>
 
-                    <div class="chat-list-last">${(c.lastMessage || "").toString().slice(0, 70)}</div>
+                    <div class="chat-list-last">${(c.lastMessage || "").toString().slice(0, 70)} ${unreadMark}</div>
 
                 </div>`;
 
@@ -5411,6 +5959,12 @@
 
             currentChatWithUsername = username;
 
+            pendingChatImage = null;
+
+            const previewBox = document.getElementById("chatImagePreviewBox");
+
+            if (previewBox) { previewBox.innerHTML = ""; previewBox.classList.add("hidden"); }
+
             document.getElementById("chatListView").classList.add("hidden");
 
             document.getElementById("chatConversationView").classList.remove("hidden");
@@ -5418,6 +5972,14 @@
             const otherUser = (window.globalUsersList || []).find(u => u.username === username);
 
             document.getElementById("chatConversationTitle").innerText = otherUser ? `${otherUser.nickname || otherUser.username} (@${username})` : ("@" + username);
+
+            const myEntry = (window.globalMyChats || []).find(c => c.username === username);
+
+            if (myEntry && myEntry.unread) {
+
+                update(ref(db, "user_chats/" + currentActiveUser.username + "/" + username), { unread: false });
+
+            }
 
             const chatId = getChatId(currentActiveUser.username, username);
 
@@ -5457,13 +6019,67 @@
 
                 const mine = currentActiveUser && m.from === currentActiveUser.username;
 
-                return `<div class="chat-bubble-row ${mine ? "mine" : ""}"><div class="chat-bubble ${mine ? "mine" : ""}">${m.text || ""}</div></div>`;
+                const imageHtml = m.imageData ? `<img src="${m.imageData}" style="max-width:220px; border-radius:10px; display:block; margin-bottom:${m.text ? "6px" : "0"};">` : "";
+
+                const textHtml = m.text ? m.text : "";
+
+                return `<div class="chat-bubble-row ${mine ? "mine" : ""}"><div class="chat-bubble ${mine ? "mine" : ""}">${imageHtml}${textHtml}</div></div>`;
 
             }).join("");
 
             box.scrollTop = box.scrollHeight;
 
         }
+
+
+
+        window.handleChatImageSelected = function(event) {
+
+            const file = event.target.files[0];
+
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = (evt) => {
+
+                pendingChatImage = evt.target.result;
+
+                const previewBox = document.getElementById("chatImagePreviewBox");
+
+                previewBox.classList.remove("hidden");
+
+                previewBox.innerHTML = `<div style="position:relative; display:inline-block;">
+
+                    <img src="${pendingChatImage}" style="max-width:120px; border-radius:10px; display:block;">
+
+                    <button type="button" onclick="cancelChatImage()" style="position:absolute; top:-8px; left:-8px; background:var(--danger-red); color:#fff; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer;">✖</button>
+
+                </div>`;
+
+            };
+
+            reader.readAsDataURL(file);
+
+        };
+
+
+
+        window.cancelChatImage = function() {
+
+            pendingChatImage = null;
+
+            const previewBox = document.getElementById("chatImagePreviewBox");
+
+            previewBox.classList.add("hidden");
+
+            previewBox.innerHTML = "";
+
+            const fileInput = document.getElementById("chatImageInput");
+
+            if (fileInput) fileInput.value = "";
+
+        };
 
 
 
@@ -5477,25 +6093,803 @@
 
             const text = input.value.trim();
 
-            if (!text) return;
+            const imageData = pendingChatImage;
+
+            if (!text && !imageData) return;
 
             const chatId = getChatId(currentActiveUser.username, currentChatWithUsername);
 
             const msgId = "msg_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
 
-            await set(ref(db, "chats/" + chatId + "/messages/" + msgId), {
+            const payload = { id: msgId, from: currentActiveUser.username, to: currentChatWithUsername, timestamp: Date.now() };
 
-                id: msgId, from: currentActiveUser.username, to: currentChatWithUsername, text, timestamp: Date.now()
+            if (text) payload.text = text;
 
-            });
+            if (imageData) payload.imageData = imageData;
+
+            await set(ref(db, "chats/" + chatId + "/messages/" + msgId), payload);
 
             const now = Date.now();
 
-            await update(ref(db, "user_chats/" + currentActiveUser.username + "/" + currentChatWithUsername), { lastMessage: text, lastTimestamp: now });
+            const lastMessagePreview = text ? text : "📷 صورة";
 
-            await update(ref(db, "user_chats/" + currentChatWithUsername + "/" + currentActiveUser.username), { lastMessage: text, lastTimestamp: now });
+            await update(ref(db, "user_chats/" + currentActiveUser.username + "/" + currentChatWithUsername), { lastMessage: lastMessagePreview, lastTimestamp: now, unread: false, lastFrom: currentActiveUser.username });
+
+            await update(ref(db, "user_chats/" + currentChatWithUsername + "/" + currentActiveUser.username), { lastMessage: lastMessagePreview, lastTimestamp: now, unread: true, lastFrom: currentActiveUser.username });
 
             input.value = "";
+
+            cancelChatImage();
+
+        };
+
+
+
+        window.copyTextToClipboard = function(text) {
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+
+                navigator.clipboard.writeText(text).then(() => {
+
+                    alert("تم نسخ النص بنجاح! ✅");
+
+                }).catch(() => {
+
+                    alert("تعذر نسخ النص تلقائياً، الرجاء النسخ يدوياً.");
+
+                });
+
+            } else {
+
+                alert("تعذر نسخ النص تلقائياً، الرجاء النسخ يدوياً.");
+
+            }
+
+        };
+
+
+
+        function listenToLessonsRealtime() {
+
+            onValue(ref(db, "lessons"), (snapshot) => {
+
+                const data = snapshot.val();
+
+                const list = data ? Object.values(data) : [];
+
+                list.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+                window.globalLessons = list;
+
+                if (!document.getElementById("trainingPage").classList.contains("hidden")) renderLessonsList();
+
+                if (currentLessonId && !document.getElementById("lessonDetailPage").classList.contains("hidden")) {
+
+                    const l = list.find(x => x.id === currentLessonId);
+
+                    if (l) document.getElementById("lessonDetailTitle").innerText = `📖 ${l.title}`;
+
+                }
+
+            });
+
+        }
+
+
+
+        function listenToExplanationFormsRealtime() {
+
+            onValue(ref(db, "guild_explanation_forms"), (snapshot) => {
+
+                const data = snapshot.val();
+
+                const list = data ? Object.values(data) : [];
+
+                list.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+                window.globalExplanationForms = list;
+
+                if (!document.getElementById("trainingPage").classList.contains("hidden")) renderExplanationFormsList();
+
+            });
+
+        }
+
+
+
+        function listenToEmpireFormsRealtime() {
+
+            window.globalEmpireForms = { events: [], admin: [], awards: [] };
+
+            ["events", "admin", "awards"].forEach(cat => {
+
+                onValue(ref(db, "empire_forms/" + cat), (snapshot) => {
+
+                    const data = snapshot.val();
+
+                    const list = data ? Object.values(data) : [];
+
+                    list.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+                    window.globalEmpireForms[cat] = list;
+
+                    if (!document.getElementById("empireFormsPage").classList.contains("hidden")) renderEmpireFormsList(cat);
+
+                });
+
+            });
+
+        }
+
+
+
+        window.navigateToTrainingPage = function() {
+
+            showLoaderThen(() => {
+
+                document.getElementById("trainingPage").classList.remove("hidden");
+
+                document.getElementById("bottomNav").classList.remove("hidden");
+
+                const addLessonBtn = document.getElementById("addLessonAdminBtn");
+
+                const addExplanationBtn = document.getElementById("addExplanationAdminBtn");
+
+                if (isSiteAdmin()) { addLessonBtn.classList.remove("hidden"); addExplanationBtn.classList.remove("hidden"); }
+
+                else { addLessonBtn.classList.add("hidden"); addExplanationBtn.classList.add("hidden"); }
+
+                renderLessonsList();
+
+                renderExplanationFormsList();
+
+            });
+
+        };
+
+
+
+        function renderLessonsList() {
+
+            const box = document.getElementById("lessonsListBox");
+
+            if (!box) return;
+
+            const list = window.globalLessons || [];
+
+            if (!list.length) {
+
+                box.innerHTML = '<div class="empty-news-state">لا توجد دروس مضافة حتى الآن.</div>';
+
+                return;
+
+            }
+
+            const canManage = isSiteAdmin();
+
+            box.innerHTML = list.map(l => `
+
+                <button class="my-guild-btn" onclick="openLessonDetail('${l.id}')" style="font-size:1rem;">
+
+                    <span>🎓 ${l.title}</span>
+
+                    <span style="display:flex; align-items:center; gap:10px;">
+
+                        ${canManage ? `<span onclick="event.stopPropagation(); deleteLesson('${l.id}')" style="color:var(--danger-red); font-size:0.85rem;">🗑️</span>` : ""}
+
+                        <span>➔</span>
+
+                    </span>
+
+                </button>
+
+            `).join("");
+
+        }
+
+
+
+        window.openAddLessonModal = function() {
+
+            if (!isSiteAdmin()) return;
+
+            document.getElementById("newLessonTitle").value = "";
+
+            document.getElementById("addLessonModal").classList.remove("hidden");
+
+        };
+
+
+
+        window.handleSaveLesson = async function(e) {
+
+            e.preventDefault();
+
+            if (!isSiteAdmin()) return;
+
+            const title = document.getElementById("newLessonTitle").value.trim();
+
+            if (!title) return;
+
+            const id = "lesson_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+
+            await set(ref(db, "lessons/" + id), { id, title, timestamp: Date.now(), createdBy: currentActiveUser ? currentActiveUser.username : "" });
+
+            closeModal("addLessonModal");
+
+        };
+
+
+
+        window.deleteLesson = async function(lessonId) {
+
+            if (!isSiteAdmin()) return;
+
+            if (confirm("هل أنت متأكد من حذف هذا الدرس وكل رسائله؟")) {
+
+                await remove(ref(db, "lessons/" + lessonId));
+
+                await remove(ref(db, "lesson_messages/" + lessonId));
+
+            }
+
+        };
+
+
+
+        window.openLessonDetail = function(lessonId) {
+
+            showLoaderThen(() => {
+
+                currentLessonId = lessonId;
+
+                currentLessonRevealCount = 0;
+
+                currentLessonMessages = [];
+
+                const lesson = (window.globalLessons || []).find(l => l.id === lessonId);
+
+                document.getElementById("lessonDetailTitle").innerText = lesson ? `📖 ${lesson.title}` : "📖 الدرس";
+
+                const addMsgBtn = document.getElementById("addLessonMessageAdminBtn");
+
+                if (isSiteAdmin()) addMsgBtn.classList.remove("hidden"); else addMsgBtn.classList.add("hidden");
+
+                document.getElementById("lessonStartBox").classList.remove("hidden");
+
+                document.getElementById("lessonMessagesBox").classList.add("hidden");
+
+                document.getElementById("lessonMessagesBox").innerHTML = "";
+
+                document.getElementById("lessonContinueBox").classList.add("hidden");
+
+                document.getElementById("lessonFinishBox").classList.add("hidden");
+
+                document.getElementById("lessonDetailPage").classList.remove("hidden");
+
+                document.getElementById("bottomNav").classList.add("hidden");
+
+                subscribeToCurrentLessonMessages(lessonId);
+
+            });
+
+        };
+
+
+
+        function subscribeToCurrentLessonMessages(lessonId) {
+
+            onValue(ref(db, "lesson_messages/" + lessonId), (snapshot) => {
+
+                if (currentLessonId !== lessonId) return;
+
+                const data = snapshot.val();
+
+                const list = data ? Object.values(data) : [];
+
+                list.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+                currentLessonMessages = list;
+
+                if (currentLessonRevealCount > 0) {
+
+                    renderRevealedLessonMessages();
+
+                    updateLessonControls();
+
+                }
+
+            });
+
+        }
+
+
+
+        window.startLesson = function() {
+
+            if (!currentLessonMessages.length) {
+
+                alert("لا توجد رسائل مضافة لهذا الدرس بعد.");
+
+                return;
+
+            }
+
+            currentLessonRevealCount = 1;
+
+            document.getElementById("lessonStartBox").classList.add("hidden");
+
+            document.getElementById("lessonMessagesBox").classList.remove("hidden");
+
+            renderRevealedLessonMessages();
+
+            updateLessonControls();
+
+        };
+
+
+
+        window.continueLesson = function() {
+
+            if (currentLessonRevealCount < currentLessonMessages.length) {
+
+                currentLessonRevealCount++;
+
+                renderRevealedLessonMessages();
+
+            }
+
+            updateLessonControls();
+
+        };
+
+
+
+        window.restartLesson = function() {
+
+            currentLessonRevealCount = 0;
+
+            document.getElementById("lessonMessagesBox").innerHTML = "";
+
+            document.getElementById("lessonMessagesBox").classList.add("hidden");
+
+            document.getElementById("lessonFinishBox").classList.add("hidden");
+
+            document.getElementById("lessonContinueBox").classList.add("hidden");
+
+            document.getElementById("lessonStartBox").classList.remove("hidden");
+
+        };
+
+
+
+        function renderRevealedLessonMessages() {
+
+            const box = document.getElementById("lessonMessagesBox");
+
+            const visible = currentLessonMessages.slice(0, currentLessonRevealCount);
+
+            box.innerHTML = visible.map(m => `
+
+                <div class="lesson-message-card">
+
+                    <div class="msg-text">${m.text || ""}</div>
+
+                    <button class="btn-action btn-edit" onclick="copyLessonMessage('${m.id}')">📋 نسخ</button>
+
+                </div>
+
+            `).join("");
+
+            box.scrollTop = box.scrollHeight;
+
+        }
+
+
+
+        function updateLessonControls() {
+
+            const continueBox = document.getElementById("lessonContinueBox");
+
+            const finishBox = document.getElementById("lessonFinishBox");
+
+            if (currentLessonRevealCount >= currentLessonMessages.length) {
+
+                continueBox.classList.add("hidden");
+
+                finishBox.classList.remove("hidden");
+
+            } else {
+
+                continueBox.classList.remove("hidden");
+
+                finishBox.classList.add("hidden");
+
+            }
+
+        }
+
+
+
+        window.copyLessonMessage = function(msgId) {
+
+            const m = currentLessonMessages.find(x => x.id === msgId);
+
+            if (m) copyTextToClipboard(m.text || "");
+
+        };
+
+
+
+        window.openAddLessonMessageModal = function() {
+
+            if (!isSiteAdmin() || !currentLessonId) return;
+
+            document.getElementById("newLessonMessageText").value = "";
+
+            document.getElementById("addLessonMessageModal").classList.remove("hidden");
+
+        };
+
+
+
+        window.handleSaveLessonMessage = async function(e) {
+
+            e.preventDefault();
+
+            if (!isSiteAdmin() || !currentLessonId) return;
+
+            const text = document.getElementById("newLessonMessageText").value.trim();
+
+            if (!text) return;
+
+            const msgId = "lmsg_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+
+            await set(ref(db, "lesson_messages/" + currentLessonId + "/" + msgId), { id: msgId, text, timestamp: Date.now() });
+
+            closeModal("addLessonMessageModal");
+
+        };
+
+
+
+        function renderExplanationFormsList() {
+
+            const box = document.getElementById("guildExplanationFormsBox");
+
+            if (!box) return;
+
+            const list = window.globalExplanationForms || [];
+
+            if (!list.length) {
+
+                box.innerHTML = '<div class="empty-news-state">لا توجد استمارات شرح مضافة حتى الآن.</div>';
+
+                return;
+
+            }
+
+            const canManage = isSiteAdmin();
+
+            box.innerHTML = list.map(f => `
+
+                <div class="form-card">
+
+                    <div class="form-card-title">${f.title || ""}</div>
+
+                    <div class="form-card-text">${f.text || ""}</div>
+
+                    <div class="form-card-actions">
+
+                        <button class="btn-action btn-edit" onclick="copyExplanationForm('${f.id}')">📋 نسخ</button>
+
+                        ${canManage ? `<button class="btn-action btn-reject" onclick="deleteExplanationForm('${f.id}')">🗑️ حذف</button>` : ""}
+
+                    </div>
+
+                </div>
+
+            `).join("");
+
+        }
+
+
+
+        window.copyExplanationForm = function(formId) {
+
+            const f = (window.globalExplanationForms || []).find(x => x.id === formId);
+
+            if (f) copyTextToClipboard(f.text || "");
+
+        };
+
+
+
+        window.openAddExplanationFormModal = function() {
+
+            if (!isSiteAdmin()) return;
+
+            document.getElementById("newExplanationTitle").value = "";
+
+            document.getElementById("newExplanationText").value = "";
+
+            document.getElementById("addExplanationFormModal").classList.remove("hidden");
+
+        };
+
+
+
+        window.handleSaveExplanationForm = async function(e) {
+
+            e.preventDefault();
+
+            if (!isSiteAdmin()) return;
+
+            const title = document.getElementById("newExplanationTitle").value.trim();
+
+            const text = document.getElementById("newExplanationText").value.trim();
+
+            if (!title || !text) return;
+
+            const id = "explform_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+
+            await set(ref(db, "guild_explanation_forms/" + id), { id, title, text, timestamp: Date.now() });
+
+            closeModal("addExplanationFormModal");
+
+        };
+
+
+
+        window.deleteExplanationForm = async function(formId) {
+
+            if (!isSiteAdmin()) return;
+
+            if (confirm("هل أنت متأكد من حذف استمارة الشرح هذه؟")) {
+
+                await remove(ref(db, "guild_explanation_forms/" + formId));
+
+            }
+
+        };
+
+
+
+        window.navigateToEmpireForms = function() {
+
+            showLoaderThen(() => {
+
+                document.getElementById("empireFormsPage").classList.remove("hidden");
+
+                document.getElementById("bottomNav").classList.remove("hidden");
+
+                document.querySelectorAll(".empire-forms-admin-btn").forEach(btn => {
+
+                    if (isSiteAdmin()) btn.classList.remove("hidden"); else btn.classList.add("hidden");
+
+                });
+
+                ["events", "admin", "awards"].forEach(cat => renderEmpireFormsList(cat));
+
+            });
+
+        };
+
+
+
+        function renderEmpireFormsList(category) {
+
+            const box = document.getElementById("empireFormsBox-" + category);
+
+            if (!box) return;
+
+            const list = (window.globalEmpireForms || {})[category] || [];
+
+            if (!list.length) {
+
+                box.innerHTML = '<div class="empty-news-state">لا توجد استمارات مضافة في هذا القسم حتى الآن.</div>';
+
+                return;
+
+            }
+
+            const canManage = isSiteAdmin();
+
+            box.innerHTML = list.map(f => `
+
+                <div class="form-card">
+
+                    <div class="form-card-title">${f.title || ""}</div>
+
+                    <div class="form-card-text">${f.text || ""}</div>
+
+                    <div class="form-card-actions">
+
+                        <button class="btn-action btn-edit" onclick="copyEmpireForm('${category}','${f.id}')">📋 نسخ</button>
+
+                        ${canManage ? `<button class="btn-action btn-reject" onclick="deleteEmpireForm('${category}','${f.id}')">🗑️ حذف</button>` : ""}
+
+                    </div>
+
+                </div>
+
+            `).join("");
+
+        }
+
+
+
+        window.copyEmpireForm = function(category, formId) {
+
+            const list = (window.globalEmpireForms || {})[category] || [];
+
+            const f = list.find(x => x.id === formId);
+
+            if (f) copyTextToClipboard(f.text || "");
+
+        };
+
+
+
+        window.openAddEmpireFormModal = function(category) {
+
+            if (!isSiteAdmin()) return;
+
+            document.getElementById("newEmpireFormCategory").value = category;
+
+            document.getElementById("newEmpireFormTitle").value = "";
+
+            document.getElementById("newEmpireFormText").value = "";
+
+            const labels = { events: "🎉 إضافة استمارة فعالية", admin: "🗂️ إضافة استمارة إدارية", awards: "🏆 إضافة استمارة جائزة" };
+
+            document.getElementById("addEmpireFormTitle").innerText = labels[category] || "📋 إضافة استمارة";
+
+            document.getElementById("addEmpireFormModal").classList.remove("hidden");
+
+        };
+
+
+
+        window.handleSaveEmpireForm = async function(e) {
+
+            e.preventDefault();
+
+            if (!isSiteAdmin()) return;
+
+            const category = document.getElementById("newEmpireFormCategory").value;
+
+            const title = document.getElementById("newEmpireFormTitle").value.trim();
+
+            const text = document.getElementById("newEmpireFormText").value.trim();
+
+            if (!category || !title || !text) return;
+
+            const id = "eform_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+
+            await set(ref(db, "empire_forms/" + category + "/" + id), { id, title, text, timestamp: Date.now() });
+
+            closeModal("addEmpireFormModal");
+
+        };
+
+
+
+        window.deleteEmpireForm = async function(category, formId) {
+
+            if (!isSiteAdmin()) return;
+
+            if (confirm("هل أنت متأكد من حذف هذه الاستمارة؟")) {
+
+                await remove(ref(db, "empire_forms/" + category + "/" + formId));
+
+            }
+
+        };
+
+
+
+        function listenToImportantNoticeRealtime() {
+
+            onValue(ref(db, "important_notice"), (snapshot) => {
+
+                window.globalImportantNotice = snapshot.val() || null;
+
+                maybeShowImportantNotice();
+
+            });
+
+        }
+
+
+
+        function maybeShowImportantNotice() {
+
+            const modal = document.getElementById("mandatoryNoticeModal");
+
+            if (!modal) return;
+
+            const notice = window.globalImportantNotice;
+
+            if (!currentActiveUser || !notice || !notice.id) { modal.classList.add("hidden"); return; }
+
+            const ackId = currentActiveUser.isGuest
+
+                ? (sessionStorage.getItem("north_guest_ack_notice_id") || "")
+
+                : (currentActiveUser.acknowledgedNoticeId || "");
+
+            if (ackId === notice.id) { modal.classList.add("hidden"); return; }
+
+            document.getElementById("mandatoryNoticeText").innerText = notice.text || "";
+
+            document.getElementById("mandatoryNoticeSender").innerText = notice.senderName ? `— ${notice.senderName}` : "";
+
+            modal.classList.remove("hidden");
+
+        }
+
+
+
+        window.acknowledgeImportantNotice = async function() {
+
+            const notice = window.globalImportantNotice;
+
+            const modal = document.getElementById("mandatoryNoticeModal");
+
+            if (!notice || !currentActiveUser) { modal.classList.add("hidden"); return; }
+
+            if (currentActiveUser.isGuest) {
+
+                sessionStorage.setItem("north_guest_ack_notice_id", notice.id);
+
+            } else {
+
+                await update(ref(db, "users/" + currentActiveUser.username), { acknowledgedNoticeId: notice.id });
+
+                currentActiveUser.acknowledgedNoticeId = notice.id;
+
+                saveActiveSession();
+
+            }
+
+            modal.classList.add("hidden");
+
+        };
+
+
+
+        window.openImportantNoticeModal = function() {
+
+            if (!isSiteAdmin()) return;
+
+            document.getElementById("importantNoticeText").value = "";
+
+            document.getElementById("importantNoticeModal").classList.remove("hidden");
+
+        };
+
+
+
+        window.handleSendImportantNotice = async function(e) {
+
+            e.preventDefault();
+
+            if (!isSiteAdmin()) return;
+
+            const text = document.getElementById("importantNoticeText").value.trim();
+
+            if (!text) return;
+
+            const id = "notice_" + Date.now();
+
+            const senderName = currentActiveUser ? (currentActiveUser.nickname || currentActiveUser.username) : "الإدارة";
+
+            await set(ref(db, "important_notice"), { id, text, senderName, timestamp: Date.now() });
+
+            closeModal("importantNoticeModal");
+
+            alert("تم إرسال الإشعار المهم لجميع المستخدمين بنجاح!");
 
         };
 
