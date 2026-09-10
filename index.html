@@ -384,6 +384,14 @@
 
         .form-card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
+        .site-footer-credit { text-align: center; font-size: 0.72rem; color: var(--text-muted); margin-top: 16px; padding-bottom: 14px; line-height: 1.7; opacity: 0.8; }
+
+        .help-link-inline { color: var(--accent-blue); text-decoration: underline; cursor: pointer; }
+
+        .kingdom-link-item { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px 16px; text-decoration: none; color: #fff; transition: 0.2s; }
+
+        .kingdom-link-item:hover { border-color: var(--accent-blue); background: var(--light-blue-bg); }
+
     </style>
 
 </head>
@@ -666,6 +674,22 @@
 
                 <div class="page-header-title" style="margin-bottom:15px; border-bottom: 1px dashed var(--border-color);">
 
+                    <span>🔗 روابط مهمة للمملكة</span>
+
+                    <button id="addKingdomLinkAdminBtn" class="btn-action btn-approve hidden" onclick="openAddKingdomLinkModal()">+ إضافة رابط</button>
+
+                </div>
+
+                <div id="kingdomImportantLinksBox" style="display:flex; flex-direction:column; gap:10px;"></div>
+
+            </div>
+
+
+
+            <div class="kingdom-section" style="margin-top: 40px;">
+
+                <div class="page-header-title" style="margin-bottom:15px; border-bottom: 1px dashed var(--border-color);">
+
                     <span>🏛️ الفروع الملكية للمملكة</span>
 
                     <button id="addRoyalBranchAdminBtn" class="btn-action btn-approve hidden" onclick="openAddRoyalBranchModal()">+ إضافة فرع ملكي</button>
@@ -698,13 +722,23 @@
 
             <div class="contact-dev-footer">
 
-                <a id="contactDevLink" class="contact-dev-link" href="#" target="_blank" rel="noopener">تواصل مع المطورين</a>
+                <div id="helpLinksText" style="font-size:0.82rem; color: var(--text-muted); line-height:1.9;"></div>
 
                 <div style="margin-top:10px;">
 
-                    <button id="editContactAdminBtn" class="btn-action btn-edit hidden" onclick="openEditContactModal()">✏️ تعديل رابط الواتساب</button>
+                    <button id="editContactAdminBtn" class="btn-action btn-edit hidden" onclick="openAddHelpLinkModal()">+ إضافة رابط مساعدة</button>
 
                 </div>
+
+            </div>
+
+
+
+            <div class="site-footer-credit">
+
+                <div>مؤسسة الموقع: ماكي</div>
+
+                <div>المطورون: لا يوجد</div>
 
             </div>
 
@@ -1332,33 +1366,69 @@
 
 
 
-    <div id="editContactModal" class="modal hidden">
+    <div id="addHelpLinkModal" class="modal hidden">
 
         <div class="modal-content">
 
-            <h3 style="margin-bottom: 15px; text-align: right;">تواصل مع المطورين 💬</h3>
+            <h3 style="margin-bottom: 15px; text-align: right;">🔗 إدارة روابط التواصل والمساعدة</h3>
 
-            <form onsubmit="handleSaveContactLink(event)">
+            <form onsubmit="handleAddHelpLink(event)">
 
                 <div class="form-group">
 
-                    <label>رقم الواتساب أو رابط الدردشة *</label>
+                    <label>رابط جديد *</label>
 
-                    <input type="text" id="contactWhatsappInput" class="form-control" placeholder="مثال: 9665xxxxxxx أو https://wa.me/9665xxxxxxx" required dir="ltr">
+                    <input type="url" id="newHelpLinkUrl" class="form-control" required dir="ltr" placeholder="https://...">
 
-                    <div class="hint">عند الضغط على «تواصل مع المطورين» سيُفتح واتساب مباشرة.</div>
-
-                </div>
-
-                <div style="display: flex; gap: 10px; margin-top: 15px;">
-
-                    <button type="submit" class="btn-submit">حفظ الرابط</button>
-
-                    <button type="button" onclick="closeModal('editContactModal')" class="btn-submit" style="background:#334155; color:#fff;">إلغاء</button>
+                    <div class="hint">كل رابط تضيفه سيظهر ككلمة "هنا" إضافية بجملة التواصل بالصفحة الرئيسية.</div>
 
                 </div>
+
+                <button type="submit" class="btn-submit">إضافة الرابط</button>
 
             </form>
+
+            <div style="margin-top:20px;">
+
+                <div style="font-weight:800; margin-bottom:8px;">الروابط الحالية</div>
+
+                <div id="helpLinksManageList"></div>
+
+            </div>
+
+            <button type="button" onclick="closeModal('addHelpLinkModal')" class="btn-submit" style="background:#334155; color:#fff; margin-top:15px;">إغلاق</button>
+
+        </div>
+
+    </div>
+
+
+
+    <div id="addKingdomLinkModal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <h3 style="margin-bottom: 15px; text-align: right;">🔗 إدارة روابط المملكة المهمة</h3>
+
+            <form onsubmit="handleAddKingdomLink(event)">
+
+                <div class="form-group"><label>اسم الرابط *</label><input type="text" id="newKingdomLinkName" class="form-control" required></div>
+
+                <div class="form-group"><label>الرابط *</label><input type="url" id="newKingdomLinkUrl" class="form-control" required dir="ltr" placeholder="https://..."></div>
+
+                <button type="submit" class="btn-submit">إضافة الرابط</button>
+
+            </form>
+
+            <div style="margin-top:20px;">
+
+                <div style="font-weight:800; margin-bottom:8px;">الروابط الحالية</div>
+
+                <div id="kingdomLinksManageList"></div>
+
+            </div>
+
+            <button type="button" onclick="closeModal('addKingdomLinkModal')" class="btn-submit" style="background:#334155; color:#fff; margin-top:15px;">إغلاق</button>
 
         </div>
 
@@ -2112,7 +2182,7 @@
 
             photo: "",
 
-guilds: []
+            guilds: []
 
         };
 
@@ -2280,9 +2350,7 @@ guilds: []
 
         }
 
-
-
-        function getAllGuildNames() {
+function getAllGuildNames() {
 
             const guildsList = window.globalGuildsObj ? Object.values(window.globalGuildsObj) : DEFAULT_GUILDS;
 
@@ -2326,33 +2394,25 @@ guilds: []
 
 
 
-        function applyContactLink(link) {
+        function renderHelpLinksText() {
 
-            contactWhatsappLink = link || "";
+            const box = document.getElementById("helpLinksText");
 
-            const a = document.getElementById("contactDevLink");
+            if (!box) return;
 
-            if (!a) return;
+            const list = window.globalHelpLinks || [];
 
-            if (contactWhatsappLink) {
+            if (!list.length) {
 
-                a.href = contactWhatsappLink;
+                box.innerText = "لديك سؤال أو تريد الإبلاغ عن مشكلة؟ تواصل معنا.";
 
-                a.onclick = null;
-
-            } else {
-
-                a.href = "#";
-
-                a.onclick = (ev) => {
-
-                    ev.preventDefault();
-
-                    alert("لم يتم وضع رابط تواصل بعد. يستطيع مسؤول الموقع إضافته.");
-
-                };
+                return;
 
             }
+
+            const linksHtml = list.map(l => `<a href="${l.url}" target="_blank" rel="noopener" class="help-link-inline">هنا</a>`).join(" أو ");
+
+            box.innerHTML = `لديك سؤال أو تريد الإبلاغ عن مشكلة؟ تواصل معنا. اضغط ${linksHtml}.`;
 
         }
 
@@ -2375,6 +2435,8 @@ guilds: []
             listenToRoyalBranchesRealtime();
 
             listenToContactRealtime();
+
+            listenToKingdomImportantLinksRealtime();
 
             listenToNotificationsRealtime();
 
@@ -2556,9 +2618,41 @@ guilds: []
 
         function listenToContactRealtime() {
 
-            onValue(ref(db, "site_settings/whatsappLink"), (snapshot) => {
+            onValue(ref(db, "site_settings/help_links"), (snapshot) => {
 
-                applyContactLink(snapshot.val() || "");
+                const data = snapshot.val();
+
+                const list = data ? Object.values(data) : [];
+
+                list.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+                window.globalHelpLinks = list;
+
+                renderHelpLinksText();
+
+                if (!document.getElementById("addHelpLinkModal").classList.contains("hidden")) renderHelpLinksManageList();
+
+            });
+
+        }
+
+
+
+        function listenToKingdomImportantLinksRealtime() {
+
+            onValue(ref(db, "site_settings/kingdom_important_links"), (snapshot) => {
+
+                const data = snapshot.val();
+
+                const list = data ? Object.values(data) : [];
+
+                list.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+                window.globalKingdomLinks = list;
+
+                renderKingdomImportantLinks();
+
+                if (!document.getElementById("addKingdomLinkModal").classList.contains("hidden")) renderKingdomLinksManageList();
 
             });
 
@@ -4108,7 +4202,7 @@ guilds: []
 
             document.getElementById("bottomNav").classList.remove("hidden");
 
-            const adminOnly = ["sidebarToggleBtn","addGuildAdminBtn","addFigureAdminBtn","editInfoAdminBtn","addRoyalBranchAdminBtn","editContactAdminBtn"];
+            const adminOnly = ["sidebarToggleBtn","addGuildAdminBtn","addFigureAdminBtn","editInfoAdminBtn","addRoyalBranchAdminBtn","editContactAdminBtn","addKingdomLinkAdminBtn"];
 
             adminOnly.forEach(id => {
 
@@ -4258,31 +4352,173 @@ guilds: []
 
 
 
-        window.openEditContactModal = async function() {
+        window.openAddHelpLinkModal = function() {
 
-            const snap = await get(ref(db, "site_settings/whatsappLink"));
+            if (!isSiteAdmin()) return;
 
-            document.getElementById("contactWhatsappInput").value = snap.exists() ? snap.val() : "";
+            document.getElementById("newHelpLinkUrl").value = "";
 
-            document.getElementById("editContactModal").classList.remove("hidden");
+            renderHelpLinksManageList();
+
+            document.getElementById("addHelpLinkModal").classList.remove("hidden");
 
         };
 
-        window.handleSaveContactLink = async function(e) {
+
+
+        function renderHelpLinksManageList() {
+
+            const box = document.getElementById("helpLinksManageList");
+
+            if (!box) return;
+
+            const list = window.globalHelpLinks || [];
+
+            if (!list.length) { box.innerHTML = '<div class="hint">لا توجد روابط مضافة بعد.</div>'; return; }
+
+            box.innerHTML = list.map((l, i) => `
+
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:8px; padding:8px 12px; margin-bottom:6px;">
+
+                    <span style="direction:ltr; font-size:0.82rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${i + 1}. ${l.url}</span>
+
+                    <button type="button" class="btn-action btn-reject" onclick="deleteHelpLink('${l.id}')">🗑️</button>
+
+                </div>
+
+            `).join("");
+
+        }
+
+
+
+        window.handleAddHelpLink = async function(e) {
 
             e.preventDefault();
 
             if (!isSiteAdmin()) return;
 
-            const link = normalizeWhatsappLink(document.getElementById("contactWhatsappInput").value);
+            const url = document.getElementById("newHelpLinkUrl").value.trim();
 
-            if (!link) { alert("أدخل رقماً أو رابط واتساب صالحاً."); return; }
+            if (!url) return;
 
-            await set(ref(db, "site_settings/whatsappLink"), link);
+            const id = "helplink_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
 
-            closeModal("editContactModal");
+            await set(ref(db, "site_settings/help_links/" + id), { id, url, timestamp: Date.now() });
 
-            alert("تم حفظ رابط التواصل بنجاح.");
+            document.getElementById("newHelpLinkUrl").value = "";
+
+        };
+
+
+
+        window.deleteHelpLink = async function(linkId) {
+
+            if (!isSiteAdmin()) return;
+
+            await remove(ref(db, "site_settings/help_links/" + linkId));
+
+        };
+
+
+
+        function renderKingdomImportantLinks() {
+
+            const box = document.getElementById("kingdomImportantLinksBox");
+
+            if (!box) return;
+
+            const list = window.globalKingdomLinks || [];
+
+            if (!list.length) {
+
+                box.innerHTML = '<div class="empty-news-state">لا توجد روابط مضافة حتى الآن.</div>';
+
+                return;
+
+            }
+
+            box.innerHTML = list.map(l => `<a href="${l.url}" target="_blank" rel="noopener" class="kingdom-link-item">
+
+                <span>🔗 ${l.name || ""}</span><span>➔</span>
+
+            </a>`).join("");
+
+        }
+
+
+
+        window.openAddKingdomLinkModal = function() {
+
+            if (!isSiteAdmin()) return;
+
+            document.getElementById("newKingdomLinkName").value = "";
+
+            document.getElementById("newKingdomLinkUrl").value = "";
+
+            renderKingdomLinksManageList();
+
+            document.getElementById("addKingdomLinkModal").classList.remove("hidden");
+
+        };
+
+
+
+        function renderKingdomLinksManageList() {
+
+            const box = document.getElementById("kingdomLinksManageList");
+
+            if (!box) return;
+
+            const list = window.globalKingdomLinks || [];
+
+            if (!list.length) { box.innerHTML = '<div class="hint">لا توجد روابط مضافة بعد.</div>'; return; }
+
+            box.innerHTML = list.map(l => `
+
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; background:rgba(255,255,255,0.03); border:1px solid var(--border-color); border-radius:8px; padding:8px 12px; margin-bottom:6px;">
+
+                    <span style="font-size:0.85rem;">${l.name || ""}</span>
+
+                    <button type="button" class="btn-action btn-reject" onclick="deleteKingdomLink('${l.id}')">🗑️</button>
+
+                </div>
+
+            `).join("");
+
+        }
+
+
+
+        window.handleAddKingdomLink = async function(e) {
+
+            e.preventDefault();
+
+            if (!isSiteAdmin()) return;
+
+            const name = document.getElementById("newKingdomLinkName").value.trim();
+
+            const url = document.getElementById("newKingdomLinkUrl").value.trim();
+
+            if (!name || !url) return;
+
+            const id = "klink_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+
+            await set(ref(db, "site_settings/kingdom_important_links/" + id), { id, name, url, timestamp: Date.now() });
+
+            document.getElementById("newKingdomLinkName").value = "";
+
+            document.getElementById("newKingdomLinkUrl").value = "";
+
+        };
+
+
+
+        window.deleteKingdomLink = async function(linkId) {
+
+            if (!isSiteAdmin()) return;
+
+            await remove(ref(db, "site_settings/kingdom_important_links/" + linkId));
 
         };
 
@@ -4539,6 +4775,7 @@ guilds: []
             if (!(isSiteAdmin() || canUserManageGuild(guild))) return;
 
             const newRank = document.getElementById("memberRankNewSelect").value;
+
             const oldRank = member.rank || "";
 
             if (newRank === oldRank) { closeModal("editMemberRankModal"); return; }
@@ -4986,7 +5223,6 @@ guilds: []
             if (isSiteAdmin()) updateData.admiral = document.getElementById("editGuildAdmiral").value.trim();
 
             const perform = async (imgData) => {
-
                 if (imgData) updateData.image = imgData;
 
                 await update(ref(db, "empire_guilds/" + currentViewingGuildId), updateData);
@@ -6898,6 +7134,7 @@ guilds: []
 </body>
 
 </html>
+
 
 
 
